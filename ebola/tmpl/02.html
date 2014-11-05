@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="Author" content="" />
+		<meta name="Description" content="" />
+		<meta name="keywords" content="callcenter">
+		<link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+		<title>callcenter</title>
+        <link href="{{ url_for('static',filename='css/style.css')}}" rel="stylesheet" type="text/css">
+        <link href="{{ url_for('static',filename='css/styleFORM.css')}}" rel="stylesheet" type="text/css">
+	</head>
+	<body>
+		<div id="wrapperMAIN" class="rounded gradient_gray3">
+			<div id="header" class="gradient_gray2">
+				<div id="logo" class="text_a">Ebola Response Call Center</div>
+				<div id="pageinfo" class="text_b white">ACTIVE CALL: PATIENT NAME</div>
+				<div id="dateinfo" class="text_b">12:00 PM  Fri, Oct 24  <span class="white">&nbsp;|&nbsp;</span>  Timer: 00:00  <span class="white">&nbsp;|&nbsp;</span>  <a href=""><span class="white">LOG-OUT</span></a></div>
+			</div>
+			
+			<div id="content_a">
+				<div id="module_a" class="rounded gradient_gray">
+					<div class="agent_instruction text_c">
+						Click here to begin recording a new call.
+					</div>
+					
+					<div class="agent_input">
+						<a class="btn gradient_green rounded" href="">
+							NEW CALL
+						</a>
+					</div>
+				</div>
+			</div>
+			<div id="content_b">
+				<div id="module_b" class="rounded">
+					<div class="caller_related_cases text_a">
+						Incoming call history
+						<br><br>
+						<a class="btn2 gradient_gray3 rounded text_d" href="">
+							<div class="call_type" style="background:#B44D54"></div>  0886670426   Charles Cooper
+						</a>
+						<a class="btn2 gradient_gray3 rounded text_d" href="">
+							<div class="call_type" style="background:#68ACBA"></div>  0886670426   Charles Cooper
+						</a>
+						<a class="btn2 gradient_gray3 rounded text_d" href="">
+							<div class="call_type" style="background:#7C5866"></div>  0886670426   Charles Cooper
+						</a>
+						<a class="btn2 gradient_gray3 rounded text_d" href="">
+							<div class="call_type" style="background:#E3BB56"></div>  0886670426   Charles Cooper
+						</a>
+						<a class="btn2 gradient_gray3 rounded text_d" href="">
+							<div class="call_type" style="background:#6EAB61"></div>  0886670426   Charles Cooper
+						</a>
+					</div>
+				</div>	
+			</div>
+			<div id="content_c">
+				<div id="module_c" class="rounded">
+					<div class="agent_stats text_a">
+						Your statistics today 
+						<br><br>
+						<div class="call_type2" style="background:#464646"></div>  XXX total calls
+						<br>
+						<div class="call_type2" style="background:#B44D54"></div>  XXX new cases
+						<br>
+						<div class="call_type2" style="background:#68ACBA"></div>  XXX case inquiries
+						<br>
+						<div class="call_type2" style="background:#7C5866"></div>  XXX general inquiries
+						<br>
+						<div class="call_type2" style="background:#E3BB56"></div>  XXX duplicate case
+						<br>
+						<div class="call_type2" style="background:#6EAB61"></div>  XXX cancelled calls
+					</div>
+				</div>
+			</div>	
+		</div>
+	</body>
+</html>
