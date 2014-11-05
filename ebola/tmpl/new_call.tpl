@@ -29,62 +29,55 @@
 </script>
 {% endblock hdr %}
 
-{% block body %}
+{% block content_a %}
+<div class="agent_instruction text_c">
+    Click here to begin recording a new call.
+</div>
 
-    <div id="content_a">
-        <div id="module_a" class="rounded gradient_gray">
-            <div class="agent_instruction text_c">
-                Click here to begin recording a new call.
-            </div>
+<div class="agent_input">
+    <a href="{{ url_for('_ui.new_call') }}" class="btn gradient_green rounded">NEW CALL</a>
+</div>
 
-            <div class="agent_input">
-                <a class="btn gradient_green rounded" href="{{ url_for('_ui.new_call') }}">
-                    NEW CALL
-                </a>
-            </div>
-        </div>
-    </div>
-    <div id="content_b">
-        <div id="module_b" class="rounded">
-            <div class="caller_related_cases text_a">
-                Incoming call history
-                <br><br>
-                <a class="btn2 gradient_gray3 rounded text_d" href="">
-                    <div class="call_type" style="background:#B44D54"></div>  0886670426   Charles Cooper
-                </a>
-                <a class="btn2 gradient_gray3 rounded text_d" href="">
-                    <div class="call_type" style="background:#68ACBA"></div>  0886670426   Charles Cooper
-                </a>
-                <a class="btn2 gradient_gray3 rounded text_d" href="">
-                    <div class="call_type" style="background:#7C5866"></div>  0886670426   Charles Cooper
-                </a>
-                <a class="btn2 gradient_gray3 rounded text_d" href="">
-                    <div class="call_type" style="background:#E3BB56"></div>  0886670426   Charles Cooper
-                </a>
-                <a class="btn2 gradient_gray3 rounded text_d" href="">
-                    <div class="call_type" style="background:#6EAB61"></div>  0886670426   Charles Cooper
-                </a>
-            </div>
-        </div>
-    </div>
-    <div id="content_c">
-        <div id="module_b" class="rounded">
-            <div class="agent_stats text_a">
-                Your statistics today
-                <div id="piechart" style="width: 280px; height: 280px;"></div>
-                <div class="call_type2" style="background:#464646"></div>  355 Total calls
-                <br>
-                <div class="call_type2" style="background:#B44D54"></div>  102 New cases
-                <br>
-                <div class="call_type2" style="background:#68ACBA"></div>  58 Case inquiries
-                <br>
-                <div class="call_type2" style="background:#7C5866"></div>  125 General inquiries
-                <br>
-                <div class="call_type2" style="background:#E3BB56"></div>  43 Duplicate cases
-                <br>
-                <div class="call_type2" style="background:#6EAB61"></div>  27 Cancelled calls
-            </div>
-        </div>
-    </div>
+{% endblock content_a %}
 
-{% endblock body %}
+
+{% block content_b %}    
+<div class="caller_related_cases text_a">
+    Incoming call history
+    <br><br>
+    <a class="btn2 gradient_gray3 rounded text_d" href="">
+        <div class="call_type" style="background:#B44D54"></div>  0886670426   Charles Cooper
+    </a>
+    <a class="btn2 gradient_gray3 rounded text_d" href="">
+        <div class="call_type" style="background:#68ACBA"></div>  0886670426   Charles Cooper
+    </a>
+    <a class="btn2 gradient_gray3 rounded text_d" href="">
+        <div class="call_type" style="background:#7C5866"></div>  0886670426   Charles Cooper
+    </a>
+    <a class="btn2 gradient_gray3 rounded text_d" href="">
+        <div class="call_type" style="background:#E3BB56"></div>  0886670426   Charles Cooper
+    </a>
+    <a class="btn2 gradient_gray3 rounded text_d" href="">
+        <div class="call_type" style="background:#6EAB61"></div>  0886670426   Charles Cooper
+    </a>
+</div>
+{% endblock content_b %}
+
+
+{% block content_c %}
+<div class="agent_stats text_a">
+    Your statistics today
+    <div id="piechart" style="width: 280px; height: 280px;"></div>
+    <div class="call_type2" style="background:#464646"></div>  355 Total calls
+    <br>
+    <div class="call_type2" style="background:#B44D54"></div>  102 New cases
+    <br>
+    <div class="call_type2" style="background:#68ACBA"></div>  58 Case inquiries
+    <br>
+    <div class="call_type2" style="background:#7C5866"></div>  125 General inquiries
+    <br>
+    <div class="call_type2" style="background:#E3BB56"></div>  43 Duplicate cases
+    <br>
+    <div class="call_type2" style="background:#6EAB61"></div>  27 Cancelled calls
+</div>
+{% endblock content_c %}
