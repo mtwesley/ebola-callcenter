@@ -8,4 +8,6 @@ venvs
 .wsgi
 .idea
 *.DS_Store
+node_modules
+somaja*
 
