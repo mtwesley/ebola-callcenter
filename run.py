@@ -1,4 +1,4 @@
-from ebola import app
+from ebola import app, app_db
 
 if __name__ == '__main__':
 

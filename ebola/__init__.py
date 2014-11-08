@@ -7,15 +7,18 @@ from datetime import date
 # from gevent_psycopg2 import monkey_patch
 # monkey_patch()
 
-import config
-
 from flask.app import Flask, g
 from flask_migrate import Migrate
 from flask_session import Session
 
-from db import app_db
+from .db import app_db
+from .api import api
+from .ui import ui
 
-app = Flask(__name__, static_url_path="/static")
+import config
+
+
+app = Flask(__package__, static_folder="../static/", static_path="/static")
 app.config.from_object(config)
 
 app_db.init_app(app)
@@ -23,16 +26,13 @@ app_db.init_app(app)
 Migrate(app, app_db)
 Session(app)
 
-# blueprints
-from api import api
-from ui import ui
-
 app.register_blueprint(api)
 app.register_blueprint(ui)
 
 @app.before_request
 def on_new_request():
     g.timestamp = date.today()
+
 
 
 @app.route("/logout", endpoint="logout")
