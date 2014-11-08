@@ -1,11 +1,11 @@
 
 from datetime import date
 
-from gevent import monkey
-monkey.patch_all()
-
-from gevent_psycopg2 import monkey_patch
-monkey_patch()
+# from gevent import monkey
+# monkey.patch_all()
+#
+# from gevent_psycopg2 import monkey_patch
+# monkey_patch()
 
 from flask.app import Flask, g
 from flask_migrate import Migrate
@@ -15,9 +15,11 @@ from .db import app_db
 from .api import api
 from .ui import ui
 
+import config
+
 
 app = Flask(__package__, static_folder="../static/", static_path="/static")
-app.config.from_envvar('EBC_CONFIG')
+app.config.from_object(config)
 
 app_db.init_app(app)
 
