@@ -2,7 +2,7 @@ from os import environ
 
 JSON_SORT_KEYS = False
 JSONIFY_PRETTYPRINT_REGULAR = False
-DEBUG = True
+DEBUG = False
 SQLALCHEMY_ECHO = True
 SQLALCHEMY_POOL_SIZE = 20
 SQLALCHEMY_DATABASE_URI = environ.get('EBOLA_CENTER_DB_URI', "postgresql://localhost/ebolacenter")
