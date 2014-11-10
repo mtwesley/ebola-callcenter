@@ -1,13 +1,12 @@
 
 
-
 {% macro dialog() -%}
-    What county are you calling from?
+    Please state {{ session.p_name or "the patient's"}} Phone Number.
     {{ caller() }}
 {%- endmacro %}
 
 {% macro input() -%}
-{% include "counties.tpl" %}
+    <input type="text" name="p_msisdn" placeholder="Patient's Phone No">
 {{ caller() }}
 {%- endmacro %}
 

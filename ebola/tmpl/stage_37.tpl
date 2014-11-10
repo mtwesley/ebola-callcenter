@@ -2,22 +2,20 @@
 
 
 {% macro dialog() -%}
-    What county are you calling from?
+     Do you have any additional comments?
     {{ caller() }}
 {%- endmacro %}
 
 {% macro input() -%}
-{% include "counties.tpl" %}
+<textarea name="comment" rows="10" cols="30">
+
+</textarea>
 {{ caller() }}
 {%- endmacro %}
 
 {% macro cancel() -%}
-<a class="btn gradient_red rounded" href="{{ url_for('_ui.index') }}">
-    CANCEL CALL
-</a>
 {{ caller() }}
 {%- endmacro %}
-
 
 {% include "call_0.tpl" %}
 

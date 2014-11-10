@@ -1,6 +1,9 @@
 
 {% extends "layout.tpl" %}
 
+{% set caller = session.get('caller', None) %}
+{% set p = session.get('patient', None) %}
+
 {% block content_a %}
 <div class="agent_instruction text_a">
     Please read the following dialogue:
@@ -28,63 +31,65 @@
 
 <div class="info_title text_a"> Call Info </div>
 <div class="info_content text_b">
-    <span style="color:#7D7D7D;">Caller Phone:</span> {{ session.get('msisdn', 'Unknown') }}
+    <span style="color:#7D7D7D;">Caller Phone:</span> {{ session.msisdn or 'Unknown' }}
     <br>
     
     
-    <span style="color:#7D7D7D;">Caller Name:</span> {{ session.get('name', 'Unknown') }}
+    <span style="color:#7D7D7D;">Caller Name:</span> {{ session.name or 'Unknown' }}
     <br>
     
-    <span style="color:#7D7D7D;">Caller Sex:</span> {{ session.get('sex', 'Unknown') }}
+    <span style="color:#7D7D7D;">Caller Sex:</span> {{ session.sex or 'Unknown' }}
     <br>
     
-    <span style="color:#7D7D7D;">Caller Age:</span> {{ session.get('age', 'Unknown') }}
+    <span style="color:#7D7D7D;">Caller Age:</span> {{ session.age or 'Unknown' }}
     <br>
     
-    <span style="color:#7D7D7D;">Caller Language:</span> {{ session.get('lang', 'Unknown') }}
+    <span style="color:#7D7D7D;">Caller Language:</span> {{ session.lang or 'Unknown' }}
     <br>
     
-    <span style="color:#7D7D7D;">Caller County:</span> {{ session.get('county', 'Unknown') }}
+    <span style="color:#7D7D7D;">Caller County:</span> {{ session.county or 'Unknown' }}
     <br>
     
-    <span style="color:#7D7D7D;">Caller City:</span> {{ session.get('city', 'Unknown') }}
+    <span style="color:#7D7D7D;">Caller City:</span> {{ session.city or 'Unknown'}}
     <br>
     
-    <span style="color:#7D7D7D;">Caller Location:</span> {{ session.get('location', 'Unknown') }}
+    <span style="color:#7D7D7D;">Caller Location:</span> {{ session.location or 'Unknown' }}
     <br>
     
-    <span style="color:#7D7D7D;">Call Type:</span> {{ session.get('call_type', 'Unknown') }}
+    <span style="color:#7D7D7D;">Call Type:</span> {{ session.call_type or 'Unknown'}}
     
 </div>
 <div class="info_title text_a">
     Patient Report Info
 </div>
 <div class="info_content text_b">
-    <span style="color:#7D7D7D;">Patient Name:</span> 0886670426
+    <span style="color:#7D7D7D;">Patient Name:</span> {{p.name or 'Unknown'}}
     <br>
-    <span style="color:#7D7D7D;">Patient Phone:</span> Charles D. Cooper
+    <span style="color:#7D7D7D;">Patient Phone:</span> {{p.msisdn or 'Unknown'}}
     <br>
-    <span style="color:#7D7D7D;">Patient Sex:</span> Male
+    <span style="color:#7D7D7D;">Patient Sex:</span> {{p.sex or 'Unknown'}}
     <br>
-    <span style="color:#7D7D7D;">Patient Age:</span> 35
+    <span style="color:#7D7D7D;">Patient Age:</span> {{p.age or 'Unknown'}}
     <br>
-    <span style="color:#7D7D7D;">Patient Language:</span> English
+    <span style="color:#7D7D7D;">Patient Language:</span> {{p.lang or 'Unknown'}}
     <br>
-    <span style="color:#7D7D7D;">Patient County:</span> Montserrado
+    <span style="color:#7D7D7D;">Patient County:</span> {{p.county or 'Unknown'}}
     <br>
-    <span style="color:#7D7D7D;">Patient City:</span> Virginia
+    <span style="color:#7D7D7D;">Patient City:</span> {{p.city or 'Unknown'}}
     <br>
-    <span style="color:#7D7D7D;">Patient Location:</span> Hotel Africa Road
+    <span style="color:#7D7D7D;">Patient Location:</span> {{p.location or 'Unknown'}}
     <br>
-    <span style="color:#7D7D7D;">Patient Condition:</span> Unconscious
+    <span style="color:#7D7D7D;">Patient Condition:</span> {{p.condition or 'Unknown'}}
     <br>
-    <span style="color:#7D7D7D;">Ebola Contact:</span> Yes
+    <span style="color:#7D7D7D;">Ebola Contact:</span> {{p.contact or 'Unknown'}}
     <br>
-    <span style="color:#7D7D7D;">Symptoms Duration:</span> 2 days
+    <span style="color:#7D7D7D;">Symptoms Duration:</span> {{p.dur or 'Unknown'}}
     <br>
-    <span style="color:#7D7D7D;">Symptoms:</span> Rash, Fever, Diarrhea, Headache, Bleeding
+    <span style="color:#7D7D7D;">Symptoms:</span> 
+        {{ (p.symtomps or [{'symptom':'Unknown'}])|join(', ', attribute='symptom') }}
     <br>
-    <span style="color:#7D7D7D;">Comments:</span> There are three people living in the house with the patient.
+    <span style="color:#7D7D7D;">Comments:</span> 
+    {{ session['p_comment'] or 'Unknown'}}
 </div>
 {% endblock content_b %}
 

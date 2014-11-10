@@ -2,22 +2,18 @@
 
 
 {% macro dialog() -%}
-    What county are you calling from?
+    Thank you for calling this case has already been reported and appropriate action is being taken. Please call again if you have any new information.
     {{ caller() }}
 {%- endmacro %}
 
 {% macro input() -%}
-{% include "counties.tpl" %}
+{%set submit_label = 'END CALL' %}
 {{ caller() }}
 {%- endmacro %}
 
 {% macro cancel() -%}
-<a class="btn gradient_red rounded" href="{{ url_for('_ui.index') }}">
-    CANCEL CALL
-</a>
 {{ caller() }}
 {%- endmacro %}
-
 
 {% include "call_0.tpl" %}
 

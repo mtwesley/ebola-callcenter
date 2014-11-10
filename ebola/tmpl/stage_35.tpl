@@ -2,22 +2,18 @@
 
 
 {% macro dialog() -%}
-    What county are you calling from?
+    How many days has {{ session.p_name or "the patient"}} been sick?
     {{ caller() }}
 {%- endmacro %}
 
 {% macro input() -%}
-{% include "counties.tpl" %}
+<input type="text" name="p_sick_days" placeholder="patient illness duration">
 {{ caller() }}
 {%- endmacro %}
 
 {% macro cancel() -%}
-<a class="btn gradient_red rounded" href="{{ url_for('_ui.index') }}">
-    CANCEL CALL
-</a>
 {{ caller() }}
 {%- endmacro %}
-
 
 {% include "call_0.tpl" %}
 
