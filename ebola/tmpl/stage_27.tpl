@@ -2,7 +2,7 @@
 
 
 {% macro dialog() -%}
-    Is {{ session["p_name"] or "the patient" }} Male or Female?
+    Is '{{ session["p_name"] or "the patient" }}' Male or Female?
     {{ caller() }}
 {%- endmacro %}
 

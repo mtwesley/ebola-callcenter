@@ -146,7 +146,7 @@ def stage_17():
         is_ebola = request.form.get("is_ebola")
         if is_ebola == "Y":
             session["call_type"] = "New Case Report"
-            return redirect(url_for(".new_case"))
+            return redirect(url_for(".stage_24"))
         elif is_ebola == "N":
             return redirect(url_for(".stage_18"))
 
@@ -241,15 +241,15 @@ def stage_24():
 def stage_25():
     if request.method == "POST":
         session["p_msisdn"] = request.form["p_msisdn"]
-        P = Phone.query.filter(Phone.msisn == session["p_msisdn"]).first()
+        P = Phone.query.filter(Phone.msisdn == session["p_msisdn"]).first()
         if P is None:
-            return redirect(url_for(".stage_26"))
+            return redirect(url_for(".stage_27"))
 
         session["tmp_p_name"] = "LOOKUP_PATIENT_NAME_FROM_DB"
         session["tmp_p_location"] = "LOOKUP_PATIENT_LOC_FROM_DB"
-        return redirect(url_for(".stage_27"))
+        return redirect(url_for(".stage_26"))
 
-    return render_template("stage_11.tpl")
+    return render_template("stage_25.tpl")
 
 @ui.route("/new/26", methods=["GET", "POST"])
 def stage_26():
