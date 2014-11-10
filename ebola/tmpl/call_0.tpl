@@ -38,9 +38,6 @@
     <span style="color:#7D7D7D;">Caller Name:</span> {{ session.name or 'Unknown' }}
     <br>
     
-    <span style="color:#7D7D7D;">Caller Sex:</span> {{ session.sex or 'Unknown' }}
-    <br>
-    
     <span style="color:#7D7D7D;">Caller Age:</span> {{ session.age or 'Unknown' }}
     <br>
     
