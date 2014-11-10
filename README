@@ -10,5 +10,9 @@ how to run:
     python run.py [runserver]
 
 
+    on production:
+        uwsgi --ini prod.ini
+
+
 
 
