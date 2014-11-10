@@ -35,16 +35,17 @@ def save_session():
 def index():
     return render_template("new_call.tpl")
 
+
 @ui.route("/new/", methods=["GET", "POST"])
 def new_call():
     if request.method == "POST":
         msisdn = request.form.get("msisdn", None)
         old_msisdn = session.get("msisdn", None)
-        if msisdn is not None and not old_msisdn == msisdn:
-            res = Phone.query.filter(Phone.msisdn == msisdn).first()
-            if res:
-                session["phone_id"] = res.id
-                session["patients"] = Call.query.filter(Call.phone_id == res.id).all()
+        # if msisdn is not None and not old_msisdn == msisdn:
+        #     res = Phone.query.filter(Phone.msisdn == msisdn).first()
+        #     if res:
+        #         session["phone_id"] = res.id
+        #         session["patients"] = Call.query.filter(Call.phone_id == res.id).all()
 
         session["msisdn"] = msisdn
 
