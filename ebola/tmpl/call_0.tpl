@@ -38,7 +38,7 @@
     <span style="color:#7D7D7D;">Caller Name:</span> {{ session.name or 'Unknown' }}
     <br>
     
-    <span style="color:#7D7D7D;">Caller Age:</span> {{ session.age or 'Unknown' }}
+    <span style="color:#7D7D7D;">Caller Sex:</span> {{ session.sex or 'Unknown' }}
     <br>
     
     <span style="color:#7D7D7D;">Caller Language:</span> {{ session.lang or 'Unknown' }}
@@ -60,33 +60,41 @@
     Patient Report Info
 </div>
 <div class="info_content text_b">
-    <span style="color:#7D7D7D;">Patient Name:</span> {{p.name or 'Unknown'}}
+    <span style="color:#7D7D7D;">Patient Name:</span> {{ session.p_name or 'Unknown'}}
     <br>
-    <span style="color:#7D7D7D;">Patient Phone:</span> {{p.msisdn or 'Unknown'}}
+    <span style="color:#7D7D7D;">Patient Phone:</span> {{session.p_msisdn or 'Unknown'}}
     <br>
-    <span style="color:#7D7D7D;">Patient Sex:</span> {{p.sex or 'Unknown'}}
+    <span style="color:#7D7D7D;">Patient Sex:</span> {{session.p_sex or 'Unknown'}}
     <br>
-    <span style="color:#7D7D7D;">Patient Age:</span> {{p.age or 'Unknown'}}
+    <span style="color:#7D7D7D;">Patient Age:</span> {{session.p_age or 'Unknown'}}
     <br>
-    <span style="color:#7D7D7D;">Patient Language:</span> {{p.lang or 'Unknown'}}
+    <span style="color:#7D7D7D;">Patient Language:</span> {{session.p_lang or 'Unknown'}}
     <br>
-    <span style="color:#7D7D7D;">Patient County:</span> {{p.county or 'Unknown'}}
+    <span style="color:#7D7D7D;">Patient County:</span> {{session.p_county or 'Unknown'}}
     <br>
-    <span style="color:#7D7D7D;">Patient City:</span> {{p.city or 'Unknown'}}
+    <span style="color:#7D7D7D;">Patient City:</span> {{session.p_city or 'Unknown'}}
     <br>
-    <span style="color:#7D7D7D;">Patient Location:</span> {{p.location or 'Unknown'}}
+    <span style="color:#7D7D7D;">Patient Location:</span> {{session.p_location or 'Unknown'}}
     <br>
-    <span style="color:#7D7D7D;">Patient Condition:</span> {{p.condition or 'Unknown'}}
+    <span style="color:#7D7D7D;">Patient Condition:</span> 
+    {%- if session.p_status == "U" -%} UnConscious 
+    {%- elif session.p_status == "A" -%} Awake 
+    {%- else -%} Unknown
+    {%- endif -%}
     <br>
-    <span style="color:#7D7D7D;">Ebola Contact:</span> {{p.contact or 'Unknown'}}
+    <span style="color:#7D7D7D;">Ebola Contact:</span> 
+        {% if session.p_ebola_contact == "Y" %} Yes {%else%} No/Unknown {% endif %}
     <br>
-    <span style="color:#7D7D7D;">Symptoms Duration:</span> {{p.dur or 'Unknown'}}
+    <span style="color:#7D7D7D;">Symptoms Duration:</span>
+    {% if session.p_sick_days -%} {{session.p_sick_days}} Days
+    {%else%} Unknown
+    {%endif%}
     <br>
     <span style="color:#7D7D7D;">Symptoms:</span> 
-        {{ (p.symtomps or [{'symptom':'Unknown'}])|join(', ', attribute='symptom') }}
+        {{ (session.p_symptoms or [{'symptom':'Unknown'}])|join(', ', attribute='symptom') }}
     <br>
     <span style="color:#7D7D7D;">Comments:</span> 
-    {{ session['p_comment'] or 'Unknown'}}
+    {{ session.p_comment or 'Unknown'}}
 </div>
 {% endblock content_b %}
 

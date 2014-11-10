@@ -7,23 +7,23 @@
 {%- endmacro %}
 
 {% macro input() -%}
-<input type="checkbox" name="symptoms" value="Fever">Fever
-<input type="checkbox" name="symptoms" value="headache">headache
-<input type="checkbox" name="symptoms" value="loss of appetitie">loss of appetitie
-<input type="checkbox" name="symptoms" value="vomiting">vomiting
-<input type="checkbox" name="symptoms" value="nausea">nausea
-<input type="checkbox" name="symptoms" value="muscle pains">muscle pains
-<input type="checkbox" name="symptoms" value="diarrhea">diarrhea
-<input type="checkbox" name="symptoms" value="weakness">weakness
-<input type="checkbox" name="symptoms" value="difficulty breathing">difficulty breathing
-<input type="checkbox" name="symptoms" value="sore throat">sore throat
-<input type="checkbox" name="symptoms" value="hiccups">hiccups
-<input type="checkbox" name="symptoms" value="difficulty swallowing">difficulty swallowing
-<input type="checkbox" name="symptoms" value="abdominal pain">abdominal pain
-<input type="checkbox" name="symptoms" value="unexplained bleeding">unexplained bleeding
-<input type="checkbox" name="symptoms" value="red eyes">red eyes
-<input type="checkbox" name="symptoms" value="skin rash">skin rash
-<input type="checkbox" name="symptoms" value="black stool">black stool
+<input type="checkbox" name="symptoms" value="Fever">Fever<br/>
+<input type="checkbox" name="symptoms" value="headache">headache<br/>
+<input type="checkbox" name="symptoms" value="loss of appetitie">loss of appetitie<br/>
+<input type="checkbox" name="symptoms" value="vomiting">vomiting<br/>
+<input type="checkbox" name="symptoms" value="nausea">nausea<br/>
+<input type="checkbox" name="symptoms" value="muscle pains">muscle pains<br/>
+<input type="checkbox" name="symptoms" value="diarrhea">diarrhea<br/>
+<input type="checkbox" name="symptoms" value="weakness">weakness<br/>
+<input type="checkbox" name="symptoms" value="difficulty breathing">difficulty breathing<br/>
+<input type="checkbox" name="symptoms" value="sore throat">sore throat<br/>
+<input type="checkbox" name="symptoms" value="hiccups">hiccups<br/>
+<input type="checkbox" name="symptoms" value="difficulty swallowing">difficulty swallowing<br/>
+<input type="checkbox" name="symptoms" value="abdominal pain">abdominal pain<br/>
+<input type="checkbox" name="symptoms" value="unexplained bleeding">unexplained bleeding<br/>
+<input type="checkbox" name="symptoms" value="red eyes">red eyes<br/>
+<input type="checkbox" name="symptoms" value="skin rash">skin rash<br/>
+<input type="checkbox" name="symptoms" value="black stool">black stool<br/>
 {{ caller() }}
 {%- endmacro %}
 

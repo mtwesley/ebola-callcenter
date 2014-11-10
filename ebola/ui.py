@@ -338,8 +338,14 @@ def stage_35():
 @ui.route("/new/36", methods=["GET", "POST"])
 def stage_36():
     if request.method == "POST":
-        session["p_symptoms"] = request.form["symptoms"]
-        print request.form
+        symptoms = []
+        for v in request.form.getlist("symptoms"):
+            s = CaseSymptom()
+            s.symptom = v
+            s.created_by = 0
+            symptoms.append(s)
+
+        session["p_symptoms"] = symptoms
         return redirect(url_for(".stage_37"))
 
     return render_template("stage_36.tpl")

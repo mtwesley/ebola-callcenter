@@ -7,7 +7,9 @@
 {%- endmacro %}
 
 {% macro input() -%}
-{%set submit_label = 'END CALL' %}
+<textarea name="question" rows="10" cols="30">
+
+</textarea>
 {{ caller() }}
 {%- endmacro %}
 
