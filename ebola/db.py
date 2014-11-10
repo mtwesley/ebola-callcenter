@@ -30,6 +30,9 @@ class Phone(app_db.Model):
     modified_by = sa.Column(sa.BIGINT, sa.ForeignKey(User.id), nullable=True)
     modified_ts = sa.Column(sa.DateTime(timezone=True), server_default=func.now(), default=func.now())
 
+    calls = app_db.relationship("Call", backref="call")
+    cases = app_db.relationship("Case", backref="case")
+
 
 class Contact(app_db.Model):
     __tablename__ = "contacts"
@@ -48,6 +51,9 @@ class Contact(app_db.Model):
 
     modified_by = sa.Column(sa.BIGINT, sa.ForeignKey(User.id), nullable=False)
     modified_ts = sa.Column(sa.DateTime(timezone=True), server_default=func.now(), default=func.now())
+
+    status = app_db.relationship("ContactStatus", backref="contact_status")
+    ##case = app_db.relationship("Case", uselist=False, backref="case", foreign_keys="contact_id")
 
 
 class ContactStatus(app_db.Model):
@@ -75,11 +81,14 @@ class Call(app_db.Model):
     modified_by = sa.Column(sa.BIGINT, sa.ForeignKey(User.id), nullable=False)
     modified_ts = sa.Column(sa.DateTime(timezone=True), server_default=func.now(), default=func.now())
 
+    status = app_db.relationship("CallStatus", backref="case_status")
+
 
 class CallStatus(app_db.Model):
     __tablename__ = "call_statuses"
 
     id = sa.Column(sa.BIGINT, primary_key=True)
+    call_id = sa.Column(sa.BIGINT, sa.ForeignKey(Call.id), nullable=False)
     status = sa.Column(sa.String(128), nullable=False)
     comments = sa.Column(sa.String, nullable=True)
     old_content = sa.Column(sa.String, nullable=True)
@@ -100,7 +109,10 @@ class Case(app_db.Model):
     context = sa.Column(sa.String, nullable=False)
     case_number = sa.Column(sa.String(128), nullable=False)
     condition = sa.Column(sa.String)
-    phone_id = sa.Column(sa.BIGINT, sa.ForeignKey(Contact.id), nullable=False)
+    phone_id = sa.Column(sa.BIGINT, sa.ForeignKey(Phone.id), nullable=False)
+
+    symptoms = app_db.relationship("CaseSymptom", backref="case_symptom")
+    status = app_db.relationship("CaseStatus", backref="case_status")
 
     created_by = sa.Column(sa.BIGINT, sa.ForeignKey(User.id), nullable=False)
     created_ts = sa.Column(sa.DateTime(timezone=True), server_default=func.now(), default=func.now())
