@@ -52,7 +52,7 @@ def new_call():
             return redirect(url_for(".stage_11"))
 
         else:
-            return redirect(url_for(".stage_one"))
+            return redirect(url_for(".stage_1"))
 
     else:
         session.clear()
@@ -60,12 +60,12 @@ def new_call():
     return render_template("phone_no.tpl")
 
 @ui.route("/new/1", methods=["GET", "POST"])
-def stage_one():
+def stage_1():
     return ""
 
 
 @ui.route("/new/2")
-def stage_two():
+def stage_2():
 
     fon = session.get('fon')
     if fon is None:
@@ -189,7 +189,6 @@ def stage_20():
         elif cond == "N":
             return redirect(url_for(".stage_21"))
 
-
     return render_template("stage_20.tpl")
 
 @ui.route("/new/21", methods=["GET", "POST"])
@@ -220,3 +219,171 @@ def stage_23():
 
     return render_template("stage_23.tpl")
 
+
+
+@ui.route("/new/24", methods=["GET", "POST"])
+def stage_24():
+    if request.method == "POST":
+        f = request.form
+
+        session["p_first_name"] = f["p_name_first"]
+        session["p_middle_name"] = f["p_name_middle"]
+        session["p_last_name"] = f["p_name_last"]
+        session["p_suffix_name"] = f["p_suffix"].lower().replace("none", "")
+        session["p_name"] = "%(p_name_first)s %(p_name_middle)s %(p_name_last)s" % f
+
+        return redirect(url_for(".stage_25"))
+
+    return render_template("stage_24.tpl")
+
+@ui.route("/new/25", methods=["GET", "POST"])
+def stage_25():
+    if request.method == "POST":
+        session["p_msisdn"] = request.form["p_msisdn"]
+        P = Phone.query.filter(Phone.msisn == session["p_msisdn"]).first()
+        if P is None:
+            return redirect(url_for(".stage_26"))
+
+        session["tmp_p_name"] = "LOOKUP_PATIENT_NAME_FROM_DB"
+        session["tmp_p_location"] = "LOOKUP_PATIENT_LOC_FROM_DB"
+        return redirect(url_for(".stage_27"))
+
+    return render_template("stage_11.tpl")
+
+@ui.route("/new/26", methods=["GET", "POST"])
+def stage_26():
+    pass
+
+@ui.route("/new/27", methods=["GET", "POST"])
+def stage_27():
+    if request.method == "POST":
+        cond = request.form.get("p_sex")
+        if cond == "M" or cond == "F":
+            session["p_sex"] = cond
+            return redirect(url_for(".stage_28"))
+
+    return render_template("stage_27.tpl")
+
+@ui.route("/new/28", methods=["GET", "POST"])
+def stage_28():
+    if request.method == "POST":
+        session["p_age"] = request.form["p_age"]
+        return redirect(url_for(".stage_29"))
+
+    return render_template("stage_28.tpl")
+
+
+@ui.route("/new/29", methods=["GET", "POST"])
+def stage_29():
+    if request.method == "POST":
+        session["p_lang"] = request.form.get("p_lang", "English")
+        return redirect(url_for(".stage_30"))
+
+    return render_template("stage_29.tpl")
+
+@ui.route("/new/30", methods=["GET", "POST"])
+def stage_30():
+    if request.method == "POST":
+        session["p_county"] = request.form["county"]
+        return redirect(url_for(".stage_31"))
+
+    return render_template("stage_30.tpl")
+
+
+@ui.route("/new/31", methods=["GET", "POST"])
+def stage_31():
+    if request.method == "POST":
+        session["p_city"] = request.form["city"]
+        return redirect(url_for(".stage_32"))
+
+    return render_template("stage_31.tpl")
+
+
+@ui.route("/new/32", methods=["GET", "POST"])
+def stage_32():
+    if request.method == "POST":
+        session["p_location"] = request.form["location"]
+        return redirect(url_for(".stage_33"))
+
+    return render_template("stage_32.tpl")
+
+
+@ui.route("/new/33", methods=["GET", "POST"])
+def stage_33():
+    if request.method == "POST":
+        session["p_status"] = request.form["p_status"]
+        return redirect(url_for(".stage_34"))
+
+    return render_template("stage_33.tpl")
+
+
+@ui.route("/new/34", methods=["GET", "POST"])
+def stage_34():
+    if request.method == "POST":
+        session["p_ebola_contact"] = request.form["ebola_contact"]
+        return redirect(url_for(".stage_35"))
+
+    return render_template("stage_34.tpl")
+
+
+@ui.route("/new/35", methods=["GET", "POST"])
+def stage_35():
+    if request.method == "POST":
+        session["p_sick_days"] = request.form["p_sick_days"]
+        return redirect(url_for(".stage_36"))
+
+    return render_template("stage_35.tpl")
+
+@ui.route("/new/36", methods=["GET", "POST"])
+def stage_36():
+    if request.method == "POST":
+        session["p_symptoms"] = request.form["symptoms"]
+        print request.form
+        return redirect(url_for(".stage_37"))
+
+    return render_template("stage_36.tpl")
+
+
+@ui.route("/new/37", methods=["GET", "POST"])
+def stage_37():
+    if request.method == "POST":
+        session["p_comment"] = request.form["comment"]
+        return redirect(url_for(".stage_38"))
+
+    return render_template("stage_37.tpl")
+
+
+@ui.route("/new/38", methods=["GET", "POST"])
+def stage_38():
+    if request.method == "POST":
+        save_session()
+        return redirect(url_for(".index"))
+
+    return render_template("stage_38.tpl")
+
+
+@ui.route("/new/39", methods=["GET", "POST"])
+def stage_39():
+    if request.method == "POST":
+        session.clear()
+        return redirect(url_for(".index"))
+
+    return render_template("stage_39.tpl")
+
+
+@ui.route("/new/40", methods=["GET", "POST"])
+def stage_40():
+    if request.method == "POST":
+        print request.form
+        return redirect(url_for(".stage_41"))
+
+    return render_template("stage_40.tpl")
+
+
+@ui.route("/new/41", methods=["GET", "POST"])
+def stage_41():
+    if request.method == "POST":
+        session.clear()
+        return redirect(url_for(".index"))
+
+    return render_template("stage_41.tpl")
