@@ -1,0 +1,33 @@
+{% extends 'step.html' %}
+{% block agent_dialogue_text %}
+      Does the patient have any of these symptoms?
+{% endblock %}
+{% block agent_input_elements %}
+    <input type="checkbox" name="patient_symptoms" value="fever"> <label for="fever">Fever</label>
+    <input type="checkbox" name="patient_symptoms" value="headache"> <label for="headache">Headache</label>
+    <input type="checkbox" name="patient_symptoms" value="nausea"> <label for="nausea">Nausea</label>
+    <br>
+    <input type="checkbox" name="patient_symptoms" value="diarrhea"> <label for="diarrhea">Diarrhea</label>
+    <input type="checkbox" name="patient_symptoms" value="stool"> <label for="stool">Black Stool</label>
+    <br>
+    <input type="checkbox" name="patient_symptoms" value="vomiting"> <label for="vomiting">Vomiting</label>
+    <input type="checkbox" name="patient_symptoms" value="appetite"> <label for="appetite">Loss of Appetite</label>
+    <br>
+    <input type="checkbox" name="patient_symptoms" value="weakness"> <label for="weakness">Weakness</label>
+    <input type="checkbox" name="patient_symptoms" value="eyes"> <label for="eyes">Red Eyes</label>
+    <br>
+    <input type="checkbox" name="patient_symptoms" value="abdominal"> <label for="abdominal">Abdominal Pain</label>
+    <input type="checkbox" name="patient_symptoms" value="muscle"> <label for="muscle">Muscle Pain</label>
+    <br>
+    <input type="checkbox" name="patient_symptoms" value="rash"> <label for="rash">Skin Rash</label>
+    <input type="checkbox" name="patient_symptoms" value="throat"> <label for="throat">Sore Throat</label>
+    <br>
+    <input type="checkbox" name="patient_symptoms" value="breathing"> <label for="breathing">Difficulty Breathing</label>
+    <input type="checkbox" name="patient_symptoms" value="hiccups"> <label for="hiccups">Hiccups</label>
+    <br>
+    <input type="checkbox" name="patient_symptoms" value="swallowing"> <label for="swallowing">Difficulty Swallowing</label>
+    <br>
+    <input type="checkbox" name="patient_symptoms" value="bleeding"> <label for="bleeding">Unexplained Bleeding</label>
+    <br><br>
+{% endblock %}
+{% block agent_skip_text %}UNKNOWN{% endblock %}

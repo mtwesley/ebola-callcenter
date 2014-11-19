@@ -1,0 +1,38 @@
+{% if not call and stats %}
+    <div id="module_c" class="module rounded">
+        <div class="agent_stats text_a">
+            Your statistics today
+            <br><br>
+            {% if stats['call_total'] %}<div class="call_type2" style="background:#464646"></div>  {{ stats['call_total'] }} total calls <br>{% endif %}
+            {% if stats['case_reports'] %}<div class="call_type2" style="background:#B44D54"></div>  {{ stats['case_reports'] }} new cases <br>{% endif %}
+            {% if stats['case_inquiries'] %}<div class="call_type2" style="background:#68ACBA"></div>  {{ stats['case_inquiries'] }} case inquiries <br>{% endif %}
+            {% if stats['general_inquiries'] %}<div class="call_type2" style="background:#7C5866"></div>  {{ stats['general_inquiries'] }} general inquiries <br>{% endif %}
+            {% if stats['case_duplicates'] %}<div class="call_type2" style="background:#E3BB56"></div>  {{ stats['case_duplicates'] }} duplicate case <br>{% endif %}
+            {% if stats['call_cancelled'] %}<div class="call_type2" style="background:#6EAB61"></div>  {{ stats['call_cancelled'] }} cancelled calls{% endif %}
+        </div>
+    </div>
+{% endif %}
+
+{% if call and call['caller_cases'] %}
+    <div id="module_b" class="module rounded">
+        <div class="caller_related_cases text_a">
+            This caller previously reported the following case(s): <br><br>
+
+            <a class="btn2 gradient_gray3 rounded text_d" href="">
+                Patient ID 012586  Charles Cooper
+            </a>
+
+            <a class="btn2 gradient_gray3 rounded text_d" href="">
+                 Patient ID 587825  James Johnson
+            </a>
+        </div>
+    </div>
+{% endif %}
+
+{% if call and call['caller_call_total'] %}
+    <div id="module_c" class="module rounded">
+        <div class="caller_frequency_today text_a">
+            This caller has previously called <span style="color:#7D7D7D;">5</span> times today.
+        </div>
+    </div>
+{% endif %}

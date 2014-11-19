@@ -1,40 +1,27 @@
 
-from datetime import date
+import datetime
 
-# from gevent import monkey
-# monkey.patch_all()
-#
-# from gevent_psycopg2 import monkey_patch
-# monkey_patch()
+from flask import Flask, g
 
-from flask.app import Flask, g
-from flask_migrate import Migrate
-from flask_session import Session
-
-from .db import app_db
-from .api import api
-from .ui import ui
+from models import db
+from views import views
 
 import config
 
 
-app = Flask(__package__, static_folder="../static/", static_path="/static")
+app = Flask(__name__)
 app.config.from_object(config)
+app.register_blueprint(views)
 
-app_db.init_app(app)
+db.init_app(app)
 
-Migrate(app, app_db)
-Session(app)
 
-app.register_blueprint(api)
-app.register_blueprint(ui)
+# @app.before_request
+# def set_session():
+
+
 
 @app.before_request
-def on_new_request():
-    g.timestamp = date.today()
+def set_datetime():
+    g.timestamp = datetime.datetime.now()
 
-
-
-@app.route("/logout", endpoint="logout")
-def logout_user():
-    pass

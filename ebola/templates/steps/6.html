@@ -1,0 +1,9 @@
+{% extends 'step.html' %}
+{% block agent_dialogue_text %}
+    Are you male or female?
+{% endblock %}
+{% block agent_input_elements %}
+    <input type="radio" name="caller_sex" value="M"> <label for="M">Male</label><br>
+    <input type="radio" name="caller_sex" value="F"> <label for="F">Female</label><br>
+{% endblock %}
+{% set disable_agent_skip = True %}

@@ -1,0 +1,8 @@
+{% extends 'step.html' %}
+{% block agent_dialogue_text %}
+    Please state the patient's phone number.
+{% endblock %}
+{% block agent_input_elements %}
+    <input type="text" name="patient_phone" placeholder="Patient Phone Number">
+{% endblock %}
+{% block agent_skip_text %}UNKNOWN{% endblock %}

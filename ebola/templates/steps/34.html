@@ -1,0 +1,9 @@
+{% extends 'step.html' %}
+{% block agent_dialogue_text %}
+    Has the patient had contact with a known Ebola case?
+{% endblock %}
+{% block agent_input_elements %}
+    <input type="radio" name="patient_had_contact" value="Y"> <label for="Y">Yes</label><br>
+    <input type="radio" name="patient_had_contact" value="N"> <label for="N">No</label><br>
+{% endblock %}
+{% block agent_skip_text %}UNKNOWN{% endblock %}

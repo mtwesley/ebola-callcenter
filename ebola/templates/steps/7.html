@@ -1,0 +1,37 @@
+{% extends 'step.html' %}
+{% block agent_dialogue_text %}
+     What is your primary language?
+{% endblock %}
+{% block agent_input_elements %}
+    <select name="caller_language">
+        <option disabled="disabled" selected="selected">Caller Language</option>
+        <option value="english">English</option>
+        <option value="french">French</option>
+        <option disabled="disabled">&#9472;</option>
+        <option value="bandi">Bandi</option>
+        <option value="bassa">Bassa</option>
+        <option value="dan">Dan</option>
+        <option value="dewoin">Dewoin</option>
+        <option value="gbii">Gbii</option>
+        <option value="glaro">Glaro</option>
+        <option value="glio">Glio</option>
+        <option value="gola">Gola</option>
+        <option value="grebo">Grebo</option>
+        <option value="kisi">Kisi</option>
+        <option value="klao">Klao</option>
+        <option value="kpelle">Kpelle</option>
+        <option value="krahn">Krahn</option>
+        <option value="krumen">Krumen</option>
+        <option value="kuwaa">Kuwaa</option>
+        <option value="loma">Loma</option>
+        <option value="maninka">Maninka</option>
+        <option value="maninkakan">Maninkakan</option>
+        <option value="mann">Mann</option>
+        <option value="manya">Manya</option>
+        <option value="mende">Mende</option>
+        <option value="sapo">Sapo</option>
+        <option value="tajuasohn">Tajuasohn</option>
+        <option value="vai">Vai</option>
+    </select>
+{% endblock %}
+{% set disable_agent_skip = True %}

@@ -1,0 +1,14 @@
+{% extends 'step.html' %}
+{% block agent_dialogue_text %}
+     What is the patient's age?
+{% endblock %}
+{% block agent_input_elements %}
+    <select name="patient_age">
+        <option disabled="disabled" selected="selected">Patient Age</option>
+        <option value="child">Child (Under 18)</option>
+        <option value="youth">Youth (19 to 39)</option>
+        <option value="adult">Adult (40 to 60)</option>
+        <option value="elderly">Elderly (Over 60)</option>
+    </select>
+{% endblock %}
+{% block agent_skip_text %}UNKNOWN{% endblock %}

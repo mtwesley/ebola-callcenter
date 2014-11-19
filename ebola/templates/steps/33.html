@@ -1,0 +1,9 @@
+{% extends 'step.html' %}
+{% block agent_dialogue_text %}
+    Is the patient awake or conscious?
+{% endblock %}
+{% block agent_input_elements %}
+    <input type="radio" name="patient_conscious" value="Y"> <label for="Y">Yes</label><br>
+    <input type="radio" name="patient_conscious" value="N"> <label for="N">No</label><br>
+{% endblock %}
+{% block agent_skip_text %}UNKNOWN{% endblock %}

@@ -1,0 +1,9 @@
+{% extends 'step.html' %}
+{% block agent_dialogue_text %}
+    Are you calling to report a possible case of Ebola?
+{% endblock %}
+{% block agent_input_elements %}
+    <input type="radio" name="case_report" value="Y"> <label for="Y">Yes</label><br>
+    <input type="radio" name="case_report" value="N"> <label for="N">No</label><br>
+{% endblock %}
+{% set disable_agent_skip = True %}

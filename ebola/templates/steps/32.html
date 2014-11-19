@@ -1,0 +1,8 @@
+{% extends 'step.html' %}
+{% block agent_dialogue_text %}
+    What community is the patient in?
+{% endblock %}
+{% block agent_input_elements %}
+    <input type="text" name="patient_community" placeholder="Patient Community">
+{% endblock %}
+{% set disable_agent_skip = True %}

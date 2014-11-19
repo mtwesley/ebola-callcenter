@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="Author" content="" />
+		<meta name="Description" content="" />
+		<meta name="keywords" content="callcenter">
+		<!-- <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" /> -->
+		<title>Ebola Response Call Center</title>
+        <link type="text/css" href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet" />
+        <link type="text/css" href="{{ url_for('static', filename='css/styleFORM.css') }}" rel="stylesheet" />
+        <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='js/script.js') }}"></script>
+	</head>
+	<body>
+		<div id="wrapperMAIN" class="rounded gradient_gray3">
+
+			<div id="header" class="gradient_gray2">
+				<div id="logo" class="text_a">Ebola Response Call Center</div>
+                <div id="pageinfo" class="text_b white">
+    				{% if call %}
+                        ACTIVE CALL{% if case and case['patient_name'] %}: {{ case['patient_name'] }}{% endif %}
+                    {% endif %}
+                </div>
+				<div id="dateinfo" class="text_b">
+                    {{ g.timestamp.strftime('%-I:%M %p %a, %b %-d, %Y') }}
+                    <span class="white">&nbsp;|&nbsp;</span>  Timer: 00:00
+                    <span class="white">&nbsp;|&nbsp;</span>
+                    <a href="{{ url_for('views.logout') }}"><span class="white">LOG-OUT</span></a>
+                </div>
+			</div>
+			
+			<div id="content_a">
+                {% include 'steps/' + (step or 0)|string + '.html' %}
+            </div>
+
+            {% if call %}
+			<div id="content_b">
+                {% include 'info.html' %}
+			</div>
+            {% endif %}
+
+            {% if not True %}
+                <div id="content_c">
+                    {% include 'extra.html' %}
+                </div>
+            {% endif %}
+		</div>
+	</body>
+</html>

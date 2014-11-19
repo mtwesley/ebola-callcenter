@@ -1,0 +1,8 @@
+{% extends 'step.html' %}
+{% block agent_dialogue_text %}
+    Please repeat your phone number.
+{% endblock %}
+{% block agent_input_elements %}
+    <input type="text" name="caller_phone" placeholder="Caller Phone Number">
+{% endblock %}
+{% set disable_agent_skip = True %}

@@ -1,0 +1,71 @@
+<div id="module_a" class="module rounded gradient_gray">
+    {% if not disable_agent_instruction %}
+        {% block agent_instruction %}
+            <div class="agent_instruction text_a">
+                {% block agent_instruction_text %}Please read the following dialogue:{% endblock %}
+            </div>
+        {% endblock %}
+    {% endif %}
+
+    {% if not disable_agent_dialogue %}
+        {% block agent_dialogue %}
+            <div class="agent_dialogue text_c rounded">
+                {% block agent_dialogue_text %}{% endblock %}
+            </div>
+        {% endblock %}
+    {% endif %}
+
+    <form method="post" id="agent_form">
+        <input type="hidden" name="agent_step" value="{{ step }}" />
+        <input type="hidden" name="agent_action" id="agent_action" />
+        {% if not disable_agent_input %}
+            {% block agent_input %}
+                <div class="agent_input">
+                    {% block agent_input_elements %}
+                        <input type="text" name="P_name_first" placeholder="Patient's First Name">
+                        <input type="text" name="P_name_middle" placeholder="Patient's Middle Name">
+                        <input type="text" name="P_name_last" placeholder="Patient's Last Name">
+                        <select name="suffix">
+                            <option value="" disabled="disabled" selected="selected">Patient's Suffix</option>
+                            <option value=""></option>
+                            <option value="Jr.">Jr.</option>
+                            <option value="Sr.">Sr.</option>
+                            <option value="II">II</option>
+                            <option value="III">III</option>
+                        </select>
+                    {% endblock %}
+                </div>
+            {% endblock %}
+        {% endif %}
+
+        {% if not disable_agent_submit %}
+            {% block agent_submit %}
+                <div class="agent_submit">
+                    <a class="btn btn_submit gradient_green rounded" href="">
+                        {% block agent_submit_text %}SUBMIT{% endblock %}
+                    </a>
+                </div>
+            {% endblock %}
+        {% endif %}
+
+        {% if not disable_agent_skip %}
+            {% block agent_skip %}
+                <div class="agent_skip">
+                    <a class="btn btn_skip gradient_orange rounded" href="">
+                        {% block agent_skip_text %}SKIP{% endblock %}
+                    </a>
+                </div>
+            {% endblock %}
+        {% endif %}
+
+        {% if not disable_agent_cancel %}
+            {% block agent_cancel %}
+                <div class="agent_cancel">
+                    <a class="btn btn_cancel gradient_red rounded" href="">
+                        {% block agent_cancel_text %}CANCEL CALL{% endblock %}
+                    </a>
+                </div>
+            {% endblock %}
+        {% endif %}
+    </form>
+</div>

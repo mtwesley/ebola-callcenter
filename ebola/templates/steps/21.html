@@ -1,0 +1,10 @@
+{% extends 'step.html' %}
+{% block agent_dialogue_text %}
+    Thank you for calling.
+    This case has already been reported and appropriate action is being taken.
+    Please call again if you have any new information.
+{% endblock %}
+{% block agent_submit_text %}END CALL{% endblock %}
+{% set disable_agent_input = True %}
+{% set disable_agent_skip = True %}
+{% set disable_agent_cancel = True %}

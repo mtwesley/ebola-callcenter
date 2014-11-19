@@ -1,11 +1,7 @@
-gevent
-psycopg2
-gevent_psycopg2
-sqlalchemy
-alembic
 Flask
-Flask-Session
 Flask-SQLAlchemy
-flask-migrate
-Flask-Script
+Flask-Login
 jinja2
+simplejson
+psycopg2
+sqlalchemy

@@ -1,0 +1,18 @@
+{% extends 'step.html' %}
+{% block agent_dialogue_text %}
+    Please state the patient's name.
+{% endblock %}
+{% block agent_input_elements %}
+    <input type="text" name="patient_first_name" placeholder="Patient First Name">
+    <input type="text" name="patient_middle_name" placeholder="Patient Middle Name">
+    <input type="text" name="patient_last_name" placeholder="Patient Last Name">
+    <select name="patient_suffix">
+        <option disabled="disabled" selected="selected">Patient Suffix</option>
+        <option value=""></option>
+        <option value="jr">Jr.</option>
+        <option value="sr">Sr.</option>
+        <option value="ii">II</option>
+        <option value="III">III</option>
+    </select>
+{% endblock %}
+{% set disable_agent_skip = True %}
