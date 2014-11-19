@@ -18,8 +18,9 @@
 			<div id="header" class="gradient_gray2">
 				<div id="logo" class="text_a">Ebola Response Call Center</div>
                 <div id="pageinfo" class="text_b white">
-    				{% if call %}
-                        ACTIVE CALL{% if case and case['patient_name'] %}: {{ case['patient_name'] }}{% endif %}
+    				{% if call or session['active'] %}
+                        ACTIVE CALL{% if call and (call['caller_first_name'] or call['caller_middle_name'] or call['caller_last_name']) %}:
+                        {{ call['caller_first_name'] }} {{ call['caller_middle_name'] }} {{ call['caller_last_name'] }} {{ call['caller_suffix'] }}{% endif %}
                     {% endif %}
                 </div>
 				<div id="dateinfo" class="text_b">
