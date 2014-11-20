@@ -201,9 +201,9 @@ def index(default_step=None):
     elif agent_step == 36:
         if agent_action == 'submit':
             session['case']['patient_symptoms'] = ', '.join(request.form.getlist('patient_symptoms'))
-            session['step'] = 36
+            session['step'] = 37
         if agent_action == 'skip':
-            session['step'] = 36
+            session['step'] = 37
 
     elif agent_step == 37:
         if agent_action == 'submit':
