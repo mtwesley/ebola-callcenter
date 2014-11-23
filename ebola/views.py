@@ -24,6 +24,7 @@ def default_session():
 @views.route("/<default_step>", methods=['GET', 'POST'])
 def index(default_step=None):
 
+    #FIXME: remove when development is complete
     print session
     print request.form
 

@@ -1,152 +1,128 @@
+import datetime
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Column, String, BIGINT, ForeignKey, DateTime, Enum
-from sqlalchemy.sql import functions
+
 
 db = SQLAlchemy()
 
 
 class User(db.Model):
-    __tablename__ = "users"
+    __tablename__ = 'users'
 
-    id = Column(BIGINT, primary_key=True)
-    name = Column(String(128))
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(128))
+    timestamp = db.Column(db.DateTime(), default=datetime.datetime.now(), nullable=False)
 
-    created_by = Column(BIGINT, ForeignKey(id, deferrable=True), nullable=True)
-    created_ts = Column(DateTime(timezone=True), server_default=functions.now(), default=functions.now())
 
-    modified_by = Column(BIGINT, ForeignKey(id, deferrable=True), nullable=True)
-    modified_ts = Column(DateTime(timezone=True), server_default=functions.now(), default=functions.now())
+phone_contacts = db.Table('phone_contacts',
+    db.Column('phone_id', db.Integer, db.ForeignKey('phones.id', onupdate='CASCADE', ondelete='CASCADE')),
+    db.Column('contact_id', db.Integer, db.ForeignKey('contacts.id', onupdate='CASCADE', ondelete='CASCADE'))
+)
 
 
 class Phone(db.Model):
-    __tablename__ = "phones"
+    __tablename__ = 'phones'
 
-    id = Column(BIGINT, primary_key=True)
-    msisdn = Column(String(23), nullable=False, unique=True)
+    id = db.Column(db.Integer, primary_key=True)
+    number = db.Column(db.String(23), nullable=False, unique=True)
 
-    created_by = Column(BIGINT, ForeignKey(User.id), nullable=True)
-    created_ts = Column(DateTime(timezone=True), server_default=functions.now(), default=functions.now())
+    user_id = db.Column(db.Integer, db.ForeignKey(User.id), nullable=False)
+    timestamp = db.Column(db.DateTime(), default=datetime.datetime.now(), nullable=False)
 
-    modified_by = Column(BIGINT, ForeignKey(User.id), nullable=True)
-    modified_ts = Column(DateTime(timezone=True), server_default=functions.now(), default=functions.now())
-
-    calls = db.relationship("Call", backref="call")
-    cases = db.relationship("Case", backref="case")
+    calls = db.relationship(Call, backref='phone', lazy='dynamic')
+    contacts = db.relationship(Contact, secondary=phone_contacts, backref='phones', lazy='dynamic')
 
 
 class Contact(db.Model):
-    __tablename__ = "contacts"
+    __tablename__ = 'contacts'
 
-    id = Column(BIGINT, primary_key=True)
-    name = Column(String(128), nullable=False)
-    sex = Column(Enum("M", "F", "N", "U", name="sex"), nullable=False)
-    lang = Column(String(50), nullable=False)
-    county = Column(String(50))
-    city = Column(String(50))
-    location = Column(String(255))
-    community = Column(String(255))
+    id = db.Column(db.Integer, primary_key=True)
+    first_name = db.Column(db.String(128))
+    middle_name = db.Column(db.String(128))
+    last_name = db.Column(db.String(128))
+    suffix = db.Column(db.Enum('jr', 'sr', 'ii', 'iii', native_enum=False))
+    sex = db.Column(db.Enum('male', 'female', native_enum=False))
+    language = db.Column(db.String(32))
+    county = db.Column(db.String(32))
+    city = db.Column(db.String(32))
+    community = db.Column(db.String(64))
+    condition = db.Column(db.Enum('conscious', 'unconscious', 'alive', 'dead', native_enum=False))
 
-    created_by = Column(BIGINT, ForeignKey(User.id), nullable=False)
-    created_ts = Column(DateTime(timezone=True), server_default=functions.now(), default=functions.now())
+    user_id = db.Column(db.Integer, db.ForeignKey(User.id), nullable=False)
+    timestamp = db.Column(db.DateTime(), default=datetime.datetime.now(), nullable=False)
 
-    modified_by = Column(BIGINT, ForeignKey(User.id), nullable=False)
-    modified_ts = Column(DateTime(timezone=True), server_default=functions.now(), default=functions.now())
+    calls = db.relationship(Call, backref='caller', lazy='dynamic')
+    cases = db.relationship(Case, backref='patient', lazy='dynamic')
 
-    status = db.relationship("ContactStatus", backref="contact_status")
-    ##case = db.relationship("Case", uselist=False, backref="case", foreign_keys="contact_id")
-
-
-class ContactStatus(db.Model):
-    __tablename__ = "contact_statuses"
-
-    id = Column(BIGINT, primary_key=True)
-    contact_id = Column(BIGINT, ForeignKey(Contact.id), nullable=False)
-    status = Column(String(255))
-
-    created_by = Column(BIGINT, ForeignKey(User.id), nullable=False)
-    created_ts = Column(DateTime(timezone=True), server_default=functions.now(), default=functions.now())
+    status = db.relationship('ContactStatus', backref='contact_status')
 
 
 class Call(db.Model):
-    __tablename__ = "calls"
+    __tablename__ = 'calls'
 
-    id = Column(BIGINT, primary_key=True)
-    type = Column(String(128), nullable=False)
-    phone_id = Column(BIGINT, ForeignKey(Phone.id), nullable=False)
-    contact_id = Column(BIGINT, ForeignKey(Contact.id), nullable=False)
+    id = db.Column(db.Integer, primary_key=True)
+    type = db.Column(db.Enum('case_report', 'case_update', 'case_inquiry', 'general_inquiry', native_enum=False))
+    phone_id = db.Column(db.Integer, db.ForeignKey(Phone.id), nullable=False)
+    caller_id = db.Column(db.Integer, db.ForeignKey(Contact.id), nullable=False)
+    case_id = db.Column(db.Integer, db.ForeignKey(Case.id))
 
-    created_by = Column(BIGINT, ForeignKey(User.id), nullable=False)
-    created_ts = Column(DateTime(timezone=True), server_default=functions.now(), default=functions.now())
+    user_id = db.Column(db.Integer, db.ForeignKey(User.id), nullable=False)
+    timestamp = db.Column(db.DateTime(), default=datetime.datetime.now(), nullable=False)
 
-    modified_by = Column(BIGINT, ForeignKey(User.id), nullable=False)
-    modified_ts = Column(DateTime(timezone=True), server_default=functions.now(), default=functions.now())
+    cases = db.relationship(Case, backref='call', lazy='dynamic')
 
-    status = db.relationship("CallStatus", backref="case_status")
+    statuses = db.relationship(CallStatus, backref='call', lazy='dynamic')
 
 
 class CallStatus(db.Model):
-    __tablename__ = "call_statuses"
+    __tablename__ = 'call_statuses'
 
-    id = Column(BIGINT, primary_key=True)
-    call_id = Column(BIGINT, ForeignKey(Call.id), nullable=False)
-    status = Column(String(128), nullable=False)
-    comments = Column(String, nullable=True)
-    old_content = Column(String, nullable=True)
-    new_content = Column(String, nullable=True)
-
-    created_by = Column(BIGINT, ForeignKey(User.id), nullable=False)
-    created_ts = Column(DateTime(timezone=True), server_default=functions.now(), default=functions.now())
-
-    modified_by = Column(BIGINT, ForeignKey(User.id), nullable=False)
-    modified_ts = Column(DateTime(timezone=True), server_default=functions.now(), default=functions.now())
+    id = db.Column(db.Integer, primary_key=True)
+    call_id = db.Column(db.Integer, db.ForeignKey(Call.id), nullable=False)
+    status = db.Column(db.Enum('pending', 'active', 'cancelled', 'deleted', native_enum=False), nullable=False)
+    reason = db.Column(db.String(32))
+    comments = db.Column(db.String(256))
+    json = db.Column(db.Text, nullable=False)
 
 
 class Case(db.Model):
-    __tablename__ = "cases"
+    __tablename__ = 'cases'
 
-    id = Column(BIGINT, primary_key=True)
-    contact_id = Column(BIGINT, ForeignKey(Contact.id), nullable=False)
-    context = Column(String, nullable=False)
-    case_number = Column(String(128), nullable=False)
-    condition = Column(String)
-    phone_id = Column(BIGINT, ForeignKey(Phone.id), nullable=False)
+    id = db.Column(db.Integer, primary_key=True)
+    patient_id = db.Column(db.Integer, db.ForeignKey(Contact.id), nullable=False)
+    dhis2_number = db.Column(db.String(32))
+    comments = db.Column(db.String(256))
 
-    symptoms = db.relationship("CaseSymptom", backref="case_symptom")
-    status = db.relationship("CaseStatus", backref="case_status")
+    user_id = db.Column(db.Integer, db.ForeignKey(User.id), nullable=False)
+    timestamp = db.Column(db.DateTime(), default=datetime.datetime.now(), nullable=False)
 
-    created_by = Column(BIGINT, ForeignKey(User.id), nullable=False)
-    created_ts = Column(DateTime(timezone=True), server_default=functions.now(), default=functions.now())
-
-    modified_by = Column(BIGINT, ForeignKey(User.id), nullable=False)
-    modified_ts = Column(DateTime(timezone=True), server_default=functions.now(), default=functions.now())
+    symptoms = db.relationship(CaseSymptom, backref='case', lazy='dynamic')
+    statuses = db.relationship(CaseStatus, backref='case', lazy='dynamic')
 
 
 class CaseSymptom(db.Model):
-    __tablename__ = "case_symptoms"
+    __tablename__ = 'case_symptoms'
 
-    id = Column(BIGINT, primary_key=True)
-    case_id = Column(BIGINT, ForeignKey(Case.id), nullable=False)
-    symptom = Column(String, nullable=False)
-    start_ts = Column(DateTime(timezone=True), nullable=False)
-    end_ts = Column(DateTime(timezone=True), nullable=False)
+    id = db.Column(db.Integer, primary_key=True)
+    case_id = db.Column(db.Integer, db.ForeignKey(Case.id), nullable=False)
+    symptom = db.Column(db.Enum(
+        'abdominal_pain', 'black_stool', 'diarrhea', 'difficulty_breathing',
+        'difficulty_swallowing', 'fever', 'headache', 'hiccups', 'loss_of_appetite',
+        'muscle_pain', 'nausea', 'red_eyes', 'skin_rash', 'sore_throat', 'unexplained_bleeding',
+        'vomiting', 'weakness', native_enum=False), nullable=False)
+    start_ts = db.Column(db.DateTime(), nullable=False)
+    end_ts = db.Column(db.DateTime(), nullable=False)
 
-    created_by = Column(BIGINT, ForeignKey(User.id), nullable=False)
-    created_ts = Column(DateTime(timezone=True), server_default=functions.now(), default=functions.now())
+    call = db.relationship(Call, backref='symptoms', lazy='dynamic')
 
 
 class CaseStatus(db.Model):
-    __tablename__ = "case_statuses"
+    __tablename__ = 'case_statuses'
 
-    id = Column(BIGINT, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
+    case_id = db.Column(db.Integer, db.ForeignKey(Case.id), nullable=False)
+    status = db.Column(db.Enum('pending', 'active', 'duplicate', 'deleted', native_enum=False), nullable=False)
+    reason = db.Column(db.String(32))
+    comments = db.Column(db.String(256))
+    json = db.Column(db.Text, nullable=True)
 
-    case_id = Column(BIGINT, ForeignKey(Case.id), nullable=False)
-    status = Column(String(128), nullable=False)
-    comments = Column(String, nullable=True)
-    old_content = Column(String, nullable=True)
-    new_content = Column(String, nullable=True)
 
-    created_by = Column(BIGINT, ForeignKey(User.id), nullable=False)
-    created_ts = Column(DateTime(timezone=True), server_default=functions.now(), default=functions.now())
-
-    modified_by = Column(BIGINT, ForeignKey(User.id), nullable=False)
-    modified_ts = Column(DateTime(timezone=True), server_default=functions.now(), default=functions.now())
