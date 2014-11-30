@@ -1,0 +1,15 @@
+{% extends 'step.html' %}
+{% block agent_instruction_text %}Why are you choosing to cancel this call?{% endblock %}
+{% block agent_input_elements %}
+    <select name="agent_reason">
+        <option disabled="disabled" selected="selected">Reason for Calling</option>
+        <option value="connection">Lost connection</option>
+        <option value="noise">Could not hear caller</option>
+        <option value="prank">Prank call</option>
+        <option value="abusive">Caller was abusive</option>
+        <option value="other">Other</option>
+    </select>
+{% endblock %}
+{% set disable_agent_dialogue = True %}
+{% set disable_agent_skip = True %}
+{% set disable_agent_cancel = True %}

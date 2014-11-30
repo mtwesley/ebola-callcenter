@@ -3,7 +3,12 @@
     Is the patient awake or conscious?
 {% endblock %}
 {% block agent_input_elements %}
-    <input type="radio" name="patient_conscious" value="Y"> <label for="Y">Yes</label><br>
-    <input type="radio" name="patient_conscious" value="N"> <label for="N">No</label><br>
+    <select name="patient_condition">
+        <option disabled="disabled" selected="selected">Patient Condition</option>
+        <option value="alive">Alive</option>
+        <option value="conscious">Conscious</option>
+        <option value="unconscious">Unconscious</option>
+        <option value="dead">Dead</option>
+    </select>
 {% endblock %}
 {% block agent_skip_text %}UNKNOWN{% endblock %}

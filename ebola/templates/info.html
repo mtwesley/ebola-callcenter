@@ -1,4 +1,4 @@
-{% if not call and not case %}
+{% if not call and not call.case %}
     <div id="module_b" class="module rounded">
         <div class="caller_related_cases text_a">
             Incoming call history
@@ -29,42 +29,42 @@
         </div>
 
         <div class="info_content text_b">
-            {% if call['caller_phone'] %}<span style="color:#7D7D7D;">Caller Phone:</span> {{ call['caller_phone'] }} <br>{% endif %}
-            {% if call['caller_first_name'] or call['caller_middle_name'] or call['caller_last_name'] %}
+            {% if call.caller.phone %}<span style="color:#7D7D7D;">Caller Phone:</span> {{ call.caller.phone }} <br>{% endif %}
+            {% if call.caller.first_name or call.caller.middle_name or call.caller.last_name %}
                 <span style="color:#7D7D7D;">Caller Name:</span>
-                {{ call['caller_first_name'] }} {{ call['caller_middle_name'] }} {{ call['caller_last_name'] }} {{ call['caller_suffix'] }} <br>
+                {{ call.caller.first_name }} {{ call.caller.middle_name }} {{ call.caller.last_name }} {{ call.caller.suffix }} <br>
             {% endif %}
-            {% if call['caller_sex'] %}<span style="color:#7D7D7D;">Caller Sex:</span> {{ call['caller_sex'] }} <br>{% endif %}
-            {% if call['caller_age'] %}<span style="color:#7D7D7D;">Caller Age:</span> {{ call['caller_age'] }} <br>{% endif %}
-            {% if call['caller_language'] %}<span style="color:#7D7D7D;">Caller Language:</span> {{ call['caller_language'] }} <br>{% endif %}
-            {% if call['caller_county'] %}<span style="color:#7D7D7D;">Caller County:</span> {{ call['caller_county'] }} <br>{% endif %}
-            {% if call['caller_city'] %}<span style="color:#7D7D7D;">Caller City:</span> {{ call['caller_city'] }} <br>{% endif %}
-            {% if call['caller_community'] %}<span style="color:#7D7D7D;">Caller Community:</span> {{ call['caller_community'] }} <br>{% endif %}
-            {% if call['type'] %}<span style="color:#7D7D7D;">Call Type:</span> {{ call['type'] }}{% endif %}
+            {% if call.caller.sex %}<span style="color:#7D7D7D;">Caller Sex:</span> {{ call.caller.sex }} <br>{% endif %}
+            {% if call.caller.age %}<span style="color:#7D7D7D;">Caller Age:</span> {{ call.caller.age }} <br>{% endif %}
+            {% if call.caller.language %}<span style="color:#7D7D7D;">Caller Language:</span> {{ call.caller.language }} <br>{% endif %}
+            {% if call.caller.county %}<span style="color:#7D7D7D;">Caller County:</span> {{ call.caller.county }} <br>{% endif %}
+            {% if call.caller.city %}<span style="color:#7D7D7D;">Caller City:</span> {{ call.caller.city }} <br>{% endif %}
+            {% if call.caller.community %}<span style="color:#7D7D7D;">Caller Community:</span> {{ call.caller.community }} <br>{% endif %}
+            {% if call.type %}<span style="color:#7D7D7D;">Call Type:</span> {{ call.type }}{% endif %}
         </div>
     </div>
 {% endif %}
 
-{% if call and case %}
+{% if call and call.case %}
     <div id="module_b" class="module rounded">
         <div class="info_title text_a">
             Patient Report Information
         </div>
 
         <div class="info_content text_b">
-            {% if case['patient_name'] %}<span style="color:#7D7D7D;">Patient Name:</span> {{ case['patient_name'] }} <br>{% endif %}
-            {% if case['patient_phone'] %}<span style="color:#7D7D7D;">Patient Phone:</span> {{ case['patient_phone'] }} <br>{% endif %}
-            {% if case['patient_sex'] %}<span style="color:#7D7D7D;">Patient Sex:</span> {{ case['patient_sex'] }} <br>{% endif %}
-            {% if case['patient_age'] %}<span style="color:#7D7D7D;">Patient Age:</span> {{ case['patient_age'] }} <br>{% endif %}
-            {% if case['patient_language'] %}<span style="color:#7D7D7D;">Patient Language:</span> {{ case['patient_language'] }} <br>{% endif %}
-            {% if case['patient_county'] %}<span style="color:#7D7D7D;">Patient County:</span> {{ case['patient_county'] }} <br>{% endif %}
-            {% if case['patient_city'] %}<span style="color:#7D7D7D;">Patient City:</span> {{ case['patient_city'] }} <br>{% endif %}
-            {% if case['patient_community'] %}<span style="color:#7D7D7D;">Patient Community:</span> {{ case['patient_community'] }} <br>{% endif %}
-            {% if case['patient_conscious'] %}<span style="color:#7D7D7D;">Patient Condition:</span> {{ case['patient_conscious'] }} <br>{% endif %}
-            {% if case['patient_had_contact'] %}<span style="color:#7D7D7D;">Ebola Contact:</span> {{ case['patient_had_contact'] }} <br>{% endif %}
-            {% if case['patient_days_sick'] %}<span style="color:#7D7D7D;">Symptoms Duration:</span> {{ case['patient_days_sick'] }} <br>{% endif %}
-            {% if case['patient_symptoms'] %}<span style="color:#7D7D7D;">Symptoms:</span> {{ case['patient_symptoms'] }} <br>{% endif %}
-            {% if case['comments'] %}<span style="color:#7D7D7D;">Comments:</span> {{ case['comments'] }}{% endif %}
+            {% if call.case.patient.name %}<span style="color:#7D7D7D;">Patient Name:</span> {{ call.case.patient.name }} <br>{% endif %}
+            {% if call.case.patient.phone %}<span style="color:#7D7D7D;">Patient Phone:</span> {{ call.case.patient.phone }} <br>{% endif %}
+            {% if call.case.patient.sex %}<span style="color:#7D7D7D;">Patient Sex:</span> {{ call.case.patient.sex }} <br>{% endif %}
+            {% if call.case.patient.age %}<span style="color:#7D7D7D;">Patient Age:</span> {{ call.case.patient.age }} <br>{% endif %}
+            {% if call.case.patient.language %}<span style="color:#7D7D7D;">Patient Language:</span> {{ call.case.patient.language }} <br>{% endif %}
+            {% if call.case.patient.county %}<span style="color:#7D7D7D;">Patient County:</span> {{ call.case.patient.county }} <br>{% endif %}
+            {% if call.case.patient.city %}<span style="color:#7D7D7D;">Patient City:</span> {{ call.case.patient.city }} <br>{% endif %}
+            {% if call.case.patient.community %}<span style="color:#7D7D7D;">Patient Community:</span> {{ call.case.patient.community }} <br>{% endif %}
+            {% if call.case.patient.conscious %}<span style="color:#7D7D7D;">Patient Condition:</span> {{ call.case.patient.conscious }} <br>{% endif %}
+            {% if call.case.patient.had_contact %}<span style="color:#7D7D7D;">Ebola Contact:</span> {{ call.case.patient.had_contact }} <br>{% endif %}
+            {% if call.case.patient.days_sick %}<span style="color:#7D7D7D;">Symptoms Duration:</span> {{ call.case.patient.days_sick }} <br>{% endif %}
+            {% if call.case.patient.symptoms %}<span style="color:#7D7D7D;">Symptoms:</span> {{ call.case.patient.symptoms }} <br>{% endif %}
+            {% if call.case.comments %}<span style="color:#7D7D7D;">Comments:</span> {{ call.case.comments }}{% endif %}
         </div>
     </div>
 {% endif %}

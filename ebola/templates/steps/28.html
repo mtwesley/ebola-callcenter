@@ -5,10 +5,9 @@
 {% block agent_input_elements %}
     <select name="patient_age">
         <option disabled="disabled" selected="selected">Patient Age</option>
-        <option value="child">Child (Under 18)</option>
-        <option value="youth">Youth (19 to 39)</option>
-        <option value="adult">Adult (40 to 60)</option>
-        <option value="elderly">Elderly (Over 60)</option>
+        {% for n in range(1,99) %}
+            <option value="{{ n }}">{{ n }}</option>
+        {% endfor %}
     </select>
 {% endblock %}
 {% block agent_skip_text %}UNKNOWN{% endblock %}

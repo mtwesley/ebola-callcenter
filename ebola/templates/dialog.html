@@ -1,0 +1,22 @@
+{% extends 'layout.html' %}
+{% block content_a %}
+    <div id="content_a">
+        {% if dialog %}{% include dialog %}{% endif %}
+    </div>
+{% endblock %}
+
+{% block content_b %}
+    {% if call %}
+    <div id="content_b">
+        {% include 'info.html' %}
+    </div>
+    {% endif %}
+{% endblock %}
+
+{% block content_c %}
+    {% if not True %}
+        <div id="content_c">
+            {% include 'extra.html' %}
+        </div>
+    {% endif %}
+{% endblock %}

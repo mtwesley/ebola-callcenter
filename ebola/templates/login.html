@@ -1,0 +1,10 @@
+{% extends 'form.html' %}
+{% block agent_instruction_text %}Welcome, please log in.{% endblock %}
+{% block agent_input_elements %}
+    <input type="email" name="user_email" placeholder="Email">
+    <input type="password" name="user_password" placeholder="Password">
+{% endblock %}
+{% block agent_submit_text %}LOG IN{% endblock %}
+{% set disable_agent_dialogue = True %}
+{% set disable_agent_skip = True %}
+{% set disable_agent_cancel = True %}

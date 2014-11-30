@@ -1,17 +1,24 @@
+from flask import Flask
+from flask.ext.login import LoginManager
 
-import datetime
-
-from flask import Flask, g
-
-from models import db
+from models import db, User
 from views import views
 
 import config
 
 
+lm = LoginManager()
+
 app = Flask(__name__)
 app.config.from_object(config)
+app.config.from_envvar('EBOLACALLCENTER_CONFIG')
 app.register_blueprint(views)
 
 db.init_app(app)
+lm.init_app(app)
+lm.login_view = 'views.login'
 
+
+@lm.user_loader
+def load_user(user_id):
+    return User.query.get(user_id)

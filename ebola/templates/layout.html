@@ -14,38 +14,27 @@
 	</head>
 	<body>
 		<div id="wrapperMAIN" class="rounded gradient_gray3">
-
 			<div id="header" class="gradient_gray2">
 				<div id="logo" class="text_a">Ebola Response Call Center</div>
                 <div id="pageinfo" class="text_b white">
-    				{% if call or session['active'] %}
-                        ACTIVE CALL{% if call and (call['caller_first_name'] or call['caller_middle_name'] or call['caller_last_name']) %}:
-                        {{ call['caller_first_name'] }} {{ call['caller_middle_name'] }} {{ call['caller_last_name'] }} {{ call['caller_suffix'] }}{% endif %}
+                    {% if g.user.is_authenticated() and (call or session['active']) %}
+                        ACTIVE CALL{% if call.caller %}: {{ call.caller.name() }}{% endif %}
                     {% endif %}
                 </div>
 				<div id="dateinfo" class="text_b">
                     {{ g.timestamp.strftime('%-I:%M %p %a, %b %-d, %Y') }}
+                    {% if g.user.is_authenticated() %}
                     <span class="white">&nbsp;|&nbsp;</span>  Timer: 00:00
-                    <span class="white">&nbsp;|&nbsp;</span>
-                    <a href="{{ url_for('views.logout') }}"><span class="white">LOG-OUT</span></a>
+                    <span class="white">&nbsp;|&nbsp;</span> <a href="{{ url_for('views.logout') }}"><span class="white">LOG OUT</span></a>
+                    {% else %}
+                    <span class="white">&nbsp;|&nbsp;</span> <a href="{{ url_for('views.login') }}"><span class="white">LOG IN</span></a>
+                    {% endif %}
                 </div>
 			</div>
-			
-			<div id="content_a">
-                {% include 'steps/' + (step or 0)|string + '.html' %}
-            </div>
 
-            {% if call %}
-			<div id="content_b">
-                {% include 'info.html' %}
-			</div>
-            {% endif %}
-
-            {% if not True %}
-                <div id="content_c">
-                    {% include 'extra.html' %}
-                </div>
-            {% endif %}
+            {% block content_a %}{% endblock %}
+            {% block content_b %}{% endblock %}
+            {% block content_c %}{% endblock %}
 		</div>
 	</body>
 </html>

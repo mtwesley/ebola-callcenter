@@ -1,7 +1,12 @@
 Flask
-Flask-SQLAlchemy
 Flask-Login
-jinja2
-simplejson
+Flask-SQLAlchemy
+Flask-Script
+Jinja2
+MarkupSafe
+SQLAlchemy
+Werkzeug
+itsdangerous
+phonenumberslite
 psycopg2
-sqlalchemy
+simplejson

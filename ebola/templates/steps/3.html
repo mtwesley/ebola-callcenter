@@ -1,9 +1,19 @@
 {% extends 'step.html' %}
 {% block agent_dialogue_text %}
-    Are you calling about [PATIENT_NAME] from [PATIENT_LOCATION]?
+    Are you
+    {% for c in variables['cases'] %}
+        {{ c.patient.name() }}{% if c.patient.city or c.patient.community or c.patient.county %}from
+        {% if c.patient.community %}{{ c.patient.community }}, {% endif %}
+        {% if c.patient.city %}{{ c.patient.city }} in {% endif %}
+        {% if c.patient.county %}{{ c.patient.county }} County{% endif %}{% endif %}?
+    {% endfor %}
 {% endblock %}
 {% block agent_input_elements %}
-    <input type="radio" name="patient_match" value="Y"> <label for="Y">Yes</label><br>
-    <input type="radio" name="patient_match" value="N"> <label for="N">No</label><br>
+    <select name="case_id">
+        <option disabled="disabled" selected="selected">Caller</option>
+        {% for c in call.phone.contacts.all() %}
+            <option value="{{ c.id }}">{{ c.patient.name() }}</option>
+        {% endfor %}
+    </select>
 {% endblock %}
 {% set disable_agent_skip = True %}
