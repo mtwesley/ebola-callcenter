@@ -1,6 +1,15 @@
 
 jQuery(document).ready(function() {
 
+    $('[data-countdown]').each(function() {
+        var $this = $(this), startDate = $(this).data('countdown');
+        $this.countdown({
+            since: new Date(startDate),
+            format: 'MS',
+            layout: '{mnn}:{snn}'
+        });
+    });
+
     $('#agent_form').on("keyup keypress", function(e) {
         if ((e.keyCode || e.which) == 13) {
             e.preventDefault()

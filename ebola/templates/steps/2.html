@@ -1,19 +1,16 @@
 {% extends 'step.html' %}
+{% set caller_match = call.phone.contacts.filter_by(id=session['caller_match_id']).first() %}
 {% block agent_dialogue_text %}
     Are you
-    {% for c in call.phone.contacts.all() %}
-        {{ c.name() }}{% if c.city or c.community or c.county %}from
-        {% if c.community %}{{ c.community }}, {% endif %}
-        {% if c.city %}{{ c.city }} in {% endif %}
-        {% if c.county %}{{ c.county }} County{% endif %}{% endif %}?
-    {% endfor %}
+    {{ caller_match.name() }}{% if caller_match.city or caller_match.community or caller_match.county %} from
+    {% if caller_match.community %}{{ caller_match.community }}, {% endif %}
+    {% if caller_match.city %}{{ caller_match.city }} in {% endif %}
+    {% if caller_match.county %}{{ helpers.county[caller_match.county] }} County{% endif %}{% endif %}?
 {% endblock %}
 {% block agent_input_elements %}
-    <select name="caller_id">
-        <option disabled="disabled" selected="selected">Caller</option>
-        {% for c in call.phone.contacts.all() %}
-            <option value="{{ c.id }}">{{ c.name() }}</option>
-        {% endfor %}
-    </select>
+    <input type="hidden" name="caller_match_id" value="{{ caller_match.id }}">
+    <input type="radio" name="caller_match" value="Y"> <label for="Y">Yes</label><br>
+    <input type="radio" name="caller_match" value="N"> <label for="N">No</label><br>
 {% endblock %}
 {% set disable_agent_skip = True %}
+

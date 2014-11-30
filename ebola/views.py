@@ -42,15 +42,10 @@ def test():
 @views.route("/<default_step>", methods=['GET', 'POST'])
 @login_required
 def index(default_step=None):
-
-    # FIXME: remove when development is complete
-    print "\n\nSESSION: ", session, "\n\n"
-    print "\n\nREQUEST: ", request.form, "\n\n"
-
     agent_action = request.form.get('agent_action', '')
     agent_step = int(request.form.get('agent_step', 0))
 
-    variables = {}
+    vars = {}
     step = session.get('step', 0)
     previous_step = session.get('previous_step', 0)
     call = Call.query.get(session.get('call_id', 0)) or Call()
@@ -59,8 +54,7 @@ def index(default_step=None):
         if agent_action == 'submit':
             call = Call()
             call.timestamp = datetime.datetime.now()
-            db.session.add(call)
-            db.session.commit()
+            session['active'] = True
             step = 1
 
     elif agent_step == 1:
@@ -68,9 +62,8 @@ def index(default_step=None):
             caller_phone = request.form.get('caller_phone', None)
             call.phone = Phone.lookup_or_create(caller_phone)
             if call.phone.number:
-                db.session.add(call)
-                db.session.commit()
-                if call.phone.contacts.scalar():
+                if call.phone.contacts.first():
+                    session['caller_match_id'] = call.phone.contacts.first().id
                     step = 2
                 else:
                     step = 11
@@ -79,28 +72,49 @@ def index(default_step=None):
 
     elif agent_step == 2:
         if agent_action == 'submit':
-            caller_id = request.form.get('caller_id', None)
-            if caller_id:
-                call.caller = Contact.query.get(caller_id)
-                variables['cases'] = call.caller.cases.all()
-                step = 3
-            else:
-                call.caller = Contact()
-                step = 4
+            caller_match_id = request.form.get('caller_match_id', None)
+            caller_match = request.form.get('caller_match', None)
+            if caller_match == 'Y':
+                call.caller = Contact.query.get(caller_match_id)
+                session['not_caller_match_id'] = None
+                session['caller_match_id'] = None
+                if call.caller.call_cases().first():
+                    session['case_match_id'] = call.caller.call_cases().first().id
+                    step = 3
+                else:
+                    step = 17
+            elif caller_match == 'N':
+                if 'not_caller_match_id' not in session:
+                    session['not_caller_match_id'] = []
+                session['not_caller_match_id'].append(caller_match_id)
+                match = call.phone.contacts.filter(
+                    ~Contact.id.in_(session['not_caller_match_id'])).first()
+                if match:
+                    session['caller_match_id'] = match.id
+                else:
+                    step = 4
         elif agent_action == 'cancel':
             step = 98
 
     elif agent_step == 3:
         if agent_action == 'submit':
-            case_id = request.form.get('case_id', None)
-            case = Case.query.get(case_id)
-            if case:
-                call.case = case
+            case_match_id = request.form.get('case_match_id', None)
+            case_match = request.form.get('case_match', None)
+            if case_match == 'Y':
+                call.case = Case.query.get(case_match_id)
+                session['not_case_match_id'] = None
+                session['case_match_id'] = None
                 step = 19
-            else:
-                step = 17
-        elif agent_action == 'cancel':
-            step = 98
+            elif case_match == 'N':
+                if 'not_case_match_id' not in session:
+                    session['not_case_match_id'] = []
+                session['not_case_match_id'].append(case_match_id)
+                match = call.caller.call_cases().filter(
+                    ~Contact.id.in_(session['not_case_match_id'])).first()
+                if match:
+                    session['case_match_id'] = match.id
+                else:
+                    step = 17
 
     elif agent_step == 4:
         if agent_action == 'submit':
@@ -158,7 +172,7 @@ def index(default_step=None):
         if agent_action == 'submit':
             city = request.form.get('caller_city', None)
             if city:
-                call.caller.city
+                call.caller.city = city
                 step = 10
         elif agent_action == 'cancel':
             step = 98
@@ -185,8 +199,6 @@ def index(default_step=None):
                 call.caller.last_name = last_name
                 call.caller.suffix = suffix
                 call.caller.phones.append(call.phone)
-                db.session.add(call)
-                db.session.commit()
                 step = 12
         elif agent_action == 'cancel':
             step = 98
@@ -222,7 +234,7 @@ def index(default_step=None):
         if agent_action == 'submit':
             city = request.form.get('caller_city', None)
             if city:
-                call.caller.city
+                call.caller.city = city
                 step = 16
         elif agent_action == 'cancel':
             step = 98
@@ -280,6 +292,7 @@ def index(default_step=None):
         if agent_action == 'submit':
             step = 0
             default_session()
+            session['active'] = True
 
     elif agent_step == 22:
         if agent_action == 'submit':
@@ -289,6 +302,7 @@ def index(default_step=None):
         if agent_action == 'submit':
             step = 0
             default_session()
+            session['active'] = True
 
     elif agent_step == 24:
         if agent_action == 'submit':
@@ -317,7 +331,7 @@ def index(default_step=None):
             if phone.number:
                 call.case.patient.phones.append(phone)
                 if phone.cases().exists():
-                    variables['cases'] = phone.cases().all()
+                    vars['cases'] = phone.cases().all()
                     step = 26
                 else:
                     step = 27
@@ -386,7 +400,7 @@ def index(default_step=None):
         if agent_action == 'submit':
             city = request.form.get('patient_city', None)
             if city:
-                call.case.patient.city
+                call.case.patient.city = city
                 step = 32
         elif agent_action == 'skip':
             step = 32
@@ -408,7 +422,7 @@ def index(default_step=None):
         if agent_action == 'submit':
             condition = request.form.get('patient_condition', None)
             if condition:
-                call.case.patient.condition = condition
+                call.case.condition = condition
                 step = 34
         elif agent_action == 'skip':
             step = 34
@@ -419,9 +433,9 @@ def index(default_step=None):
         if agent_action == 'submit':
             had_contact = request.form.get('patient_had_contact', None)
             if had_contact == 'Y':
-                call.case.patient.had_contact = True
+                call.case.had_contact = True
             elif had_contact == 'N':
-                call.case.patient.had_contact = False
+                call.case.had_contact = False
             step = 35
         elif agent_action == 'skip':
             step = 35
@@ -432,7 +446,7 @@ def index(default_step=None):
         if agent_action == 'submit':
             days_sick = request.form.get('patient_days_sick', None)
             if days_sick is not None:
-                call.case.patient.days_sick = days_sick
+                call.case.days_sick = days_sick
                 step = 36
         elif agent_action == 'skip':
             step = 36
@@ -466,11 +480,13 @@ def index(default_step=None):
         if agent_action == 'submit':
             step = 0
             default_session()
+            session['active'] = True
 
     elif agent_step == 39:
         if agent_action == 'submit':
             step = 0
             default_session()
+            session['active'] = True
 
     elif agent_step == 40:
         if agent_action == 'submit':
@@ -483,6 +499,7 @@ def index(default_step=None):
         if agent_action == 'submit':
             step = 0
             default_session()
+            session['active'] = True
 
     elif agent_step == 42:
         if agent_action == 'submit':
@@ -513,7 +530,7 @@ def index(default_step=None):
             if phone.number:
                 call.case.patient.phones.append(phone)
                 if phone.cases().exists():
-                    variables['cases'] = phone.cases().all()
+                    vars['cases'] = phone.cases().all()
                     step = 44
                 else:
                     step = 45
@@ -544,6 +561,7 @@ def index(default_step=None):
         if agent_action == 'submit':
             step = 0
             default_session()
+            session['active'] = True
 
     elif agent_step == 47:
         if agent_action == 'submit':
@@ -572,7 +590,7 @@ def index(default_step=None):
             if phone.number:
                 call.case.patient.phones.append(phone)
                 if phone.cases().exists():
-                    variables['cases'] = phone.cases().all()
+                    session['cases'] = phone.cases().all()
                     step = 49
                 else:
                     step = 62
@@ -664,7 +682,7 @@ def index(default_step=None):
         if agent_action == 'submit':
             city = request.form.get('patient_city', None)
             if city:
-                call.case.patient.city
+                call.case.patient.city = city
                 step = 55
         elif agent_action == 'skip':
             step = 55
@@ -684,19 +702,19 @@ def index(default_step=None):
 
     elif agent_step == 56:
         if agent_action == 'submit':
-            condition = request.form.get('patient_condition', None)
+            condition = request.form.get('condition', None)
             if condition:
-                call.case.patient.condition = condition
-                if not call.case.patient.had_contact:
+                call.case.condition = condition
+                if not call.case.had_contact:
                     step = 57
-                elif not call.case.patient.days_sick:
+                elif not call.case.days_sick:
                     step = 58
                 else:
                     step = 59
         elif agent_action == 'skip':
-            if not call.case.patient.had_contact:
+            if not call.case.had_contact:
                 step = 57
-            elif not call.case.patient.days_sick:
+            elif not call.case.days_sick:
                 step = 58
             else:
                 step = 59
@@ -705,17 +723,17 @@ def index(default_step=None):
 
     elif agent_step == 57:
         if agent_action == 'submit':
-            had_contact = request.form.get('patient_had_contact', None)
+            had_contact = request.form.get('had_contact', None)
             if had_contact == 'Y':
-                call.case.patient.had_contact = True
+                call.case.had_contact = True
             elif had_contact == 'N':
-                call.case.patient.had_contact = False
-            if not call.case.patient.days_sick:
+                call.case.had_contact = False
+            if not call.case.days_sick:
                 step = 58
             else:
                 step = 59
         elif agent_action == 'skip':
-            if not call.case.patient.days_sick:
+            if not call.case.days_sick:
                 step = 58
             else:
                 step = 59
@@ -724,9 +742,9 @@ def index(default_step=None):
 
     elif agent_step == 58:
         if agent_action == 'submit':
-            days_sick = request.form.get('patient_days_sick', None)
+            days_sick = request.form.get('days_sick', None)
             if days_sick is not None:
-                call.case.patient.days_sick = days_sick
+                call.case.days_sick = days_sick
                 step = 59
         elif agent_action == 'skip':
             step = 59
@@ -760,6 +778,7 @@ def index(default_step=None):
         if agent_action == 'submit':
             step = 0
             default_session()
+            session['active'] = True
 
     elif agent_step == 62:
         if agent_action == 'submit':
@@ -775,6 +794,7 @@ def index(default_step=None):
         if agent_action == 'submit':
             step = 0
             default_session()
+            session['active'] = True
 
     elif agent_step == 98:
         if agent_action == 'submit':
@@ -787,18 +807,27 @@ def index(default_step=None):
             agent_reason = request.form.get('agent_reason', '')
             step = 0
             default_session()
+            session['active'] = True
 
     #TODO: implement step stack for easy back and forth movement instead of only "previous_step"
     session['step'] = step
     session['previous_step'] = agent_step
 
-    if call:
+    if call and session.get('active', False):
+        db.session.add(call)
+        db.session.commit()
         session['call_id'] = call.id
+    else:
+        call = Call()
+
+    # FIXME: remove when development is complete
+    print "\n\nSESSION: ", session, "\n\n"
+    print "\n\nREQUEST: ", request.form, "\n\n"
 
     step = default_step or step
     dialog = 'steps/' + str(step or 0) + '.html'
 
-    return render_template('dialog.html', dialog=dialog, step=step, call=call)
+    return render_template('dialog.html', dialog=dialog, step=step, call=call, vars=vars)
 
 
 @views.route('/cancel')

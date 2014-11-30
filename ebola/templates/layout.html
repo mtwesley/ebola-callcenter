@@ -10,6 +10,7 @@
         <link type="text/css" href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet" />
         <link type="text/css" href="{{ url_for('static', filename='css/styleFORM.css') }}" rel="stylesheet" />
         <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.countdown.js') }}"></script>
         <script type="text/javascript" src="{{ url_for('static', filename='js/script.js') }}"></script>
 	</head>
 	<body>
@@ -24,7 +25,7 @@
 				<div id="dateinfo" class="text_b">
                     {{ g.timestamp.strftime('%-I:%M %p %a, %b %-d, %Y') }}
                     {% if g.user.is_authenticated() %}
-                    <span class="white">&nbsp;|&nbsp;</span>  Timer: 00:00
+                    {% if call %}<span class="white">&nbsp;|&nbsp;</span>  Timer: <span data-countdown="{{ call.timestamp.strftime("%Y-%m-%dT%H:%M:%S") }}"></span>{% endif %}
                     <span class="white">&nbsp;|&nbsp;</span> <a href="{{ url_for('views.logout') }}"><span class="white">LOG OUT</span></a>
                     {% else %}
                     <span class="white">&nbsp;|&nbsp;</span> <a href="{{ url_for('views.login') }}"><span class="white">LOG IN</span></a>

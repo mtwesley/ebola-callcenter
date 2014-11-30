@@ -1,4 +1,5 @@
 import datetime
+import helpers
 from phonenumbers import parse as parse_number, format_number, PhoneNumberFormat
 
 from flask import g
@@ -91,6 +92,9 @@ class Phone(db.Model):
     def cases(self):
         return Case.query.join(Contact).join(phone_contacts).join(Phone).filter(Phone.number == self.number)
 
+    def pretty(self):
+        return Phone.local(self.number)
+
 
 class Contact(db.Model):
     __tablename__ = 'contacts'
@@ -106,9 +110,6 @@ class Contact(db.Model):
     county = db.Column(db.String(32))
     city = db.Column(db.String(32))
     community = db.Column(db.String(64))
-    condition = db.Column(db.Enum('conscious', 'unconscious', 'alive', 'dead', native_enum=False))
-    had_contact = db.Column(db.Boolean)
-    days_sick = db.Column(db.Integer)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     timestamp = db.Column(db.DateTime(), default=datetime.datetime.now(), server_default=db.func.now(), nullable=False)
 
@@ -123,11 +124,11 @@ class Contact(db.Model):
     def __init__(self):
         self.user_id = g.user.id
 
-    def phone_cases(self):
-        return self.phones
-
     def name(self):
-        return ' '.join([self.first_name or '', self.middle_name or '', self.last_name or '', self.suffix or ''])
+        return ' '.join([self.first_name or '', self.middle_name or '', self.last_name or '', self.suffix or '']).strip()
+
+    def call_cases(self):
+        return Case.query.join(Call).join(Call.caller).filter(Contact.id == self.id)
 
     def today_calls(self):
         return self.calls.filter(Call.timestamp.between(
@@ -146,7 +147,7 @@ class Call(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     timestamp = db.Column(db.DateTime(), default=datetime.datetime.now(), server_default=db.func.now(), nullable=False)
 
-    statuses = db.relationship('CallStatus', backref='call', lazy='dynamic')
+    statuses = db.relationship('CallStatus', backref='call', lazy='dynamic', cascade="all, delete-orphan")
 
     @orm.reconstructor
     def set_user(self):
@@ -162,7 +163,7 @@ class Call(db.Model):
         self.user_id = g.user.id
 
     def __nonzero__(self):
-        return bool(self.phone)
+        return bool(self.timestamp)
 
 
 class CallStatus(db.Model):
@@ -182,13 +183,16 @@ class Case(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     patient_id = db.Column(db.Integer, db.ForeignKey('contacts.id'))
     dhis2_number = db.Column(db.String(32))
+    condition = db.Column(db.Enum('conscious', 'unconscious', 'alive', 'dead', native_enum=False))
+    had_contact = db.Column(db.Boolean)
+    days_sick = db.Column(db.Integer)
     comments = db.Column(db.String(256))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     timestamp = db.Column(db.DateTime(), default=datetime.datetime.now(), server_default=db.func.now(), nullable=False)
 
     calls = db.relationship('Call', backref='case', lazy='dynamic')
-    symptoms = db.relationship('CaseSymptom', backref='case', lazy='dynamic')
-    statuses = db.relationship('CaseStatus', backref='case', lazy='dynamic')
+    symptoms = db.relationship('CaseSymptom', backref='case', lazy='dynamic', cascade="all, delete-orphan")
+    statuses = db.relationship('CaseStatus', backref='case', lazy='dynamic', cascade="all, delete-orphan")
 
     @orm.reconstructor
     def set_user(self):
@@ -199,6 +203,12 @@ class Case(db.Model):
 
     def __nonzero__(self):
         return bool(self.timestamp)
+
+    def pretty_symptoms(self):
+        pretty = []
+        for s in self.symptoms.all():
+            pretty.append(helpers.symptom[s.symptom])
+        return ', '.join(pretty)
 
 
 class CaseSymptom(db.Model):
@@ -214,11 +224,8 @@ class CaseSymptom(db.Model):
     start_ts = db.Column(db.DateTime())
     end_ts = db.Column(db.DateTime())
 
-    def __init__(self, case=None, symptom=None):
-        if case is None:
-            pass
-        elif isinstance(case, Case):
-            self.case = case
+    def __init__(self, case, symptom):
+        self.case = case
         self.symptom = symptom
 
 

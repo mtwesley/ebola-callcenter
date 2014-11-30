@@ -19,7 +19,12 @@ a:hover, a:visited, a:link, a:active{
 img{
 	border:0px;
 }
-	
+
+.hasCountdown {
+    width: 35px;
+    display: inline-block;
+}
+
 .rounded{
 	-moz-border-radius-topleft: 5px;
 	-moz-border-radius-topright: 5px;

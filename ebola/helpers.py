@@ -1,8 +1,16 @@
 import collections
 
-nesteddict = lambda: collections.defaultdict(nesteddict)
+def nesteddict():
+    return collections.defaultdict(nesteddict)
 
-languages = {
+condition = {
+    'alive': 'Alive',
+    'conscious': 'Conscious',
+    'unconscious': 'Unconscious',
+    'dead': 'Dead'
+}
+
+language = {
     'bandi': 'Bandi',
     'bassa': 'Bassa',
     'dan': 'Dan',
@@ -30,7 +38,7 @@ languages = {
     'vai': 'Vai'
 }
 
-counties = {
+county = {
     'bomi': 'Bomi',
     'bong': 'Bong',
     'gbarpolu': 'Gbarpolu',
@@ -48,7 +56,7 @@ counties = {
     'sinoe': 'Sinoe'
 }
 
-symptoms = {
+symptom = {
     'abdominal_pain': 'Abdominal Pain',
     'black_stool': 'Black Stool',
     'diarrhea': 'Diarrhea',
@@ -79,6 +87,8 @@ yes_no = {
     'y': 'Yes',
     'yes': 'Yes',
     'n': 'No',
-    'no': 'No'
+    'no': 'No',
+    True: 'Yes',
+    False: 'No'
 }
 
