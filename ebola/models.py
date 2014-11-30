@@ -1,6 +1,8 @@
 import datetime
 from phonenumbers import parse as parse_number, format_number, PhoneNumberFormat
-from flask.ext.sqlalchemy import SQLAlchemy
+
+from flask import g
+from flask.ext.sqlalchemy import SQLAlchemy, orm
 from flask.ext.login import UserMixin, current_user
 
 
@@ -33,11 +35,12 @@ class Phone(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     number = db.Column(db.String(23), nullable=False, unique=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), default=current_user, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     timestamp = db.Column(db.DateTime(), default=datetime.datetime.now(), server_default=db.func.now(), nullable=False)
 
     calls = db.relationship('Call', backref='phone', lazy='dynamic')
     contacts = db.relationship('Contact', secondary=phone_contacts, lazy='dynamic')
+    user = db.relationship('User')
 
     COUNTRY_CODE = 'LR'
 
@@ -49,30 +52,41 @@ class Phone(db.Model):
     def lookup_or_create(cls, number):
         lookup = Phone.lookup(number)
         return lookup if lookup is not None else Phone(number)
+        # if lookup is not None:
+        #     return lookup
+        # else:
+        #     create = Phone(number)
+        #     db.session.add(create)
+        #     return create
 
     @classmethod
     def e164(cls, number):
-        return format_number(
+        return str(format_number(
             parse_number(number, Phone.COUNTRY_CODE),
-            PhoneNumberFormat.E164)
+            PhoneNumberFormat.E164))
 
     @classmethod
     def local(cls, number):
-        return format_number(
+        return str(format_number(
             parse_number(number, Phone.COUNTRY_CODE),
-            PhoneNumberFormat.NATIONAL)
+            PhoneNumberFormat.NATIONAL))
 
     @classmethod
     def international(cls, number):
-        return format_number(
+        return str(format_number(
             parse_number(number, Phone.COUNTRY_CODE),
-            PhoneNumberFormat.INTERNATIONAL)
+            PhoneNumberFormat.INTERNATIONAL))
+
+    @orm.reconstructor
+    def set_user(self):
+        self.user_id = g.user.id
 
     def __init__(self, number):
-        self.number = Phone.e164(number)
+        self.number = str(Phone.e164(number))
+        self.user_id = g.user.id
 
     def __nonzero__(self):
-        return self.number
+        return bool(self.number)
 
     def cases(self):
         return Case.query.join(Contact).join(phone_contacts).join(Phone).filter(Phone.number == self.number)
@@ -95,18 +109,25 @@ class Contact(db.Model):
     condition = db.Column(db.Enum('conscious', 'unconscious', 'alive', 'dead', native_enum=False))
     had_contact = db.Column(db.Boolean)
     days_sick = db.Column(db.Integer)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), default=current_user, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     timestamp = db.Column(db.DateTime(), default=datetime.datetime.now(), server_default=db.func.now(), nullable=False)
 
     calls = db.relationship('Call', backref='caller', lazy='dynamic')
     cases = db.relationship('Case', backref='patient', lazy='dynamic')
     phones = db.relationship('Phone', secondary=phone_contacts, lazy='dynamic')
 
+    @orm.reconstructor
+    def set_user(self):
+        self.user_id = g.user.id
+
+    def __init__(self):
+        self.user_id = g.user.id
+
     def phone_cases(self):
         return self.phones
 
     def name(self):
-        return ' '.join([self.first_name, self.middle_name, self.last_name, self.suffix])
+        return ' '.join([self.first_name or '', self.middle_name or '', self.last_name or '', self.suffix or ''])
 
     def today_calls(self):
         return self.calls.filter(Call.timestamp.between(
@@ -119,22 +140,29 @@ class Call(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     type = db.Column(db.Enum('case_report', 'case_update', 'case_inquiry', 'general_inquiry', native_enum=False))
-    phone_id = db.Column(db.Integer, db.ForeignKey('phones.id'), nullable=False)
+    phone_id = db.Column(db.Integer, db.ForeignKey('phones.id'))
     caller_id = db.Column(db.Integer, db.ForeignKey('contacts.id'))
     case_id = db.Column(db.Integer, db.ForeignKey('cases.id'))
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), default=current_user, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     timestamp = db.Column(db.DateTime(), default=datetime.datetime.now(), server_default=db.func.now(), nullable=False)
 
     statuses = db.relationship('CallStatus', backref='call', lazy='dynamic')
 
-    def __init__(self, phone):
-        if isinstance(phone, Phone):
+    @orm.reconstructor
+    def set_user(self):
+        self.user_id = g.user.id
+
+    def __init__(self, phone=None):
+        if phone is None:
+            pass
+        elif isinstance(phone, Phone):
             self.phone = phone
         else:
             self.phone = Phone(phone)
+        self.user_id = g.user.id
 
     def __nonzero__(self):
-        return bool(self.timestamp)
+        return bool(self.phone)
 
 
 class CallStatus(db.Model):
@@ -155,15 +183,22 @@ class Case(db.Model):
     patient_id = db.Column(db.Integer, db.ForeignKey('contacts.id'))
     dhis2_number = db.Column(db.String(32))
     comments = db.Column(db.String(256))
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), default=current_user, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     timestamp = db.Column(db.DateTime(), default=datetime.datetime.now(), server_default=db.func.now(), nullable=False)
 
     calls = db.relationship('Call', backref='case', lazy='dynamic')
     symptoms = db.relationship('CaseSymptom', backref='case', lazy='dynamic')
     statuses = db.relationship('CaseStatus', backref='case', lazy='dynamic')
 
+    @orm.reconstructor
+    def set_user(self):
+        self.user_id = g.user.id
+
+    def __init__(self):
+        self.user_id = g.user.id
+
     def __nonzero__(self):
-        return self.active
+        return bool(self.timestamp)
 
 
 class CaseSymptom(db.Model):
@@ -180,7 +215,9 @@ class CaseSymptom(db.Model):
     end_ts = db.Column(db.DateTime())
 
     def __init__(self, case=None, symptom=None):
-        if isinstance(case, Case):
+        if case is None:
+            pass
+        elif isinstance(case, Case):
             self.case = case
         self.symptom = symptom
 

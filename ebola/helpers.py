@@ -1,3 +1,7 @@
+import collections
+
+nesteddict = lambda: collections.defaultdict(nesteddict)
+
 languages = {
     'bandi': 'Bandi',
     'bassa': 'Bassa',

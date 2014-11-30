@@ -4,7 +4,8 @@ jQuery(document).ready(function() {
     $('#agent_form').on("keyup keypress", function(e) {
         if ((e.keyCode || e.which) == 13) {
             e.preventDefault()
-            return false
+            $("#agent_action").val('submit')
+            $("#agent_form").submit()
         }
     });
 

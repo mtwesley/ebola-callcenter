@@ -32,7 +32,7 @@
             {% if call.caller.phone %}<span style="color:#7D7D7D;">Caller Phone:</span> {{ call.caller.phone }} <br>{% endif %}
             {% if call.caller.first_name or call.caller.middle_name or call.caller.last_name %}
                 <span style="color:#7D7D7D;">Caller Name:</span>
-                {{ call.caller.first_name }} {{ call.caller.middle_name }} {{ call.caller.last_name }} {{ call.caller.suffix }} <br>
+                {{ call.caller.name() }} <br>
             {% endif %}
             {% if call.caller.sex %}<span style="color:#7D7D7D;">Caller Sex:</span> {{ call.caller.sex }} <br>{% endif %}
             {% if call.caller.age %}<span style="color:#7D7D7D;">Caller Age:</span> {{ call.caller.age }} <br>{% endif %}

@@ -3,16 +3,16 @@
     Please state your name.
 {% endblock %}
 {% block agent_input_elements %}
-    <input type="text" name="caller_first_name" placeholder="Caller First Name">
-    <input type="text" name="caller_middle_name" placeholder="Caller Middle Name">
-    <input type="text" name="caller_last_name" placeholder="Caller Last Name">
+    <input type="text" name="caller_first_name" placeholder="Caller First Name" value="{{ call.caller.first_name }}">
+    <input type="text" name="caller_middle_name" placeholder="Caller Middle Name" value="{{ call.caller.middle_name }}">
+    <input type="text" name="caller_last_name" placeholder="Caller Last Name" value="{{ call.caller.last_name }}">
     <select name="caller_suffix">
-        <option disabled="disabled" selected="selected">Caller Suffix</option>
+        <option disabled="disabled" {% if not call.caller.suffix %}selected="selected"{% endif %}>Caller Suffix</option>
         <option value=""></option>
-        <option value="jr">Jr.</option>
-        <option value="sr">Sr.</option>
-        <option value="ii">II</option>
-        <option value="III">III</option>
+        <option value="jr" {% if call.caller.suffix == 'jr' %}selected="selected"{% endif %}>Jr.</option>
+        <option value="sr" {% if call.caller.suffix == 'sr' %}selected="selected"{% endif %}>Sr.</option>
+        <option value="ii" {% if call.caller.suffix == 'ii' %}selected="selected"{% endif %}>II</option>
+        <option value="III" {% if call.caller.suffix == 'iii' %}selected="selected"{% endif %}>III</option>
     </select>
 {% endblock %}
 {% set disable_agent_skip = True %}

@@ -17,7 +17,7 @@
 			<div id="header" class="gradient_gray2">
 				<div id="logo" class="text_a">Ebola Response Call Center</div>
                 <div id="pageinfo" class="text_b white">
-                    {% if g.user.is_authenticated() and (call or session['active']) %}
+                    {% if g.user.is_authenticated() and call %}
                         ACTIVE CALL{% if call.caller %}: {{ call.caller.name() }}{% endif %}
                     {% endif %}
                 </div>
