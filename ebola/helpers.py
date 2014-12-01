@@ -3,11 +3,34 @@ import collections
 def nesteddict():
     return collections.defaultdict(nesteddict)
 
+call_type = {
+    'case_report': 'New Case Report',
+    'case_update': 'Case Report Update',
+    'case_inquiry': 'Case Inquiry',
+    'general_inquiry': 'General Inquiry'
+}
+
+relationship = {
+    'spouse': 'Spouse',
+    'parent': 'Parent',
+    'child': 'Child',
+    'relative': 'Other relative',
+    'non_relative': 'Other non-relative'
+}
+
 condition = {
     'alive': 'Alive',
     'conscious': 'Conscious',
     'unconscious': 'Unconscious',
     'dead': 'Dead'
+}
+
+reason = {
+    'connection': 'Lost connection',
+    'noise': 'Cound not hear caller',
+    'prank': 'Prank call',
+    'abusive': 'Caller was abusive',
+    'other': 'Other'
 }
 
 language = {
@@ -39,6 +62,8 @@ language = {
 }
 
 county = {
+    None: None,
+    '': '',
     'bomi': 'Bomi',
     'bong': 'Bong',
     'gbarpolu': 'Gbarpolu',
@@ -57,6 +82,8 @@ county = {
 }
 
 symptom = {
+    None: None,
+    '': '',
     'abdominal_pain': 'Abdominal Pain',
     'black_stool': 'Black Stool',
     'diarrhea': 'Diarrhea',
@@ -83,12 +110,20 @@ sex = {
     'female': 'Female'
 }
 
+suffix = {
+    '': '',
+    'jf': 'Jr.',
+    'sr': 'Sr.',
+    'ii': 'II',
+    'iii': 'III'
+}
+
 yes_no = {
     'y': 'Yes',
     'yes': 'Yes',
+    True: 'Yes',
     'n': 'No',
     'no': 'No',
-    True: 'Yes',
     False: 'No'
 }
 

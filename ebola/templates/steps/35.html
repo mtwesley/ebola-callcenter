@@ -1,12 +1,12 @@
 {% extends 'step.html' %}
 {% block agent_dialogue_text %}
-      How many days has the patient been sick?
+      How many days has {{ call.case.patient.short_name() or 'the patient' }} been sick?
 {% endblock %}
 {% block agent_input_elements %}
     <select name="patient_days_sick">
         <option disabled="disabled" selected="selected">Patient Days Sick</option>
-        {% for n in range(1,21) %}
-            <option value="{{ n }}">{{ n }}</option>
+        {% for n in range(0,22) %}
+            <option value="{{ n }}" {% if call.case.days_sick == n %}selected="selected"{% endif %}>{{ n }}</option>
         {% endfor %}
     </select>
 {% endblock %}

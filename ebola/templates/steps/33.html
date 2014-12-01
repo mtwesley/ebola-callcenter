@@ -1,14 +1,13 @@
 {% extends 'step.html' %}
 {% block agent_dialogue_text %}
-    What condition is the patient in?
+    What condition is {{ call.case.patient.short_name() or 'the patient' }} in?
 {% endblock %}
 {% block agent_input_elements %}
     <select name="patient_condition">
         <option disabled="disabled" selected="selected">Patient Condition</option>
-        <option value="alive">Alive</option>
-        <option value="conscious">Conscious</option>
-        <option value="unconscious">Unconscious</option>
-        <option value="dead">Dead</option>
+        {% for k,v in helpers.condition.items() %}
+        <option value="{{ k }}" {% if call.case.condition == k %}selected="selected"{% endif %}>{{ v }}</option>
+        {% endfor %}
     </select>
 {% endblock %}
 {% block agent_skip_text %}UNKNOWN{% endblock %}

@@ -7,7 +7,7 @@ from sqlalchemy.orm.exc import MultipleResultsFound, NoResultFound
 from flask import Blueprint, render_template, request, session, redirect, url_for, g, flash
 from flask.ext.login import current_user, login_user, logout_user, login_required
 
-from models import db, User, Call, Case, CaseSymptom, Contact, Phone, phone_contacts
+from models import db, User, Call, Case, Inquiry, CaseSymptom, Contact, Phone
 
 
 views = Blueprint("views", __name__)
@@ -26,6 +26,11 @@ def default_session():
     session.setdefault('previous_step', 0)
     session.setdefault('calls', helpers.nesteddict())
     session.setdefault('call_id', 0)
+    session.setdefault('caller_match_id', None)
+    session.setdefault('not_caller_match_id', [])
+    session.setdefault('case_match_id', None)
+    session.setdefault('not_case_match_id', [])
+    session.setdefault('no_case_match_needed', None)
 
 
 @views.context_processor
@@ -54,8 +59,8 @@ def index(default_step=None):
         if agent_action == 'submit':
             call = Call()
             call.timestamp = datetime.datetime.now()
-            session['active'] = True
             step = 1
+            session['active'] = True
 
     elif agent_step == 1:
         if agent_action == 'submit':
@@ -76,7 +81,7 @@ def index(default_step=None):
             caller_match = request.form.get('caller_match', None)
             if caller_match == 'Y':
                 call.caller = Contact.query.get(caller_match_id)
-                session['not_caller_match_id'] = None
+                session['not_caller_match_id'] = []
                 session['caller_match_id'] = None
                 if call.caller.call_cases().first():
                     session['case_match_id'] = call.caller.call_cases().first().id
@@ -84,8 +89,6 @@ def index(default_step=None):
                 else:
                     step = 17
             elif caller_match == 'N':
-                if 'not_caller_match_id' not in session:
-                    session['not_caller_match_id'] = []
                 session['not_caller_match_id'].append(caller_match_id)
                 match = call.phone.contacts.filter(
                     ~Contact.id.in_(session['not_caller_match_id'])).first()
@@ -102,12 +105,10 @@ def index(default_step=None):
             case_match = request.form.get('case_match', None)
             if case_match == 'Y':
                 call.case = Case.query.get(case_match_id)
-                session['not_case_match_id'] = None
+                session['not_case_match_id'] = []
                 session['case_match_id'] = None
                 step = 19
             elif case_match == 'N':
-                if 'not_case_match_id' not in session:
-                    session['not_case_match_id'] = []
                 session['not_case_match_id'].append(case_match_id)
                 match = call.caller.call_cases().filter(
                     ~Contact.id.in_(session['not_case_match_id'])).first()
@@ -252,6 +253,7 @@ def index(default_step=None):
         if agent_action == 'submit':
             case_report = request.form.get('case_report', None)
             if case_report == 'Y':
+                call.type = 'case_report'
                 step = 24
             elif case_report == 'N':
                 step = 18
@@ -262,6 +264,7 @@ def index(default_step=None):
         if agent_action == 'submit':
             general_inquiry = request.form.get('general_inquiry', None)
             if general_inquiry == 'Y':
+                call.type = 'general_inquiry'
                 step = 40
             elif general_inquiry == 'N':
                 step = 19
@@ -272,7 +275,11 @@ def index(default_step=None):
         if agent_action == 'submit':
             case_inquiry = request.form.get('case_inquiry', None)
             if case_inquiry == 'Y':
-                step = 42
+                call.type = 'case_inquiry'
+                if call.case:
+                    step = 46
+                else:
+                    step = 42
             elif case_inquiry == 'N':
                 step = 20
         elif agent_action == 'cancel':
@@ -282,7 +289,23 @@ def index(default_step=None):
         if agent_action == 'submit':
             case_update = request.form.get('case_update', None)
             if case_update == 'Y':
-                step = 47
+                call.type = 'case_update'
+                if call.case:
+                    session['no_case_match_needed'] = True
+                    if not call.case.patient.name():
+                        step = 47
+                    elif not call.case.patient.phones.first():
+                        step = 48
+                    elif not call.case.patient.sex:
+                        step = 50
+                    elif not call.case.patient.age:
+                        step = 51
+                    elif not call.case.patient.language:
+                        step = 52
+                    else:
+                        step = 53
+                else:
+                    step = 47
             elif case_update == 'N':
                 step = 22
         elif agent_action == 'cancel':
@@ -292,7 +315,7 @@ def index(default_step=None):
         if agent_action == 'submit':
             step = 0
             default_session()
-            session['active'] = True
+            session['active'] = False
 
     elif agent_step == 22:
         if agent_action == 'submit':
@@ -302,7 +325,7 @@ def index(default_step=None):
         if agent_action == 'submit':
             step = 0
             default_session()
-            session['active'] = True
+            session['active'] = False
 
     elif agent_step == 24:
         if agent_action == 'submit':
@@ -312,7 +335,7 @@ def index(default_step=None):
             middle_name = request.form.get('patient_middle_name', None)
             last_name = request.form.get('patient_last_name', None)
             suffix = request.form.get('patient_suffix', None)
-            if first_name and last_name:
+            if first_name or last_name:
                 call.case.patient = Contact()
                 call.case.patient.first_name = first_name
                 call.case.patient.middle_name = middle_name
@@ -330,7 +353,7 @@ def index(default_step=None):
             phone = Phone.lookup_or_create(patient_phone)
             if phone.number:
                 call.case.patient.phones.append(phone)
-                if phone.cases().exists():
+                if phone.cases().first():
                     vars['cases'] = phone.cases().all()
                     step = 26
                 else:
@@ -436,23 +459,25 @@ def index(default_step=None):
                 call.case.had_contact = True
             elif had_contact == 'N':
                 call.case.had_contact = False
-            step = 35
-        elif agent_action == 'skip':
-            step = 35
-        elif agent_action == 'cancel':
-            step = 98
-
-    elif agent_step == 35:
-        if agent_action == 'submit':
-            days_sick = request.form.get('patient_days_sick', None)
-            if days_sick is not None:
-                call.case.days_sick = days_sick
-                step = 36
+            step = 36
         elif agent_action == 'skip':
             step = 36
         elif agent_action == 'cancel':
             step = 98
 
+    # order of steps #35 and #36 have been switched
+    elif agent_step == 35:
+        if agent_action == 'submit':
+            days_sick = request.form.get('patient_days_sick', None)
+            if days_sick is not None:
+                call.case.days_sick = days_sick
+                step = 37
+        elif agent_action == 'skip':
+            step = 37
+        elif agent_action == 'cancel':
+            step = 98
+
+    # order of steps #35 and #36 have been switched
     elif agent_step == 36:
         if agent_action == 'submit':
             symptoms = request.form.getlist('patient_symptoms')
@@ -461,9 +486,9 @@ def index(default_step=None):
                 for s in symptoms:
                     case_symptoms.append(CaseSymptom(call.case, s))
                 call.case.symptoms = case_symptoms
-                step = 37
+                step = 35
         elif agent_action == 'skip':
-            step = 37
+            step = 35
         elif agent_action == 'cancel':
             step = 98
 
@@ -480,18 +505,22 @@ def index(default_step=None):
         if agent_action == 'submit':
             step = 0
             default_session()
-            session['active'] = True
+            session['active'] = False
 
     elif agent_step == 39:
         if agent_action == 'submit':
             step = 0
             default_session()
-            session['active'] = True
+            session['active'] = False
 
     elif agent_step == 40:
         if agent_action == 'submit':
-            call.case['caller_question'] = request.form.get('caller_question', '')
-            step = 41
+            caller_question = request.form.get('caller_question', '')
+            if caller_question:
+                call.inquiry = Inquiry()
+                call.inquiry.inquirer = call.caller
+                call.inquiry.question = caller_question
+                step = 41
         elif agent_action == 'cancel':
             step = 98
 
@@ -499,7 +528,7 @@ def index(default_step=None):
         if agent_action == 'submit':
             step = 0
             default_session()
-            session['active'] = True
+            session['active'] = False
 
     elif agent_step == 42:
         if agent_action == 'submit':
@@ -509,7 +538,7 @@ def index(default_step=None):
             middle_name = request.form.get('patient_middle_name', None)
             last_name = request.form.get('patient_last_name', None)
             suffix = request.form.get('patient_suffix', None)
-            if first_name and last_name:
+            if first_name or last_name:
                 call.case.patient = Contact()
                 call.case.patient.first_name = first_name
                 call.case.patient.middle_name = middle_name
@@ -529,7 +558,7 @@ def index(default_step=None):
             phone = Phone.lookup_or_create(patient_phone)
             if phone.number:
                 call.case.patient.phones.append(phone)
-                if phone.cases().exists():
+                if phone.cases().first():
                     vars['cases'] = phone.cases().all()
                     step = 44
                 else:
@@ -555,28 +584,49 @@ def index(default_step=None):
 
     elif agent_step == 45:
         if agent_action == 'submit':
-            step = 46
+            step = 70
 
     elif agent_step == 46:
         if agent_action == 'submit':
-            step = 0
-            default_session()
-            session['active'] = True
+            caller_question = request.form.get('caller_question', '')
+            if caller_question:
+                call.inquiry = Inquiry()
+                call.inquiry.case = call.case
+                call.inquiry.inquirer = call.caller
+                call.inquiry.question = caller_question
+                step = 70
+        elif agent_action == 'cancel':
+            step = 98
 
     elif agent_step == 47:
         if agent_action == 'submit':
-            call.case = Case()
-            call.case.timestamp = datetime.datetime.now()
+            if not call.case:
+                call.case = Case()
+                call.case.timestamp = datetime.datetime.now()
+            else:
+                session['no_case_match_needed'] = True
             first_name = request.form.get('patient_first_name', None)
             middle_name = request.form.get('patient_middle_name', None)
             last_name = request.form.get('patient_last_name', None)
             suffix = request.form.get('patient_suffix', None)
-            if first_name and last_name:
+            if first_name or last_name:
                 call.case.patient = Contact()
                 call.case.patient.first_name = first_name
                 call.case.patient.middle_name = middle_name
                 call.case.patient.last_name = last_name
                 call.case.patient.suffix = suffix
+            if session['no_case_match_needed']:
+                if not call.case.patient.phones.first():
+                    step = 48
+                elif not call.case.patient.sex:
+                    step = 50
+                elif not call.case.patient.age:
+                    step = 51
+                elif not call.case.patient.language:
+                    step = 52
+                else:
+                    step = 53
+            else:
                 step = 48
         elif agent_action == 'skip':
             step = 48
@@ -589,7 +639,17 @@ def index(default_step=None):
             phone = Phone.lookup_or_create(patient_phone)
             if phone.number:
                 call.case.patient.phones.append(phone)
-                if phone.cases().exists():
+                if session['no_case_match_needed']:
+                    session['no_case_match_needed'] = None
+                    if not call.case.patient.sex:
+                        step = 50
+                    elif not call.case.patient.age:
+                        step = 51
+                    elif not call.case.patient.language:
+                        step = 52
+                    else:
+                        step = 53
+                elif phone.cases().first():
                     session['cases'] = phone.cases().all()
                     step = 49
                 else:
@@ -702,7 +762,7 @@ def index(default_step=None):
 
     elif agent_step == 56:
         if agent_action == 'submit':
-            condition = request.form.get('condition', None)
+            condition = request.form.get('patient_condition', None)
             if condition:
                 call.case.condition = condition
                 if not call.case.had_contact:
@@ -728,29 +788,26 @@ def index(default_step=None):
                 call.case.had_contact = True
             elif had_contact == 'N':
                 call.case.had_contact = False
-            if not call.case.days_sick:
-                step = 58
             else:
-                step = 59
-        elif agent_action == 'skip':
-            if not call.case.days_sick:
-                step = 58
-            else:
-                step = 59
-        elif agent_action == 'cancel':
-            step = 98
-
-    elif agent_step == 58:
-        if agent_action == 'submit':
-            days_sick = request.form.get('days_sick', None)
-            if days_sick is not None:
-                call.case.days_sick = days_sick
                 step = 59
         elif agent_action == 'skip':
             step = 59
         elif agent_action == 'cancel':
             step = 98
 
+    # order of steps #58 and #59 have been switched
+    elif agent_step == 58:
+        if agent_action == 'submit':
+            days_sick = request.form.get('days_sick', None)
+            if days_sick is not None:
+                call.case.days_sick = days_sick
+                step = 60
+        elif agent_action == 'skip':
+            step = 60
+        elif agent_action == 'cancel':
+            step = 98
+
+    # order of steps #58 and #59 have been switched
     elif agent_step == 59:
         if agent_action == 'submit':
             symptoms = request.form.getlist('patient_symptoms')
@@ -759,9 +816,15 @@ def index(default_step=None):
                 for s in symptoms:
                     case_symptoms.append(CaseSymptom(call.case, s))
                 call.case.symptoms = case_symptoms
-                step = 60
+                if not call.case.days_sick:
+                    step = 58
+                else:
+                    step = 60
         elif agent_action == 'skip':
-            step = 60
+            if not call.case.days_sick:
+                step = 58
+            else:
+                step = 60
         elif agent_action == 'cancel':
             step = 98
 
@@ -778,12 +841,13 @@ def index(default_step=None):
         if agent_action == 'submit':
             step = 0
             default_session()
-            session['active'] = True
+            session['active'] = False
 
     elif agent_step == 62:
         if agent_action == 'submit':
             case_report = request.form.get('case_report', None)
             if case_report == 'Y':
+                call.type = 'case_report'
                 step = 24
             elif case_report == 'N':
                 step = 63
@@ -794,7 +858,13 @@ def index(default_step=None):
         if agent_action == 'submit':
             step = 0
             default_session()
-            session['active'] = True
+            session['active'] = False
+
+    elif agent_step == 70:
+        if agent_action == 'submit':
+            step = 0
+            default_session()
+            session['active'] = False
 
     elif agent_step == 98:
         if agent_action == 'submit':
@@ -807,7 +877,7 @@ def index(default_step=None):
             agent_reason = request.form.get('agent_reason', '')
             step = 0
             default_session()
-            session['active'] = True
+            session['active'] = False
 
     #TODO: implement step stack for easy back and forth movement instead of only "previous_step"
     session['step'] = step

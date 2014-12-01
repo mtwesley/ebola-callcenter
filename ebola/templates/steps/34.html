@@ -1,9 +1,9 @@
 {% extends 'step.html' %}
 {% block agent_dialogue_text %}
-    Has the patient had contact with a known Ebola case?
+    Has {{ call.case.patient.short_name() or 'the patient' }} had contact with a known Ebola case?
 {% endblock %}
 {% block agent_input_elements %}
-    <input type="radio" name="patient_had_contact" value="Y"> <label for="Y">Yes</label><br>
-    <input type="radio" name="patient_had_contact" value="N"> <label for="N">No</label><br>
+    <input type="radio" name="patient_had_contact" value="Y" {% if call.case.had_contact == True %}checked="checked"{% endif %}> <label for="Y">Yes</label><br>
+    <input type="radio" name="patient_had_contact" value="N" {% if not call.case.had_contact is none %}checked="checked"{% endif %}> <label for="N">No</label><br>
 {% endblock %}
 {% block agent_skip_text %}UNKNOWN{% endblock %}

@@ -3,5 +3,6 @@
     Do you have any additional comments?
 {% endblock %}
 {% block agent_input_elements %}
-    <textarea name="caller_comments" placeholder="Caller Comments"></textarea>
+    <textarea name="caller_comments" placeholder="Caller Comments" value="{{ call.case.comments }}"></textarea>
 {% endblock %}
+{% set disable_agent_skip = True %}

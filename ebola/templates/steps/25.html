@@ -1,6 +1,6 @@
 {% extends 'step.html' %}
 {% block agent_dialogue_text %}
-    Please state the patient's phone number.
+    Please state the {{ call.case.patient.short_name() or 'the patient' }}'s phone number.
 {% endblock %}
 {% block agent_input_elements %}
     <input type="text" name="patient_phone" placeholder="Patient Phone Number">

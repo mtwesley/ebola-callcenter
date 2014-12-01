@@ -1,12 +1,12 @@
 {% extends 'step.html' %}
 {% block agent_dialogue_text %}
-     What is the patient's age?
+     What is {{ call.case.patient.short_name() or 'the patient' }}'s age?
 {% endblock %}
 {% block agent_input_elements %}
     <select name="patient_age">
         <option disabled="disabled" selected="selected">Patient Age</option>
         {% for n in range(1,99) %}
-            <option value="{{ n }}">{{ n }}</option>
+            <option value="{{ n }}" {% if call.case.patient.age == k %}selected="selected"{% endif %}>{{ n }}</option>
         {% endfor %}
     </select>
 {% endblock %}

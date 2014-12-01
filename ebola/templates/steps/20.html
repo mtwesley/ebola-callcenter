@@ -1,6 +1,6 @@
 {% extends 'step.html' %}
 {% block agent_dialogue_text %}
-     Do you have new info about [PATIENT_NAME]?
+     Do you have new information about {{ call.case.patient.name() or 'the patient' }}?
 {% endblock %}
 {% block agent_input_elements %}
     <input type="radio" name="case_update" value="Y"> <label for="Y">Yes</label><br>

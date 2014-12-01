@@ -5,21 +5,9 @@
 {% block agent_input_elements %}
     <select name="caller_county">
         <option disabled="disabled" selected="selected">Caller County</option>
-        <option value="bomi">Bomi</option>
-        <option value="bong">Bong</option>
-        <option value="gbarpolu">Gbarpolu</option>
-        <option value="grand_bassa">Grand Bassa</option>
-        <option value="grand_cape_mount">Grand Cape Mount</option>
-        <option value="grand_gedeh">Grand Gedeh</option>
-        <option value="grand_kru">Grand Kru</option>
-        <option value="lofa">Lofa</option>
-        <option value="margibi">Margibi</option>
-        <option value="maryland">Maryland</option>
-        <option value="montserrado">Montserrado</option>
-        <option value="nimba">Nimba</option>
-        <option value="rivercess">Rivercess</option>
-        <option value="river_gee">River Gee</option>
-        <option value="sinoe">Sinoe</option>
+        {% for k,v in helpers.county.items() %}
+        <option value="{{ k }}">{{ v }}</option>
+        {% endfor %}
     </select>
 {% endblock %}
 {% set disable_agent_skip = True %}

@@ -1,6 +1,6 @@
 {% extends 'step.html' %}
 {% block agent_dialogue_text %}
-     Are you calling to ask about [PATIENT_NAME]?
+     Are you calling to ask about {{ call.case.patient.name() or 'the patient' }}?
 {% endblock %}
 {% block agent_input_elements %}
     <input type="radio" name="case_inquiry" value="Y"> <label for="Y">Yes</label><br>

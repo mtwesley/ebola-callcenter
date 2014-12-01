@@ -53,12 +53,6 @@ class Phone(db.Model):
     def lookup_or_create(cls, number):
         lookup = Phone.lookup(number)
         return lookup if lookup is not None else Phone(number)
-        # if lookup is not None:
-        #     return lookup
-        # else:
-        #     create = Phone(number)
-        #     db.session.add(create)
-        #     return create
 
     @classmethod
     def e164(cls, number):
@@ -115,6 +109,7 @@ class Contact(db.Model):
 
     calls = db.relationship('Call', backref='caller', lazy='dynamic')
     cases = db.relationship('Case', backref='patient', lazy='dynamic')
+    inquiries = db.relationship('Inquiry', backref='inquirer', lazy='dynamic')
     phones = db.relationship('Phone', secondary=phone_contacts, lazy='dynamic')
 
     @orm.reconstructor
@@ -125,7 +120,11 @@ class Contact(db.Model):
         self.user_id = g.user.id
 
     def name(self):
-        return ' '.join([self.first_name or '', self.middle_name or '', self.last_name or '', self.suffix or '']).strip()
+        return ' '.join([self.first_name or '', self.middle_name or '', self.last_name or '', helpers.suffix[self.suffix or '']]).strip()
+
+    def short_name(self):
+        return (self.first_name or self.last_name).strip()
+
 
     def call_cases(self):
         return Case.query.join(Call).join(Call.caller).filter(Contact.id == self.id)
@@ -191,6 +190,7 @@ class Case(db.Model):
     timestamp = db.Column(db.DateTime(), default=datetime.datetime.now(), server_default=db.func.now(), nullable=False)
 
     calls = db.relationship('Call', backref='case', lazy='dynamic')
+    inquiries = db.relationship('Inquiry', backref='case', lazy='dynamic')
     symptoms = db.relationship('CaseSymptom', backref='case', lazy='dynamic', cascade="all, delete-orphan")
     statuses = db.relationship('CaseStatus', backref='case', lazy='dynamic', cascade="all, delete-orphan")
 
@@ -209,6 +209,9 @@ class Case(db.Model):
         for s in self.symptoms.all():
             pretty.append(helpers.symptom[s.symptom])
         return ', '.join(pretty)
+
+    def unpretty_symptoms(self):
+        return [cs.symptom for cs in self.symptoms.all()]
 
 
 class CaseSymptom(db.Model):
@@ -235,6 +238,44 @@ class CaseStatus(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     case_id = db.Column(db.Integer, db.ForeignKey('cases.id'), nullable=False)
     status = db.Column(db.Enum('pending', 'active', 'duplicate', 'deleted', native_enum=False), nullable=False)
+    reason = db.Column(db.String(32))
+    comments = db.Column(db.String(256))
+    json = db.Column(db.Text, nullable=True)
+
+
+class Inquiry(db.Model):
+    __tablename__ = 'inquiries'
+
+    id = db.Column(db.Integer, primary_key=True)
+    inquirer_id = db.Column(db.Integer, db.ForeignKey('contacts.id'))
+    call_id = db.Column(db.Integer, db.ForeignKey('calls.id'))
+    case_id = db.Column(db.Integer, db.ForeignKey('cases.id'))
+    question = db.Column(db.Text)
+    answer = db.Column(db.Text)
+    answerer = db.Column(db.String(128))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    timestamp = db.Column(db.DateTime(), default=datetime.datetime.now(), server_default=db.func.now(), nullable=False)
+
+    call = db.relationship('Call', backref=orm.backref('inquiry', uselist=False))
+    statuses = db.relationship('InquiryStatus', backref='inquiry', lazy='dynamic', cascade="all, delete-orphan")
+
+    @orm.reconstructor
+    def set_user(self):
+        self.user_id = g.user.id
+
+    def __init__(self):
+        self.user_id = g.user.id
+
+    def __nonzero__(self):
+        return bool(self.timestamp)
+
+
+class InquiryStatus(db.Model):
+    __tablename__ = 'inquiry_statuses'
+
+    id = db.Column(db.Integer, primary_key=True)
+    inquiry_id = db.Column(db.Integer, db.ForeignKey('inquiries.id'), nullable=False)
+    status = db.Column(db.Enum('pending', 'active', 'duplicate', 'answered', 'deleted', native_enum=False), nullable=False)
     reason = db.Column(db.String(32))
     comments = db.Column(db.String(256))
     json = db.Column(db.Text, nullable=True)
