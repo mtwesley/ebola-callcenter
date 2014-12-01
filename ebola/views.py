@@ -10,7 +10,7 @@ from flask.ext.login import current_user, login_user, logout_user, login_require
 from models import db, User, Call, Case, Inquiry, CaseSymptom, Contact, Phone
 
 
-views = Blueprint("views", __name__, static_url_path='')
+views = Blueprint("views", __name__)
 
 @views.before_request
 def default_globals():
