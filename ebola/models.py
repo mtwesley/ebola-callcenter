@@ -30,6 +30,21 @@ class User(db.Model, UserMixin):
     def hash_password(self, password):
         pass
 
+    def today_calls(self, type=None, status=None):
+        query = self.calls.filter(Call.timestamp.between(
+            datetime.datetime.today().replace(hour=0, minute=0, second=0),
+            datetime.datetime.today().replace(hour=23, minute=59, second=59)))
+        if type:
+            query = query.filter(Call.type == type)
+        if status:
+            query = query.join(CallStatus).filter(CallStatus.status == status)
+        return query
+
+    def today_cases(self):
+        return self.cases.filter(Call.timestamp.between(
+            datetime.datetime.today().replace(hour=0, minute=0, second=0),
+            datetime.datetime.today().replace(hour=23, minute=59, second=59)))
+
 
 class Phone(db.Model):
     __tablename__ = 'phones'
@@ -123,16 +138,22 @@ class Contact(db.Model):
         return ' '.join([self.first_name or '', self.middle_name or '', self.last_name or '', helpers.suffix[self.suffix or '']]).strip()
 
     def short_name(self):
-        return (self.first_name or self.last_name).strip()
-
+        return (self.first_name or self.last_name or '').strip()
 
     def call_cases(self):
         return Case.query.join(Call).join(Call.caller).filter(Contact.id == self.id)
 
     def today_calls(self):
         return self.calls.filter(Call.timestamp.between(
-            datetime.datetime.today(),
-            datetime.datetime.today().replace(hour=11, min=59, second=59)))
+            datetime.datetime.today().replace(hour=0, minute=0, second=0),
+            datetime.datetime.today().replace(hour=23, minute=59, second=59)))
+
+    def pretty_phones(self):
+        pretty = []
+        for p in self.phones.all():
+            pretty.append(p.pretty())
+        return ', '.join(pretty)
+
 
 
 class Call(db.Model):

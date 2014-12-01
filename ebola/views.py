@@ -26,6 +26,7 @@ def default_session():
     session.setdefault('previous_step', 0)
     session.setdefault('calls', helpers.nesteddict())
     session.setdefault('call_id', 0)
+    session.setdefault('case_id', 0)
     session.setdefault('caller_match_id', None)
     session.setdefault('not_caller_match_id', [])
     session.setdefault('case_match_id', None)
@@ -365,13 +366,21 @@ def index(default_step=None):
 
     elif agent_step == 26:
         if agent_action == 'submit':
-            case_id = request.form.get('case_id', None)
-            case = Case.query.get(case_id)
-            if case:
-                call.case = case
+            case_match_id = request.form.get('case_match_id', None)
+            case_match = request.form.get('case_match', None)
+            if case_match == 'Y':
+                call.case = Case.query.get(case_match_id)
+                session['not_case_match_id'] = []
+                session['case_match_id'] = None
                 step = 39
-            else:
-                step = 27
+            elif case_match == 'N':
+                session['not_case_match_id'].append(case_match_id)
+                match = call.caller.call_cases().filter(
+                    ~Contact.id.in_(session['not_case_match_id'])).first()
+                if match:
+                    session['case_match_id'] = match.id
+                else:
+                    step = 27
         elif agent_action == 'cancel':
             step = 98
 
@@ -887,8 +896,14 @@ def index(default_step=None):
         db.session.add(call)
         db.session.commit()
         session['call_id'] = call.id
+        if call.case:
+            session['case_id'] = call.case.id
     else:
         call = Call()
+
+    if not call.case:
+        call.case = Case()
+        call.case.patient = Contact()
 
     # FIXME: remove when development is complete
     print "\n\nSESSION: ", session, "\n\n"

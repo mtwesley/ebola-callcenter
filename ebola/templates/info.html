@@ -1,23 +1,13 @@
-{% if not call and not call.case %}
+{% if not call and not call.case and g.user.today_calls().first() %}
     <div id="module_b" class="module rounded">
         <div class="caller_related_cases text_a">
             Incoming call history
             <br><br>
+            {% for c in g.user.today_calls().all() %}
             <a class="btn2 gradient_gray3 rounded text_d" href="">
-                <div class="call_type" style="background:#B44D54"></div>  0886670426   Charles Cooper
+                <div class="call_type" style="background:#B44D54"></div>  {{ c.phone.pretty() }}   {{ c.caller.name() }}
             </a>
-            <a class="btn2 gradient_gray3 rounded text_d" href="">
-                <div class="call_type" style="background:#68ACBA"></div>  0886670426   Charles Cooper
-            </a>
-            <a class="btn2 gradient_gray3 rounded text_d" href="">
-                <div class="call_type" style="background:#7C5866"></div>  0886670426   Charles Cooper
-            </a>
-            <a class="btn2 gradient_gray3 rounded text_d" href="">
-                <div class="call_type" style="background:#E3BB56"></div>  0886670426   Charles Cooper
-            </a>
-            <a class="btn2 gradient_gray3 rounded text_d" href="">
-                <div class="call_type" style="background:#6EAB61"></div>  0886670426   Charles Cooper
-            </a>
+            {% endfor %}
         </div>
     </div>
 {% endif %}
@@ -30,29 +20,30 @@
 
         <div class="info_content text_b">
             {% if call.type %}<span style="color:#7D7D7D;">Call Type:</span> {{ helpers.call_type[call.type] }} <br>{% endif %}
-            {% if call.phone %}<span style="color:#7D7D7D;">Caller Phone:</span> {{ call.phone.pretty() }} <br>{% endif %}
-            {% if call.caller.first_name or call.caller.middle_name or call.caller.last_name %}
-                <span style="color:#7D7D7D;">Caller Name:</span>
-                {{ call.caller.name() }} <br>
+            {% if not call.caller %}
+                {% if call.phone %}<span style="color:#7D7D7D;">Caller Phone:</span> {{ call.phone.pretty() }} <br>{% endif %}
+            {% elif call.caller %}
+                {% if call.caller.phones.first() %}<span style="color:#7D7D7D;">Caller Phone:</span> {{ call.caller.pretty_phones() }} <br>{% endif %}
+                {% if call.caller and call.caller.name() %}<span style="color:#7D7D7D;">Caller Name:</span>{{ call.caller.name() }} <br>{% endif %}
+                {% if call.caller.sex %}<span style="color:#7D7D7D;">Caller Sex:</span> {{ helpers.sex[call.caller.sex] }} <br>{% endif %}
+                {% if call.caller.age %}<span style="color:#7D7D7D;">Caller Age:</span> {{ call.caller.age }} <br>{% endif %}
+                {% if call.caller.language %}<span style="color:#7D7D7D;">Caller Language:</span> {{ helpers.language[call.caller.language] }} <br>{% endif %}
+                {% if call.caller.county %}<span style="color:#7D7D7D;">Caller County:</span> {{ helpers.county[call.caller.county] }} <br>{% endif %}
+                {% if call.caller.city %}<span style="color:#7D7D7D;">Caller City:</span> {{ call.caller.city }} <br>{% endif %}
+                {% if call.caller.community %}<span style="color:#7D7D7D;">Caller Community:</span> {{ call.caller.community }}{% endif %}
             {% endif %}
-            {% if call.caller.sex %}<span style="color:#7D7D7D;">Caller Sex:</span> {{ helpers.sex[call.caller.sex] }} <br>{% endif %}
-            {% if call.caller.age %}<span style="color:#7D7D7D;">Caller Age:</span> {{ call.caller.age }} <br>{% endif %}
-            {% if call.caller.language %}<span style="color:#7D7D7D;">Caller Language:</span> {{ helpers.language[call.caller.language] }} <br>{% endif %}
-            {% if call.caller.county %}<span style="color:#7D7D7D;">Caller County:</span> {{ helpers.county[call.caller.county] }} <br>{% endif %}
-            {% if call.caller.city %}<span style="color:#7D7D7D;">Caller City:</span> {{ call.caller.city }} <br>{% endif %}
-            {% if call.caller.community %}<span style="color:#7D7D7D;">Caller Community:</span> {{ call.caller.community }}{% endif %}
         </div>
     </div>
 
-    {% if call and call.case %}
+    {% if call and call.case and call.case.id == session['case_id'] %}
         <div id="module_b" class="module rounded">
             <div class="info_title text_a">
                 Patient Report Information
             </div>
 
             <div class="info_content text_b">
-                {% if call.case.patient.name %}<span style="color:#7D7D7D;">Patient Name:</span> {{ call.case.patient.name() }} <br>{% endif %}
-                {% if call.case.patient.phone %}<span style="color:#7D7D7D;">Patient Phone:</span> {{ call.case.patient.phone.pretty() }} <br>{% endif %}
+                {% if call.case.patient.name() %}<span style="color:#7D7D7D;">Patient Name:</span> {{ call.case.patient.name() }} <br>{% endif %}
+                {% if call.case.patient.phones.first() %}<span style="color:#7D7D7D;">Patient Phone:</span> {{ call.case.patient.pretty_phones() }} <br>{% endif %}
                 {% if call.case.patient.sex %}<span style="color:#7D7D7D;">Patient Sex:</span> {{ helpers.sex[call.case.patient.sex] }} <br>{% endif %}
                 {% if call.case.patient.age %}<span style="color:#7D7D7D;">Patient Age:</span> {{ call.case.patient.age }} <br>{% endif %}
                 {% if call.case.patient.language %}<span style="color:#7D7D7D;">Patient Language:</span> {{ helpers.language[call.case.patient.language] }} <br>{% endif %}
