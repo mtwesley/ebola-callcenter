@@ -1,6 +1,6 @@
 {% extends 'step.html' %}
 {% block agent_dialogue_text %}
-    Please state {{ call.case.patient.short_name() or 'the patient' }}'s name.
+    Please state {{ call.case.patient.short_name() or 'a patient' }}'s name.
 {% endblock %}
 {% block agent_input_elements %}
     <input type="text" name="patient_first_name" placeholder="Patient First Name" {% if call.case.patient %}value="{{ call.case.patient.first_name or '' }}"{% endif %}>

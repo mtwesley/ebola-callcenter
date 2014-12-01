@@ -1,8 +1,8 @@
 {% extends 'step.html' %}
-{% set case_match = call.caller.call_cases().filter_by(id=session['case_match_id']).first() %}
+{% set case_match = vars['case_match'] %}
 {% block agent_dialogue_text %}
     Are you calling about
-    {{ case_match.patient.name() or 'the patient' }}{% if case_match.patient.city or case_match.patient.community or case_match.patient.county %} from
+    {{ case_match.patient.name() or 'a patient' }}{% if case_match.patient.city or case_match.patient.community or case_match.patient.county %} from
     {% if case_match.patient.community %}{{ case_match.patient.community }}, {% endif %}
     {% if case_match.patient.city %}{{ case_match.patient.city }} in {% endif %}
     {% if case_match.patient.county %}{{ helpers.county[case_match.patient.county] }} County{% endif %}{% endif %}?

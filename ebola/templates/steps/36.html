@@ -1,7 +1,7 @@
 {% extends 'step.html' %}
 {% set symptoms = call.case.unpretty_symptoms() %}
 {% block agent_dialogue_text %}
-      Does {{ call.case.patient.short_name() or 'the patient' }} have any of these symptoms?
+      Does {{ call.case.patient.short_name() or 'a patient' }} have any of these symptoms?
 {% endblock %}
 {% block agent_input_elements %}
     <input type="checkbox" name="patient_symptoms" value="fever" {% if 'fever' in symptoms %}checked="checked"{% endif %}> <label for="fever">Fever</label>

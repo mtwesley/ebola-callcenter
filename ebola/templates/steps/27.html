@@ -1,6 +1,6 @@
 {% extends 'step.html' %}
 {% block agent_dialogue_text %}
-    Is {{ call.case.patient.short_name() or 'the patient' }} male or female?
+    Is {{ call.case.patient.short_name() or 'a patient' }} male or female?
 {% endblock %}
 {% block agent_input_elements %}
     <input type="radio" name="patient_sex" value="male" {% if call.case.patient.sex == 'male' %}checked="checked"{% endif %}> <label for="male">Male</label><br>

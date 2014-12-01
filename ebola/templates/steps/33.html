@@ -1,6 +1,6 @@
 {% extends 'step.html' %}
 {% block agent_dialogue_text %}
-    What condition is {{ call.case.patient.short_name() or 'the patient' }} in?
+    What condition is {{ call.case.patient.short_name() or 'a patient' }} in?
 {% endblock %}
 {% block agent_input_elements %}
     <select name="patient_condition">

@@ -99,7 +99,7 @@ class Phone(db.Model):
         return bool(self.number)
 
     def cases(self):
-        return Case.query.join(Contact).join(phone_contacts).join(Phone).filter(Phone.number == self.number)
+        return Case.query.join(Case.patient).join(phone_contacts).join(Phone).filter(Phone.number == self.number)
 
     def pretty(self):
         return Phone.local(self.number)
@@ -140,8 +140,11 @@ class Contact(db.Model):
     def short_name(self):
         return (self.first_name or self.last_name or '').strip()
 
-    def call_cases(self):
-        return Case.query.join(Call).join(Call.caller).filter(Contact.id == self.id)
+    def call_cases(self, id=None):
+        query = Case.query.join(Call).join(Call.caller).filter(Contact.id == self.id)
+        if id:
+            query = query.filter(Case.id == id)
+        return query
 
     def today_calls(self):
         return self.calls.filter(Call.timestamp.between(

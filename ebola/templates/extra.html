@@ -1,3 +1,4 @@
+{% if g.user.is_authenticated() %}
 {% if not call %}
     <div id="module_c" class="module rounded">
         <div class="agent_stats text_a">
@@ -45,4 +46,5 @@
             </div>
         </div>
     {% endif %}
+{% endif %}
 {% endif %}

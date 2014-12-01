@@ -1,6 +1,6 @@
 {% extends 'step.html' %}
 {% block agent_dialogue_text %}
-    What city is {{ call.case.patient.short_name() or 'the patient' }} in?
+    What city is {{ call.case.patient.short_name() or 'a patient' }} in?
 {% endblock %}
 {% block agent_input_elements %}
     <input type="text" name="patient_city" placeholder="Patient City" value="{{ call.case.patient.city or '' }}">

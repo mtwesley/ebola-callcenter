@@ -1,6 +1,6 @@
 {% extends 'step.html' %}
 {% block agent_dialogue_text %}
-     What is {{ call.case.patient.short_name() or 'the patient' }}'s primary language?
+     What is {{ call.case.patient.short_name() or 'a patient' }}'s primary language?
 {% endblock %}
 {% block agent_input_elements %}
     <select name="patient_language">

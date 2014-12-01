@@ -1,6 +1,6 @@
 {% extends 'step.html' %}
 {% block agent_dialogue_text %}
-      How many days has {{ call.case.patient.short_name() or 'the patient' }} been sick?
+      How many days has {{ call.case.patient.short_name() or 'a patient' }} been sick?
 {% endblock %}
 {% block agent_input_elements %}
     <select name="patient_days_sick">

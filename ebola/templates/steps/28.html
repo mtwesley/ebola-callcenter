@@ -1,6 +1,6 @@
 {% extends 'step.html' %}
 {% block agent_dialogue_text %}
-     What is {{ call.case.patient.short_name() or 'the patient' }}'s age?
+     What is {{ call.case.patient.short_name() or 'a patient' }}'s age?
 {% endblock %}
 {% block agent_input_elements %}
     <select name="patient_age">

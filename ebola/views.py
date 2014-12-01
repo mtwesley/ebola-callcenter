@@ -30,6 +30,7 @@ def default_session():
     session.setdefault('caller_match_id', None)
     session.setdefault('not_caller_match_id', [])
     session.setdefault('case_match_id', None)
+    session.setdefault('case_match_phone_id', None)
     session.setdefault('not_case_match_id', [])
     session.setdefault('no_case_match_needed', None)
 
@@ -86,6 +87,7 @@ def index(default_step=None):
                 session['caller_match_id'] = None
                 if call.caller.call_cases().first():
                     session['case_match_id'] = call.caller.call_cases().first().id
+                    vars['case_match'] = call.caller.call_cases().first()
                     step = 3
                 else:
                     step = 17
@@ -112,9 +114,10 @@ def index(default_step=None):
             elif case_match == 'N':
                 session['not_case_match_id'].append(case_match_id)
                 match = call.caller.call_cases().filter(
-                    ~Contact.id.in_(session['not_case_match_id'])).first()
+                    ~Case.id.in_(session['not_case_match_id'])).first()
                 if match:
                     session['case_match_id'] = match.id
+                    vars['case_match'] = match
                 else:
                     step = 17
 
@@ -184,7 +187,12 @@ def index(default_step=None):
             community = request.form.get('caller_community', None)
             if community:
                 call.caller.community = community
-                step = 3
+                if call.caller.call_cases().first():
+                    session['case_match_id'] = call.caller.call_cases().first().id
+                    vars['case_match'] = call.caller.call_cases().first()
+                    step = 3
+                else:
+                    step = 17
         elif agent_action == 'cancel':
             step = 98
 
@@ -355,7 +363,9 @@ def index(default_step=None):
             if phone.number:
                 call.case.patient.phones.append(phone)
                 if phone.cases().first():
-                    vars['cases'] = phone.cases().all()
+                    session['case_match_phone_id'] = phone.id
+                    session['case_match_id'] = phone.cases().first().id
+                    vars['case_match'] = phone.cases().first()
                     step = 26
                 else:
                     step = 27
@@ -372,13 +382,16 @@ def index(default_step=None):
                 call.case = Case.query.get(case_match_id)
                 session['not_case_match_id'] = []
                 session['case_match_id'] = None
+                session['case_match_phone_id'] = None
+                vars['case_match'] = None
                 step = 39
             elif case_match == 'N':
                 session['not_case_match_id'].append(case_match_id)
-                match = call.caller.call_cases().filter(
-                    ~Contact.id.in_(session['not_case_match_id'])).first()
+                match = Phone.query.get(session['case_match_phone_id']).cases().filter(
+                    ~Case.id.in_(session['not_case_match_id'])).first()
                 if match:
                     session['case_match_id'] = match.id
+                    vars['case_match'] = match
                 else:
                     step = 27
         elif agent_action == 'cancel':
@@ -559,7 +572,24 @@ def index(default_step=None):
         elif agent_action == 'cancel':
             step = 98
 
+
     #TODO: handle situations with patient/caller name similarity check lookup
+
+    # elif agent_step == 43:
+    #     if agent_action == 'submit':
+    #         patient_phone = request.form.get('patient_phone', None)
+    #         phone = Phone.lookup_or_create(patient_phone)
+    #         if phone.number:
+    #             call.case.patient.phones.append(phone)
+    #             if phone.cases().first():
+    #                 vars['cases'] = phone.cases().all()
+    #                 step = 44
+    #             else:
+    #                 step = 45
+    #     elif agent_action == 'skip':
+    #         step = 45
+    #     elif agent_action == 'cancel':
+    #         step = 98
 
     elif agent_step == 43:
         if agent_action == 'submit':
@@ -568,7 +598,9 @@ def index(default_step=None):
             if phone.number:
                 call.case.patient.phones.append(phone)
                 if phone.cases().first():
-                    vars['cases'] = phone.cases().all()
+                    session['case_match_phone_id'] = phone.id
+                    session['case_match_id'] = phone.cases().first().id
+                    vars['case_match'] = phone.cases().first()
                     step = 44
                 else:
                     step = 45
@@ -579,15 +611,38 @@ def index(default_step=None):
 
     #TODO: handle situations to lookup phone cases from the following step
 
+    # elif agent_step == 44:
+    #     if agent_action == 'submit':
+    #         case_id = request.form.get('case_id', None)
+    #         case = Case.query.get(case_id)
+    #         if case:
+    #             call.case = case
+    #             step = 46
+    #         else:
+    #             step = 45
+    #     elif agent_action == 'cancel':
+    #         step = 98
+
     elif agent_step == 44:
         if agent_action == 'submit':
-            case_id = request.form.get('case_id', None)
-            case = Case.query.get(case_id)
-            if case:
-                call.case = case
+            case_match_id = request.form.get('case_match_id', None)
+            case_match = request.form.get('case_match', None)
+            if case_match == 'Y':
+                call.case = Case.query.get(case_match_id)
+                session['not_case_match_id'] = []
+                session['case_match_id'] = None
+                session['case_match_phone_id'] = None
+                vars['case_match'] = None
                 step = 46
-            else:
-                step = 45
+            elif case_match == 'N':
+                session['not_case_match_id'].append(case_match_id)
+                match = Phone.query.get(session['case_match_phone_id']).cases().filter(
+                    ~Case.id.in_(session['not_case_match_id'])).first()
+                if match:
+                    session['case_match_id'] = match.id
+                    vars['case_match'] = match
+                else:
+                    step = 45
         elif agent_action == 'cancel':
             step = 98
 
