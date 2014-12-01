@@ -995,7 +995,7 @@ def login():
             user = User.query.filter_by(email=eml, hash=hsh).one()
 
             if user is not None and login_user(user):
-                return redirect(request.args.get('next') or url_for('home.index'))
+                return redirect(request.args.get('next') or url_for('views.index'))
 
         except NoResultFound:
             flash('Email and password do not match', 'error')
