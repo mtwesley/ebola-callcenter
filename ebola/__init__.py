@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, redirect, url_for
 from flask.ext.login import LoginManager
 
 from models import db, User
@@ -22,3 +22,7 @@ lm.login_view = 'views.login'
 @lm.user_loader
 def load_user(user_id):
     return User.query.get(user_id)
+
+@lm.unauthorized_handler
+def unauthorized():
+    return redirect(url_for('views.login'))
