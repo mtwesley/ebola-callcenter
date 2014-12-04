@@ -9,9 +9,8 @@ import config
 
 lm = LoginManager()
 
-app = Flask(__name__, static_url_path='')
+app = Flask(__name__)
 app.config.from_object(config)
-app.config.from_envvar('EBOLACALLCENTER_CONFIG')
 app.register_blueprint(views)
 
 db.init_app(app)
