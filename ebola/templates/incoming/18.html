@@ -1,0 +1,10 @@
+{% extends 'step.html' %}
+{% block agent_dialogue_text %}
+    What kind of payment you are calling about?
+{% endblock %}
+{% block agent_input_elements %}
+    {% for k,v in helpers.payment_type.items() %}
+    <input type="radio" name="payment_type" value="{{ k }}"> <label for="{{ k }}">{{ v }}</label><br>
+    {% endfor %}
+{% endblock %}
+{% set disable_agent_skip = True %}

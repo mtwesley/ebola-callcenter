@@ -1,0 +1,8 @@
+{% extends 'step.html' %}
+{% block agent_dialogue_text %}
+    What kind of organization is it?
+{% endblock %}
+{% block agent_input_elements %}
+    <input type="text" name="other_organization_type" placeholder="Type the kind of organization">
+{% endblock %}
+{% set disable_agent_skip = True %}

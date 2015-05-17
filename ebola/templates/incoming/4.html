@@ -1,10 +1,10 @@
 {% extends 'step.html' %}
 {% block agent_dialogue_text %}
-      What county are you calling from?
+      What county do you live in?
 {% endblock %}
 {% block agent_input_elements %}
-    <select name="caller_county">
-        <option disabled="disabled" selected="selected">Caller County</option>
+    <select name="county">
+        <option disabled="disabled" selected="selected">Select the county</option>
         {% for k,v in helpers.county.items() %}
         <option value="{{ k }}">{{ v }}</option>
         {% endfor %}

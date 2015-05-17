@@ -6,7 +6,7 @@
 		<meta name="Description" content="" />
 		<meta name="keywords" content="callcenter">
 		<!-- <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" /> -->
-		<title>Ebola Response Call Center</title>
+		<title>PPERW Call Center</title>
         <link type="text/css" href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet" />
         <link type="text/css" href="{{ url_for('static', filename='css/styleFORM.css') }}" rel="stylesheet" />
         <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
@@ -16,19 +16,19 @@
 	<body>
 		<div id="wrapperMAIN" class="rounded gradient_gray3">
 			<div id="header" class="gradient_gray2">
-				<div id="logo" class="text_a">Ebola Response Call Center</div>
+				<div id="logo" class="text_a">PPERW Call Center</div>
                 <div id="pageinfo" class="text_b white">
-                    {% if g.user.is_authenticated() and call %}
-                        ACTIVE CALL{% if call.caller %}: {{ call.caller.name() }}{% endif %}
+                    {% if g.user.is_authenticated() and complaint %}
+                        ACTIVE CALL{% if complaint.name %}: {{ complaint.name }}{% endif %}
                     {% endif %}
                 </div>
 				<div id="dateinfo" class="text_b">
                     {{ g.timestamp.strftime('%-I:%M %p %a, %b %-d, %Y') }}
                     {% if g.user.is_authenticated() %}
-                    {% if call %}<span class="white">&nbsp;|&nbsp;</span>  Timer: <span data-countdown="{{ call.timestamp.strftime("%Y-%m-%dT%H:%M:%S") }}"></span>{% endif %}
-                    <span class="white">&nbsp;|&nbsp;</span> <a href="{{ url_for('views.logout') }}"><span class="white">LOG OUT</span></a>
+                    {% if complaint %}<span class="white">&nbsp;|&nbsp;</span>  Timer: <span data-countdown="{{ complaint.timestamp.strftime("%Y-%m-%dT%H:%M:%S") }}"></span>{% endif %}
+                    <span class="white">&nbsp;|&nbsp;</span> <a href="{{ url_for('home.logout') }}"><span class="white">LOG OUT</span></a>
                     {% else %}
-                    <span class="white">&nbsp;|&nbsp;</span> <a href="{{ url_for('views.login') }}"><span class="white">LOG IN</span></a>
+                    <span class="white">&nbsp;|&nbsp;</span> <a href="{{ url_for('home.login') }}"><span class="white">LOG IN</span></a>
                     {% endif %}
                 </div>
 			</div>

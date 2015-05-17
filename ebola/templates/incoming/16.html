@@ -1,0 +1,9 @@
+{% extends 'step.html' %}
+{% block agent_dialogue_text %}
+    Are you calling about an allowance?
+{% endblock %}
+{% block agent_input_elements %}
+    <input type="radio" name="allowance" value="Y"> <label for="Y">Yes</label><br>
+    <input type="radio" name="allowance" value="N"> <label for="N">No</label><br>
+{% endblock %}
+{% set disable_agent_skip = True %}

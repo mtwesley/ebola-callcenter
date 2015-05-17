@@ -1,0 +1,9 @@
+{% extends 'step.html' %}
+{% block agent_dialogue_text %}
+    Are you calling about hazard pay?
+{% endblock %}
+{% block agent_input_elements %}
+    <input type="radio" name="hazard" value="Y"> <label for="Y">Yes</label><br>
+    <input type="radio" name="hazard" value="N"> <label for="N">No</label><br>
+{% endblock %}
+{% set disable_agent_skip = True %}
