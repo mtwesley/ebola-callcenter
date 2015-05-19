@@ -1,0 +1,7 @@
+{% extends 'step.html' %}
+{% block agent_dialogue_text %}
+    Hello {{ complaint.name }}, we have called today to give you an update on the status of the complaint
+    you filed on {{ complaint.complaint_date.strftime('%A, %b %-d, %Y') }}.
+{% endblock %}
+{% block agent_submit_text %}NEXT{% endblock %}
+{% set disable_agent_skip = True %}

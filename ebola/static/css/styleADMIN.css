@@ -1,0 +1,104 @@
+/* general elements */
+
+/* structural */
+
+#wrapperMAIN_ADMIN{
+	width:1024px;
+	min-height: 738px;
+	margin:10px auto 0;
+	overflow: auto
+	/*  min-height: 100%;  */
+}
+
+#content_d{
+	float:left;
+	width:639px;
+	min-height: 678px;
+	margin:0px 0px 15px 0px;
+	padding:30px 0px 0px 20px;
+	border-left:1px dashed #999999;
+}
+
+#module_d{
+	float:left;
+	width:619px;
+	margin:0px;
+	padding:10px 0px 0px 20px;
+	background: #fff;
+	border:1px solid #999999;
+}
+
+#module_e{
+	float:left;
+	width:599px;
+	margin:10px 0px 0px 0px;
+	padding:20px;
+	background: #fff;
+	border:1px solid #999999;
+}
+/* buttons */
+a.btn3,
+a.btn3:link,
+a.btn3:visited{
+	display: inline-block;
+	float: right;
+	text-align:center;
+	font-size:13px;
+	font-weight:bold;
+	margin: 0px 20px 0px 0px;
+	padding:5px 10px 5px 10px;
+	text-decoration: none;
+	box-shadow: 0px 1px 6px #777;
+	color: #ffffff;
+}
+
+a.btn3:hover,
+a.btn3:active {
+	cursor:pointer;
+	box-shadow: 0px 1px 1px #777;
+	background: #999;
+	color: #ffffff;
+}
+
+a.btn4,
+a.btn4:link,
+a.btn4:visited{
+	display: inline-block;
+	text-decoration: none;
+	width: 96%;
+	font-size:13px;
+	margin:5px 0px 5px 0px;
+	padding:5px 10px 5px 10px;
+	border:1px solid #999999;
+	color: #464646;
+}
+
+a.btn4:hover,
+a.btn4:active {
+	cursor:pointer;
+	background: #999;
+	color: #ffffff;
+}
+
+a.btn5,
+a.btn5:link,
+a.btn5:visited{
+	display: inline-block;
+	float: left;
+	text-align:center;
+	font-size:20px;
+	font-weight:bold;
+	margin: 0px 20px 0px 0px;
+	padding:5px 20px 5px 20px;
+	text-decoration: none;
+	box-shadow: 0px 1px 6px #777;
+	color: #ffffff;
+}
+
+a.btn5:hover,
+a.btn5:active {
+	cursor:pointer;
+	box-shadow: 0px 1px 1px #777;
+	background: #999;
+	color: #ffffff;
+}

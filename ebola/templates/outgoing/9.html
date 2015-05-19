@@ -1,0 +1,8 @@
+{% extends 'step.html' %}
+{% block agent_dialogue_text %}
+    Thank you, your response will be forwarded to the appropriate authorities. Have a nice day.
+{% endblock %}
+{% block agent_submit_text %}END CALL{% endblock %}
+{% set disable_agent_input = True %}
+{% set disable_agent_skip = True %}
+{% set disable_agent_cancel = True %}

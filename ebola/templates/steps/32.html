@@ -1,8 +1,0 @@
-{% extends 'step.html' %}
-{% block agent_dialogue_text %}
-    What community is {{ call.case.patient.short_name() or 'a patient' }} in?
-{% endblock %}
-{% block agent_input_elements %}
-    <input type="text" name="patient_community" placeholder="Patient Community" value="{{ call.case.patient.community or '' }}">
-{% endblock %}
-{% block agent_skip_text %}UNKNOWN{% endblock %}

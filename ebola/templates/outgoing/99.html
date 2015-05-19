@@ -1,0 +1,13 @@
+{% extends 'step.html' %}
+{% block agent_instruction_text %}Why are you choosing to cancel this call?{% endblock %}
+{% block agent_input_elements %}
+    <select name="reason">
+        <option disabled="disabled" selected="selected">Choose reason for cancelling call</option>
+        {% for k,v in helpers.reason.items() %}
+        <option value="{{ k }}">{{ v }}</option>
+        {% endfor %}
+    </select>
+{% endblock %}
+{% set disable_agent_dialogue = True %}
+{% set disable_agent_skip = True %}
+{% set disable_agent_cancel = True %}

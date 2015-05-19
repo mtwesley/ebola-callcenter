@@ -1,60 +1,53 @@
-{% if not call and not call.case and g.user.today_calls().first() %}
-    <div id="module_b" class="module rounded">
-        <div class="caller_related_cases text_a">
-            Incoming call history
-            <br><br>
-            {% for c in g.user.today_calls().all() %}
-            <a class="btn2 gradient_gray3 rounded text_d" href="">
-                <div class="call_type" style="background:#B44D54"></div>  {{ c.phone.pretty() }}   {{ c.caller.name() }}
-            </a>
-            {% endfor %}
-        </div>
-    </div>
-{% endif %}
+{#{% if not call and not complaint and g.user.today_calls().first() %}#}
+{#    <div id="module_b" class="module rounded">#}
+{#        <div class="caller_related_cases text_a">#}
+{#            Incoming call history#}
+{#            <br><br>#}
+{#            {% for c in g.user.today_calls().all() %}#}
+{#            <a class="btn2 gradient_gray3 rounded text_d" href="">#}
+{#                <div class="call_type" style="background:#B44D54"></div>  {{ c.phone.pretty() }}   {{ c.caller.name() }}#}
+{#            </a>#}
+{#            {% endfor %}#}
+{#        </div>#}
+{#    </div>#}
+{#{% endif %}#}
 
-{% if call and call.phone %}
+{% if complaint.phone %}
     <div id="module_b" class="module rounded">
         <div class="info_title text_a">
-            Call Information
+            Caller Information
         </div>
 
         <div class="info_content text_b">
-            {% if call.type %}<span style="color:#7D7D7D;">Call Type:</span> {{ helpers.call_type[call.type] }} <br>{% endif %}
-            {% if not call.caller %}
-                {% if call.phone %}<span style="color:#7D7D7D;">Caller Phone:</span> {{ call.phone.pretty() }} <br>{% endif %}
-            {% elif call.caller %}
-                {% if call.caller.phones.first() %}<span style="color:#7D7D7D;">Caller Phone:</span> {{ call.caller.pretty_phones() }} <br>{% endif %}
-                {% if call.caller and call.caller.name() %}<span style="color:#7D7D7D;">Caller Name:</span>{{ call.caller.name() }} <br>{% endif %}
-                {% if call.caller.sex %}<span style="color:#7D7D7D;">Caller Sex:</span> {{ helpers.sex[call.caller.sex] }} <br>{% endif %}
-                {% if call.caller.age %}<span style="color:#7D7D7D;">Caller Age:</span> {{ call.caller.age }} <br>{% endif %}
-                {% if call.caller.language %}<span style="color:#7D7D7D;">Caller Language:</span> {{ helpers.language[call.caller.language] }} <br>{% endif %}
-                {% if call.caller.county %}<span style="color:#7D7D7D;">Caller County:</span> {{ helpers.county[call.caller.county] }} <br>{% endif %}
-                {% if call.caller.city %}<span style="color:#7D7D7D;">Caller City:</span> {{ call.caller.city }} <br>{% endif %}
-                {% if call.caller.community %}<span style="color:#7D7D7D;">Caller Community:</span> {{ call.caller.community }}{% endif %}
+            {% if complaint.phone %}<span style="color:#7D7D7D;">Phone:</span> {{ helpers.local_phone_number(complaint.phone) }} <br>{% endif %}
+            {% if complaint.name %}<span style="color:#7D7D7D;">Name:</span> {{ complaint.name }} <br>{% endif %}
+            {% if complaint.county %}<span style="color:#7D7D7D;">County:</span> {{ helpers.county[complaint.county] }} <br>{% endif %}
+            {% if complaint.district %}<span style="color:#7D7D7D;">District:</span> {{ complaint.district }} <br>{% endif %}
+            {% if complaint.city %}<span style="color:#7D7D7D;">Village:</span> {{ complaint.city }} <br>{% endif %}
+            {% if complaint.address %}<span style="color:#7D7D7D;">Address:</span> {{ complaint.address }} <br>{% endif %}
+            {% if not complaint.is_moh is none %}<span style="color:#7D7D7D;">MOH Staff:</span> {{ helpers.yes_no[complaint.is_moh] }} <br>{% endif %}
+            {% if not complaint.is_erw is none %}<span style="color:#7D7D7D;">ERW:</span> {{ helpers.yes_no[complaint.is_erw] }} <br>{% endif %}
+            {% if complaint.organization %}<span style="color:#7D7D7D;">Organization:</span> {{ complaint.organization }} <br>{% endif %}
+            {% if complaint.organization_type == 'other' %}
+                <span style="color:#7D7D7D;">Org. Type:</span> {{ complaint.other_organization_type }} <br>
+            {% elif complaint.organization_type in helpers.organization_type %}
+                <span style="color:#7D7D7D;">Org. Type:</span> {{ helpers.organization_type[complaint.organization_type] }} <br>
             {% endif %}
+            {% if complaint.position %}<span style="color:#7D7D7D;">Job Title:</span> {{ complaint.position }} <br>{% endif %}
         </div>
     </div>
 
-    {% if call and call.case and call.case.id == session['case_id'] %}
+    {% if complaint.payment_type or complaint.payment_issue or complaint.complaint_description or complaint.complaint_resolution %}
         <div id="module_b" class="module rounded">
             <div class="info_title text_a">
-                Patient Report Information
+                Complaint Information
             </div>
 
             <div class="info_content text_b">
-                {% if call.case.patient.name() %}<span style="color:#7D7D7D;">Patient Name:</span> {{ call.case.patient.name() }} <br>{% endif %}
-                {% if call.case.patient.phones.first() %}<span style="color:#7D7D7D;">Patient Phone:</span> {{ call.case.patient.pretty_phones() }} <br>{% endif %}
-                {% if call.case.patient.sex %}<span style="color:#7D7D7D;">Patient Sex:</span> {{ helpers.sex[call.case.patient.sex] }} <br>{% endif %}
-                {% if call.case.patient.age %}<span style="color:#7D7D7D;">Patient Age:</span> {{ call.case.patient.age }} <br>{% endif %}
-                {% if call.case.patient.language %}<span style="color:#7D7D7D;">Patient Language:</span> {{ helpers.language[call.case.patient.language] }} <br>{% endif %}
-                {% if call.case.patient.county %}<span style="color:#7D7D7D;">Patient County:</span> {{ helpers.county[call.case.patient.county] }} <br>{% endif %}
-                {% if call.case.patient.city %}<span style="color:#7D7D7D;">Patient City:</span> {{ call.case.patient.city }} <br>{% endif %}
-                {% if call.case.patient.community %}<span style="color:#7D7D7D;">Patient Community:</span> {{ call.case.patient.community }} <br>{% endif %}
-                {% if call.case.condition %}<span style="color:#7D7D7D;">Patient Condition:</span> {{ helpers.condition[call.case.condition] }} <br>{% endif %}
-                {% if not call.case.had_contact is none %}<span style="color:#7D7D7D;">Ebola Contact:</span> {{ helpers.yes_no[call.case.had_contact] }} <br>{% endif %}
-                {% if call.case.symptoms.first() %}<span style="color:#7D7D7D;">Symptoms:</span> {{ call.case.pretty_symptoms() }} <br>{% endif %}
-                {% if not call.case.days_sick is none %}<span style="color:#7D7D7D;">Symptoms Duration:</span> {{ call.case.days_sick }} {% if call.case.days_sick == 1 %}day{% else %}days{% endif %}<br>{% endif %}
-                {% if call.case.comments %}<span style="color:#7D7D7D;">Comments:</span> {{ call.case.comments }}{% endif %}
+                {% if complaint.payment_type %}<span style="color:#7D7D7D;">Wage type:</span> {{ helpers.payment_type[complaint.payment_type] }} <br>{% endif %}
+                {% if complaint.payment_issue and complaint.payment_issue != 'other' %}<span style="color:#7D7D7D;">Complaint type:</span> {{ helpers.payment_issue[complaint.payment_issue] }} <br>{% endif %}
+                {% if complaint.complaint_description %}<span style="color:#7D7D7D;">Description of complaint:</span> {{ complaint.complaint_description }} <br>{% endif %}
+                {% if complaint.complaint_resolution %}<span style="color:#7D7D7D;">Proposed resolution:</span> {{ complaint.complaint_resolution }} <br>{% endif %}
             </div>
         </div>
     {% endif %}

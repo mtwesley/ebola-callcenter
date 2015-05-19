@@ -5,6 +5,26 @@
 	padding:0;
 }
 
+/************************************
+
+::-webkit-input-placeholder {
+   text-transform: uppercase;
+}
+
+:-moz-placeholder {
+   text-transform: uppercase;
+}
+
+::-moz-placeholder {
+   text-transform: uppercase;
+}
+
+:-ms-input-placeholder {
+   text-transform: uppercase;
+}
+
+************************************/
+
 body {
 	font: .8em "arial", sans-serif;
 	background: #898080;

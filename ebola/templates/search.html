@@ -1,0 +1,84 @@
+{% extends 'layout.html' %}
+{% block content_a %}
+    <div id="content_a">
+        <div id="module_a" class="module rounded gradient_gray">
+            <div class="agent_input">
+                <form method="post" id="search_form">
+                    <input type="text" name="complaint_id" placeholder="COMPLAINT ID">
+                    <input type="text" name="phone" placeholder="CALLER PHONE">
+                    <input type="text" name="name" placeholder="CALLER NAME">
+
+                    <select name="county">
+                        <option value="none">CALLER COUNTY</option>
+                        <option value="none">None</option>
+                    </select>
+
+                    <input type="text" name="location" placeholder="DISTRICT, VILLAGE, or ADDRESS">
+
+                    <select name="is_moh">
+                        <option value="none">MOH STAFF?</option>
+                        <option value="none">None</option>
+                    </select>
+
+                    <select name="is_erw">
+                        <option value="none">EBOLA RESPONSE WORKER?</option>
+                        <option value="none">None</option>
+                    </select>
+
+                    <input type="text" name="organization" placeholder="ORGANIZATION">
+
+                    <select name="organization_type">
+                        <option value="none">ORGANIZATION TYPE</option>
+                        <option value="none">None</option>
+                    </select>
+
+                    <input type="text" name="position" placeholder="JOB TITLE">
+
+                    <select name="payment_type">
+                        <option value="none">WAGE TYPE</option>
+                        <option value="none">None</option>
+                    </select>
+
+                    <select name="payment_issue">
+                        <option value="none">COMPLAINT TYPE</option>
+                        <option value="none">None</option>
+                    </select>
+
+                    <a class="btn gradient_green rounded" href="">
+                        SEARCH
+                    </a>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block content_d %}
+    <div id="content_d">
+        <div id="module_d" class="module rounded">
+            <div class="info_title text_a">
+                Latest Pending Complaints
+                <a class="btn3 gradient_red rounded text_d" href="{{ url_for('home.index') }}">
+                    BACK TO DASHBOARD
+                </a>
+            </div>
+        </div>
+        {% if complaints and complaints.count() %}
+        <div id="module_e" class="rounded">
+            <div class="info_content text_b">
+                {% for c in complaints %}
+                <a class="btn4 gradient_gray3 rounded text_d" href="{{ url_for('admin.complaint', complaint_id=c.id) }}">
+                    Complaint {{ c.id }}
+                    &nbsp;&nbsp;|&nbsp;&nbsp; {{ c.name }}
+                    &nbsp;&nbsp;|&nbsp;&nbsp; {{ c.phone }}
+                    &nbsp;&nbsp;|&nbsp;&nbsp; {{ helpers.county[c.county] }}
+                    &nbsp;&nbsp;|&nbsp;&nbsp; {{ helpers.status[c.status()|string] }}
+                    <span style="color:#000;float:right;">VIEW DETAILS</span>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+{% endblock %}
+

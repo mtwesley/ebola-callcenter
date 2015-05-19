@@ -1,5 +1,5 @@
 import collections
-from phonenumbers import parse as parse_number, format_number, PhoneNumberFormat
+from phonenumbers import parse as parse_number, format_number, is_possible_number, PhoneNumberFormat
 from collections import OrderedDict
 
 payment_type = OrderedDict([
@@ -7,13 +7,13 @@ payment_type = OrderedDict([
     ('hazard',  'Hazard pay'),
     ('allowance',  'Allowance'),
     ('response',  'Response pay'),
-    ('unknown',  'I don''t know')
+    ('unknown',  'Unknown')
 ])
 
 payment_issue = OrderedDict([
     ('not_paid',  'Not paid'),
-    ('delayed',  'Delayed'),
-    ('incorrect',  'Incorrect amount'),
+    ('delayed',  'Delayed payment'),
+    ('incorrect',  'Incorrect payment amount'),
     ('other',  'Other')
 ])
 
@@ -116,21 +116,25 @@ yes_no = OrderedDict([
 
 COUNTRY_CODE = 'LR'
 
+
 def nesteddict():
     return collections.defaultdict(nesteddict)
 
+
 def e164_phone_number(phone_number):
-    return str(format_number(
-        parse_number(phone_number, COUNTRY_CODE),
-        PhoneNumberFormat.E164))
+    number = parse_number(phone_number, COUNTRY_CODE)
+    if is_possible_number(number):
+        return str(format_number(number, PhoneNumberFormat.E164))
+
 
 def local_phone_number(phone_number):
-    return str(format_number(
-        parse_number(phone_number, COUNTRY_CODE),
-        PhoneNumberFormat.NATIONAL))
+    number = parse_number(phone_number, COUNTRY_CODE)
+    if is_possible_number(number):
+        return str(format_number(number, PhoneNumberFormat.NATIONAL))
+
 
 def international_phone_number(phone_number):
-    return str(format_number(
-        parse_number(phone_number, COUNTRY_CODE),
-        PhoneNumberFormat.INTERNATIONAL))
+    number = parse_number(phone_number, COUNTRY_CODE)
+    if is_possible_number(number):
+        return str(format_number(number, PhoneNumberFormat.INTERNATIONAL))
 

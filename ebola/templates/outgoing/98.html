@@ -1,0 +1,7 @@
+{% extends 'step.html' %}
+{% block agent_instruction_text %}Are you sure you want to cancel this call?{% endblock %}
+{% block agent_input_elements %}{% endblock %}
+{% block agent_submit_text %}NO, RETURN TO CALL{% endblock %}
+{% block agent_cancel_text %}YES, CANCEL CALL{% endblock %}
+{% set disable_agent_dialogue = True %}
+{% set disable_agent_skip = True %}

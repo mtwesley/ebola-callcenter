@@ -1,0 +1,10 @@
+{% extends 'step.html' %}
+{% block agent_dialogue_text %}
+    Is {{ complaint.name }} available to receive this call?
+{% endblock %}
+{% block agent_input_elements %}
+    <input type="radio" name="is_complainant_available" value="Y"> <label for="Y">Yes</label><br>
+    <input type="radio" name="is_complainant_available" value="N"> <label for="N">No</label><br>
+{% endblock %}
+{% set disable_agent_skip = True %}
+

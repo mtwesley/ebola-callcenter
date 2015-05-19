@@ -1,0 +1,10 @@
+{% extends 'step.html' %}
+{% block agent_dialogue_text %}
+    Would you like to make another complaint?
+{% endblock %}
+{% block agent_input_elements %}
+    <input type="radio" name="new_complaint" value="Y"> <label for="Y">Yes</label><br>
+    <input type="radio" name="new_complaint" value="N"> <label for="N">No</label><br>
+{% endblock %}
+{% set disable_agent_skip = True %}
+

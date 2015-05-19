@@ -3,7 +3,7 @@
     What is your phone number?
 {% endblock %}
 {% block agent_input_elements %}
-    <input type="text" name="phone" placeholder="Type the phone number">
+    <input type="text" name="phone" placeholder="Type the phone number" {% if complaint.phone %}value="{{ complaint.phone }}"{% endif %}>
 {% endblock %}
 {% set disable_agent_skip = True %}
 

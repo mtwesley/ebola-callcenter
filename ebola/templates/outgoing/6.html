@@ -1,0 +1,6 @@
+{% extends 'step.html' %}
+{% block agent_dialogue_text %}
+    {{ complaint.response_description }}
+{% endblock %}
+{% block agent_submit_text %}NEXT{% endblock %}
+{% set disable_agent_skip = True %}

@@ -5,18 +5,18 @@
     </div>
 {% endblock %}
 
-{#{% block content_b %}#}
-{#    {% if g.user.is_authenticated() and call %}#}
-{#    <div id="content_b">#}
-{#        {% include 'info.html' %}#}
-{#    </div>#}
-{#    {% endif %}#}
-{#{% endblock %}#}
-{##}
-{#{% block content_c %}#}
-{#    {% if g.user.is_authenticated() %}#}
-{#        <div id="content_c">#}
-{#            {% include 'extra.html' %}#}
-{#        </div>#}
-{#    {% endif %}#}
-{#{% endblock %}#}
+{% block content_b %}
+    {% if g.user.is_authenticated() and complaint %}
+    <div id="content_b">
+        {% include 'info.html' %}
+    </div>
+    {% endif %}
+{% endblock %}
+
+{% block content_c %}
+    {% if g.user.is_authenticated() %}
+        <div id="content_c">
+            {% include 'extra.html' %}
+        </div>
+    {% endif %}
+{% endblock %}

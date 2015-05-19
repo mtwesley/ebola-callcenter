@@ -13,7 +13,14 @@ view = Blueprint('home', __name__)
 
 @view.route("/", methods=['GET', 'POST'])
 def index():
-    return "Homepage"
+    return render_template('home.html')
+
+
+@view.route("/refresh")
+def refresh():
+    # db.drop_all()
+    # db.create_all()
+    return "Nothing"
 
 
 @view.route('/login', methods=['GET', 'POST'])

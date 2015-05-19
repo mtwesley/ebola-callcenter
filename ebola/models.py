@@ -90,7 +90,7 @@ class ComplaintStatus(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     complaint_id = db.Column(db.Integer, db.ForeignKey('complaints.id'), nullable=False)
-    status = db.Column(db.Enum('pending', 'open', 'resolved', 'closed', 'deleted', native_enum=False), nullable=False)
+    status = db.Column(db.Enum('pending', 'open', 'resolved', 'closed', 'duplicate', 'deleted', native_enum=False), nullable=False)
     reason = db.Column(db.String(16), nullable=False)
     comments = db.Column(db.Text)
 

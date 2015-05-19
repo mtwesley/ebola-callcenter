@@ -2,11 +2,14 @@ from flask import Flask, redirect, url_for, g, request, session, flash, render_t
 from flask.ext.login import LoginManager, current_user
 
 from models import db, User
-from incoming import view as incoming
 from home import view as home
+from admin import view as admin
+from incoming import view as incoming
+from outgoing import view as outgoing
 
 import datetime
 import config
+import helpers
 
 
 lm = LoginManager()
@@ -14,11 +17,18 @@ lm = LoginManager()
 app = Flask(__name__)
 app.config.from_object(config)
 app.register_blueprint(home)
+app.register_blueprint(admin)
 app.register_blueprint(incoming)
+app.register_blueprint(outgoing)
 
 db.init_app(app)
 lm.init_app(app)
 lm.login_view = 'home.login'
+
+
+@app.context_processor
+def inject_helpers():
+    return dict(helpers=helpers)
 
 
 @lm.user_loader

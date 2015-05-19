@@ -1,0 +1,40 @@
+{% extends 'layout.html' %}
+{% block content_a %}
+    <div id="content_a">
+        <div id="module_a" class="module rounded gradient_gray">
+            <div class="agent_instruction text_a">
+                Please select an option:
+            </div>
+            <div class="agent_input">
+                <form>
+                    <a class="btn gradient_green rounded" href="{{ url_for('admin.search', status='open') }}">
+                        BROWSE PENDING
+                    </a>
+                    <br><br>
+                    <a class="btn gradient_green rounded" href="{{ url_for('admin.search', status='resolved') }}">
+                        BROWSE RESOLVED
+                    </a>
+                    <br><br>
+                    <a class="btn gradient_green rounded" href="{{ url_for('admin.search', status='closed') }}">
+                        BROWSE CLOSED
+                    </a>
+                </form>
+            </div>
+        </div>
+        <!--
+        <div id="module_c" class="module rounded">
+            <a class="btn gradient_orange rounded" href="">
+                DOWNLOAD REPORT
+            </a>
+        </div>
+        -->
+    </div>
+{% endblock %}
+
+{% block content_b %}
+    <!-- <div id="content_b"></div> -->
+{% endblock %}
+
+{% block content_c %}
+    <!-- <div id="content_c"></div> -->
+{% endblock %}

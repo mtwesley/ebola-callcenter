@@ -1,0 +1,8 @@
+{% extends 'step.html' %}
+{% block agent_dialogue_text %}
+    Thank you, we will call back another time.
+{% endblock %}
+{% block agent_submit_text %}END CALL{% endblock %}
+{% set disable_agent_input = True %}
+{% set disable_agent_skip = True %}
+{% set disable_agent_cancel = True %}
