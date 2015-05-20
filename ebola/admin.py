@@ -29,8 +29,8 @@ def check_admin():
 
 
 @view.route("/search/", methods=['GET', 'POST'])
-@view.route("/search/<status>", methods=['GET', 'POST'])
-def search(status=None):
+@view.route("/search/<current_status>", methods=['GET', 'POST'])
+def search(current_status=None):
 
     search_action = request.form.get('search_action', '')
 
@@ -38,12 +38,12 @@ def search(status=None):
                                  func.max(ComplaintStatus.timestamp).label('latest_timestamp'))
                 .group_by(ComplaintStatus.complaint_id).subquery())
 
-    if status:
+    if current_status:
 
         complaints = db.session.query(Complaint).filter(
             Complaint.id == ComplaintStatus.complaint_id,
             Complaint.id == subquery.columns.complaint_id,
-            ComplaintStatus.status == status,
+            ComplaintStatus.status == current_status,
             ComplaintStatus.timestamp == subquery.columns.latest_timestamp
         )
 
@@ -142,7 +142,7 @@ def search(status=None):
             ComplaintStatus.timestamp == subquery.columns.latest_timestamp
         ).order_by(subquery.columns.latest_timestamp.desc()).limit(12)
 
-    return render_template('search.html', status=status, complaints=complaints, complaint_id=complaint_id, name=name,
+    return render_template('search.html', current_status=current_status, complaints=complaints, complaint_id=complaint_id, name=name,
                            phone=phone, organization=organization, organization_type=organization_type,
                            position=position, county=county, location=location, is_moh=is_moh, is_erw=is_erw,
                            payment_type=payment_type, payment_issue=payment_issue)

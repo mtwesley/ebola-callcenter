@@ -75,7 +75,7 @@
     <div id="content_d">
         <div id="module_d" class="module rounded">
             <div class="info_title text_a">
-                Latest {% if status == 'open' %}Pending{% else %}{{ helpers.status[status|string] }}{% endif %} Complaints
+                Latest {% if current_status|string == 'open' %}Pending{% else %}{{ helpers.status[current_status|string] }}{% endif %} Complaints
                 <a class="btn3 gradient_red rounded text_d" href="{{ url_for('home.index') }}">
                     BACK TO DASHBOARD
                 </a>
