@@ -117,11 +117,8 @@ def search(current_status=None):
         if county:
             complaints = complaints.filter(Complaint.payment_issue == payment_issue)
 
-        complaints = complaints.order_by(subquery.columns.latest_timestamp.desc()).limit(12)
-        
     else:
         status = None
-        complaints = None
         complaint_id = None
         name = None
         phone = None
@@ -135,12 +132,7 @@ def search(current_status=None):
         payment_type = None
         payment_issue = None
 
-        complaints = db.session.query(Complaint).filter(
-            Complaint.id == ComplaintStatus.complaint_id,
-            Complaint.id == subquery.columns.complaint_id,
-            ComplaintStatus.status != 'pending',
-            ComplaintStatus.timestamp == subquery.columns.latest_timestamp
-        ).order_by(subquery.columns.latest_timestamp.desc()).limit(12)
+    complaints = complaints.order_by(subquery.columns.latest_timestamp.desc()).limit(12)
 
     return render_template('search.html', current_status=current_status, complaints=complaints, complaint_id=complaint_id, name=name,
                            phone=phone, organization=organization, organization_type=organization_type,
