@@ -7,15 +7,15 @@
             </div>
             <div class="agent_input">
                 <form>
-                    <a class="btn gradient_green rounded" href="{{ url_for('admin.search', status='open') }}">
+                    <a class="btn gradient_green rounded" href="{{ url_for('admin.search', current_status='open') }}">
                         BROWSE PENDING
                     </a>
                     <br><br>
-                    <a class="btn gradient_green rounded" href="{{ url_for('admin.search', status='resolved') }}">
+                    <a class="btn gradient_green rounded" href="{{ url_for('admin.search', current_status='resolved') }}">
                         BROWSE RESOLVED
                     </a>
                     <br><br>
-                    <a class="btn gradient_green rounded" href="{{ url_for('admin.search', status='closed') }}">
+                    <a class="btn gradient_green rounded" href="{{ url_for('admin.search', current_status='closed') }}">
                         BROWSE CLOSED
                     </a>
                 </form>

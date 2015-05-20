@@ -163,7 +163,7 @@ def complaint(complaint_id=None):
             db.session.add(complaint)
             db.session.add(status)
             db.session.commit()
-            return redirect(url_for('admin.search', status=str(complaint.status())))
+            return redirect(url_for('admin.search', current_status=str(complaint.status())))
 
     return render_template('complaint.html', complaint=complaint)
 

@@ -31,7 +31,7 @@
         <div id="module_d" class="module rounded">
             <div class="info_title text_a">
                 Complaint ID {{ '%05d' % complaint.id|int }}
-                <a class="btn3 gradient_red rounded text_d" href="{{ url_for('admin.search') }}">
+                <a class="btn3 gradient_red rounded text_d" href="{{ url_for('admin.search', current_status=complaint.status()|string) }}">
                     BACK TO SEARCH
                 </a>
             </div>
