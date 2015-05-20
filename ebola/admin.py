@@ -135,7 +135,12 @@ def search(status=None):
         payment_type = None
         payment_issue = None
 
-        complaints = complaints.order_by(subquery.columns.latest_timestamp.desc()).limit(12)
+        complaints = db.session.query(Complaint).filter(
+            Complaint.id == ComplaintStatus.complaint_id,
+            Complaint.id == subquery.columns.complaint_id,
+            ComplaintStatus.status != 'pending',
+            ComplaintStatus.timestamp == subquery.columns.latest_timestamp
+        ).order_by(subquery.columns.latest_timestamp.desc()).limit(12)
 
     return render_template('search.html', status=status, complaints=complaints, complaint_id=complaint_id, name=name,
                            phone=phone, organization=organization, organization_type=organization_type,
