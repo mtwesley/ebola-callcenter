@@ -20,7 +20,7 @@
 				<div id="logo" class="text_a">PPERW Call Center</div>
                 <div id="pageinfo" class="text_b white">
                     {% if g.user.is_authenticated() and complaint %}
-                        ACTIVE CALL: {% if complaint.name %}: {{ complaint.name }} - {% endif %}{% if complaint.phone %}{{ helpers.local_phone_number(complaint.phone) }}{% endif %}
+                        ACTIVE CALL: {% if complaint.name %} {{ complaint.name }} - {% endif %}{% if complaint.phone %}{{ helpers.local_phone_number(complaint.phone) }}{% endif %}
                     {% endif %}
                 </div>
 				<div id="dateinfo" class="text_b">
