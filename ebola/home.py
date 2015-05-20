@@ -16,7 +16,7 @@ view = Blueprint('home', __name__)
 @view.route("/", methods=['GET', 'POST'])
 def index():
     responded_complaints = None
-    if g.user.is_agent:
+    if g.user.is_authenticated() and g.user.is_agent:
         subquery = (db.session.query(ComplaintStatus.complaint_id,
                                      func.max(ComplaintStatus.timestamp).label('latest_timestamp'))
                     .group_by(ComplaintStatus.complaint_id)

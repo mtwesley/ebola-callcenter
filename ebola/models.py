@@ -7,10 +7,6 @@ from flask.ext.login import UserMixin, AnonymousUserMixin, current_user
 
 db = SQLAlchemy()
 
-class AnonymousUser(AnonymousUserMixin):
-    is_admin = False
-    is_agent = False
-
 
 class User(db.Model, UserMixin):
     __tablename__ = 'users'
