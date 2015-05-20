@@ -14,7 +14,7 @@ import helpers
 
 lm = LoginManager()
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='')
 app.config.from_object(config)
 app.register_blueprint(home)
 app.register_blueprint(admin)
