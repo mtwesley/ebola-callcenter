@@ -1,56 +1,63 @@
 {% extends 'layout.html' %}
 {% block content_a %}
     <div id="content_a">
-        <div id="module_a" class="module rounded gradient_gray">
-            <div class="agent_instruction text_c">
-                Click here to begin recording an <span style="color:#6EAB61;">incoming</span> call.
+        {% if g.user.is_admin %}
+            <div id="module_a" class="module rounded gradient_gray">
+                <div class="agent_instruction text_c">
+                    Click here to search and browse <span style="color:#6EAB61;">existing</span> calls.
+                </div>
+                <div class="agent_input">
+                    <form>
+                        <a class="btn gradient_green rounded" href="{{ url_for('admin.search', status='open') }}">
+                            BROWSE PENDING
+                        </a>
+                        <br><br>
+                        <a class="btn gradient_green rounded" href="{{ url_for('admin.search', status='resolved') }}">
+                            BROWSE RESOLVED
+                        </a>
+                        <br><br>
+                        <a class="btn gradient_green rounded" href="{{ url_for('admin.search', status='closed') }}">
+                            BROWSE CLOSED
+                        </a>
+                    </form>
+                </div>
             </div>
-
-            <div class="agent_input">
-                <a class="btn gradient_green rounded" href="{{ url_for('incoming.new') }}">
-                    NEW INCOMING CALL
+            <!--
+            <div id="module_c" class="module rounded">
+                <a class="btn gradient_orange rounded" href="">
+                    DOWNLOAD REPORT
                 </a>
             </div>
-        </div>
-        <div id="module_c" class="module rounded gradient_gray">
-            <div class="agent_instruction text_c">
-                Click one to begin recording an <span style="color:#6EAB61;">outgoing</span> call.
+            -->
+        {% endif %}
+        {% if g.user.is_agent %}
+            <div id="module_a" class="module rounded gradient_gray">
+                <div class="agent_instruction text_c">
+                    Click here to begin recording an <span style="color:#6EAB61;">incoming</span> call.
+                </div>
+
+                <div class="agent_input">
+                    <a class="btn gradient_green rounded" href="{{ url_for('incoming.new') }}">
+                        NEW INCOMING CALL
+                    </a>
+                </div>
             </div>
-            <a class="btn2 gradient_gray3 rounded text_d" href="">
-                <div class="call_type" style="background:#B44D54"></div>  0886670426   Charles Cooper
-            </a>
-            <a class="btn2 gradient_gray3 rounded text_d" href="">
-                <div class="call_type" style="background:#68ACBA"></div>  0886670426   Charles Cooper
-            </a>
-            <a class="btn2 gradient_gray3 rounded text_d" href="">
-                <div class="call_type" style="background:#7C5866"></div>  0886670426   Charles Cooper
-            </a>
-            <a class="btn2 gradient_gray3 rounded text_d" href="">
-                <div class="call_type" style="background:#B44D54"></div>  0886670426   Charles Cooper
-            </a>
-            <a class="btn2 gradient_gray3 rounded text_d" href="">
-                <div class="call_type" style="background:#68ACBA"></div>  0886670426   Charles Cooper
-            </a>
-            <a class="btn2 gradient_gray3 rounded text_d" href="">
-                <div class="call_type" style="background:#E3BB56"></div>  0886670426   Charles Cooper
-            </a>
-            <a class="btn2 gradient_gray3 rounded text_d" href="">
-                <div class="call_type" style="background:#7C5866"></div>  0886670426   Charles Cooper
-            </a>
-            <a class="btn2 gradient_gray3 rounded text_d" href="">
-                <div class="call_type" style="background:#E3BB56"></div>  0886670426   Charles Cooper
-            </a>
-            <a class="btn2 gradient_gray3 rounded text_d" href="">
-                <div class="call_type" style="background:#A88648"></div>  0886670426   Charles Cooper
-            </a>
-            <a class="btn2 gradient_gray3 rounded text_d" href="">
-                <div class="call_type" style="background:#6EAB61"></div>  0886670426   Charles Cooper
-            </a>
-            <a class="btn2 gradient_gray3 rounded text_d" href="">
-                <div class="call_type" style="background:#A88648"></div>  0886670426   Charles Cooper
-            </a>
-        </div>
-    </div>
+            {% if responded_complaints and responded_complaints.count() %}
+            <div id="module_c" class="module rounded gradient_gray">
+                <div class="agent_instruction text_c">
+                    Click one to begin recording an <span style="color:#6EAB61;">outgoing</span> call.
+                </div>
+                {% for c in responded_complaints %}
+                <a class="btn2 gradient_gray3 rounded text_d" href="{{ url_for('outgoing.new', complaint_id=c.id) }}">
+                    <div class="call_type" style="background:#B44D54"></div>
+                    {% if c.phone %}{{ helpers.local_phone_number(c.phone) }} {% endif %}
+                    {% if c.name %}{{ c.name }}{% endif %}
+                </a>
+                {% endfor %}
+            </div>
+            {% endif %}
+        {% endif %}
+   </div>
 {% endblock %}
 
 {% block content_b %}

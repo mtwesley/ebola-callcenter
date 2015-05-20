@@ -1,7 +1,7 @@
 import datetime
 import helpers
 
-from flask import Blueprint, render_template, request, session, redirect, url_for, g, flash
+from flask import Blueprint, render_template, request, session, redirect, url_for, g, flash, abort
 from flask.ext.login import current_user, login_user, logout_user, login_required
 
 from models import db, User, Complaint, ComplaintStatus
@@ -17,6 +17,14 @@ def clean_session():
     session['steps'] = []
     session['previous_step'] = 0
     session['complaint_id'] = 0
+
+
+@view.before_request
+def check_agent():
+    if not (g.user.is_authenticated() and g.user.is_agent):
+        logout_user()
+        response = redirect(url_for('home.login'))
+        abort(response)
 
 
 @view.before_request
@@ -134,6 +142,10 @@ def index(default_step=None):
         if agent_action == 'submit':
             new_complaint = request.form.get('new_complaint', None)
             if new_complaint == 'Y':
+                status = complaint.status('closed')
+                db.session.add(complaint)
+                db.session.add(status)
+                db.session.commit()
                 return redirect(url_for('incoming.new', from_complaint_id=complaint.id))
             elif new_complaint == 'N':
                 step = 9

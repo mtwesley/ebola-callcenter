@@ -30,7 +30,7 @@
     <div id="content_d">
         <div id="module_d" class="module rounded">
             <div class="info_title text_a">
-                Complaint ID 01234
+                Complaint ID {{ '%05d' % complaint.id|int }}
                 <a class="btn3 gradient_red rounded text_d" href="{{ url_for('admin.search') }}">
                     BACK TO SEARCH
                 </a>
@@ -55,8 +55,9 @@
                     Discovery / Resolution
                 </div>
                 <form method="post" id="admin_form">
-                    <textarea name="resolution_description" placeholder="COMPLAINT RESOLUTION">{{ complaint.resolution_description }}</textarea>
-                    <a class="btn5 gradient_green rounded" href="">
+                    <input type="hidden" name="admin_action" id="admin_action" value="submit" />
+                    <textarea name="response_description" placeholder="Type complaint resolution">{% if complaint.response_description %}{{ complaint.response_description.strip() }}{% endif %}</textarea>
+                    <a class="btn5 btn_submit gradient_green rounded" href="">
                         UPDATE RESOLUTION
                     </a>
                 </form>

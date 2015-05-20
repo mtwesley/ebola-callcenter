@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block content_b %}
-    {% if g.user.is_authenticated() and complaint %}
+    {% if g.user.is_authenticated() and complaint and complaint.phone %}
     <div id="content_b">
         {% include 'info.html' %}
     </div>
@@ -14,7 +14,7 @@
 {% endblock %}
 
 {% block content_c %}
-    {% if g.user.is_authenticated() %}
+    {% if g.user.is_authenticated() and complaint and complaint.phone %}
         <div id="content_c">
             {% include 'extra.html' %}
         </div>

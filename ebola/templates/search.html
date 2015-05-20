@@ -57,7 +57,7 @@
     <div id="content_d">
         <div id="module_d" class="module rounded">
             <div class="info_title text_a">
-                Latest Pending Complaints
+                Latest {% if status == 'open' %}Pending{% else %}{{ helpers.status[status|string] }}{% endif %} Complaints
                 <a class="btn3 gradient_red rounded text_d" href="{{ url_for('home.index') }}">
                     BACK TO DASHBOARD
                 </a>
@@ -68,11 +68,11 @@
             <div class="info_content text_b">
                 {% for c in complaints %}
                 <a class="btn4 gradient_gray3 rounded text_d" href="{{ url_for('admin.complaint', complaint_id=c.id) }}">
-                    Complaint {{ c.id }}
-                    &nbsp;&nbsp;|&nbsp;&nbsp; {{ c.name }}
-                    &nbsp;&nbsp;|&nbsp;&nbsp; {{ c.phone }}
-                    &nbsp;&nbsp;|&nbsp;&nbsp; {{ helpers.county[c.county] }}
-                    &nbsp;&nbsp;|&nbsp;&nbsp; {{ helpers.status[c.status()|string] }}
+                    Complaint {{ '%05d' % c.id }}
+                    {% if c.name %}&nbsp;&nbsp;|&nbsp;&nbsp; {{ c.name }}{% endif %}
+                    {% if c.phone %}&nbsp;&nbsp;|&nbsp;&nbsp; {{ helpers.local_phone_number(c.phone) }}{% endif %}
+                    {% if c.county %}&nbsp;&nbsp;|&nbsp;&nbsp; {{ helpers.county[c.county] }} County{% endif %}
+                    {% if c.status() %}&nbsp;&nbsp;|&nbsp;&nbsp; {{ helpers.status[c.status()|string] }}{% endif %}
                     <span style="color:#000;float:right;">VIEW DETAILS</span>
                 </a>
                 {% endfor %}

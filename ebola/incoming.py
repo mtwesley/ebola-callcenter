@@ -1,7 +1,7 @@
 import datetime
 import helpers
 
-from flask import Blueprint, render_template, request, session, redirect, url_for, g, flash
+from flask import Blueprint, render_template, request, session, redirect, url_for, g, flash, abort
 from flask.ext.login import current_user, login_user, logout_user, login_required
 
 from models import db, User, Complaint, ComplaintStatus
@@ -17,6 +17,14 @@ def clean_session():
     session['steps'] = []
     session['previous_step'] = 0
     session['complaint_id'] = 0
+
+
+@view.before_request
+def check_agent():
+    if not (g.user.is_authenticated() and g.user.is_agent):
+        logout_user()
+        response = redirect(url_for('home.login'))
+        abort(response)
 
 
 @view.before_request
@@ -310,10 +318,10 @@ def index(default_step=None):
     elif agent_step == 19:
         if agent_action == 'submit':
             not_paid = request.form.get('not_paid', None)
-            if not_paid == 'Y':
+            if not_paid == 'N':
                 complaint.payment_issue = 'not_paid'
                 step = 22
-            elif not_paid == 'N':
+            elif not_paid == 'Y':
                 step = 20
             else:
                 step = agent_step

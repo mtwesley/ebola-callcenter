@@ -14,6 +14,8 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(128), nullable=False, unique=True)
     hash = db.Column(db.String(64), nullable=False)
     name = db.Column(db.String(128))
+    is_agent = db.Column(db.Boolean, default=False, nullable=False)
+    is_admin = db.Column(db.Boolean, default=False, nullable=False)
     timestamp = db.Column(db.DateTime(), default=datetime.datetime.now(), server_default=db.func.now(), nullable=False)
 
     complaints = db.relationship('Complaint', backref='user', lazy='dynamic')
@@ -78,6 +80,9 @@ class Complaint(db.Model):
     def __nonzero__(self):
         return bool(self.timestamp)
 
+    def first_name(self):
+        return self.name.split(" ")[0]
+
     def status(self, status=None, reason='system', comments=None):
         if status is None:
             return self.statuses.order_by(ComplaintStatus.timestamp.desc()).first()
@@ -95,7 +100,7 @@ class ComplaintStatus(db.Model):
     comments = db.Column(db.Text)
 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    timestamp = db.Column(db.DateTime(), default=datetime.datetime.now(), server_default=db.func.now(), nullable=False)
+    timestamp = db.Column(db.DateTime(), server_default=db.func.now(), nullable=False)
 
     def __init__(self, complaint, status, reason='system', comments=None):
         self.complaint_id = complaint.id

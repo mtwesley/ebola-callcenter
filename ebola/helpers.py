@@ -28,7 +28,7 @@ organization_type = OrderedDict([
 status = OrderedDict([
     ('pending',  'Pending'),
     ('open',  'Open'),
-    ('responded',  'Responded'),
+    ('resolved',  'Resolved'),
     ('closed',  'Closed'),
     ('duplicate',  'Duplicate'),
     ('deleted',  'Deleted')
@@ -124,17 +124,17 @@ def nesteddict():
 def e164_phone_number(phone_number):
     number = parse_number(phone_number, COUNTRY_CODE)
     if is_possible_number(number):
-        return str(format_number(number, PhoneNumberFormat.E164))
+        return str(format_number(number, PhoneNumberFormat.E164)).replace(" ", "")
 
 
 def local_phone_number(phone_number):
     number = parse_number(phone_number, COUNTRY_CODE)
     if is_possible_number(number):
-        return str(format_number(number, PhoneNumberFormat.NATIONAL))
+        return str(format_number(number, PhoneNumberFormat.NATIONAL)).replace(" ", "")
 
 
 def international_phone_number(phone_number):
     number = parse_number(phone_number, COUNTRY_CODE)
     if is_possible_number(number):
-        return str(format_number(number, PhoneNumberFormat.INTERNATIONAL))
+        return str(format_number(number, PhoneNumberFormat.INTERNATIONAL)).replace(" ", "")
 
