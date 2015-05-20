@@ -60,7 +60,7 @@ img{
 
 @font-face {
   font-family: 'franklinGothicMedium';
-  src: url('framdcn.ttf')  format('truetype');
+  src: url('/fonts/framdcn.ttf')  format('truetype');
 }
 
 .text_a,

@@ -14,6 +14,7 @@ view = Blueprint('home', __name__)
 
 
 @view.route("/", methods=['GET', 'POST'])
+@login_required
 def index():
     responded_complaints = None
     if g.user.is_authenticated() and g.user.is_agent:
@@ -39,8 +40,8 @@ def index():
 
 @view.route("/refresh")
 def refresh():
-    db.drop_all()
-    db.create_all()
+    # db.drop_all()
+    # db.create_all()
     return "Nothing"
 
 
