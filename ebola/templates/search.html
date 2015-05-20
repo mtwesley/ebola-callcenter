@@ -4,47 +4,65 @@
         <div id="module_a" class="module rounded gradient_gray">
             <div class="agent_input">
                 <form method="post" id="search_form">
-                    <input type="text" name="complaint_id" placeholder="COMPLAINT ID">
-                    <input type="text" name="phone" placeholder="CALLER PHONE">
-                    <input type="text" name="name" placeholder="CALLER NAME">
+                    <input type="hidden" name="search_action" id="admin_action" value="submit" />
+
+                    <input type="text" name="complaint_id" placeholder="Filter by complaint ID" {% if complaint_id %}value="{{ complaint_id }}"{% endif %}>
+                    <input type="text" name="phone" placeholder="Filter by phone number" {% if phone %}value="{{ phone }}"{% endif %}>
+                    <input type="text" name="name" placeholder="Filter by name" {% if name %}value="{{ name }}"{% endif %}>
 
                     <select name="county">
-                        <option value="none">CALLER COUNTY</option>
-                        <option value="none">None</option>
+                        <option disabled="disabled" {% if not county %}selected="selected"{% endif %}>Filter by county</option>
+                        <option value=""></option>
+                        {% for k,v in helpers.county.items() %}
+                        <option value="{{ k }}" {% if county == k %}selected="selected"{% endif %}>{{ v }}</option>
+                        {% endfor %}
                     </select>
 
-                    <input type="text" name="location" placeholder="DISTRICT, VILLAGE, or ADDRESS">
+                    <input type="text" name="location" placeholder="Filter by district, village, or address" {% if location %}value="{{ location }}"{% endif %}>
 
                     <select name="is_moh">
-                        <option value="none">MOH STAFF?</option>
-                        <option value="none">None</option>
+                        <option value="" disabled="disabled" {% if not is_moh %}selected="selected"{% endif %}>Filter by MOH status</option>
+                        <option value=""></option>
+                        <option value="Y" {% if is_moh == 'Y' %}selected="selected"{% endif %}>Is MOH staff</option>
+                        <option value="N" {% if is_moh == 'N' %}selected="selected"{% endif %}>Is not MOH staff</option>
                     </select>
 
                     <select name="is_erw">
-                        <option value="none">EBOLA RESPONSE WORKER?</option>
-                        <option value="none">None</option>
+                        <option value="" disabled="disabled" {% if not is_erw %}selected="selected"{% endif %}>Filter by ERW status</option>
+                        <option value=""></option>
+                        <option value="Y" {% if is_erw == 'Y' %}selected="selected"{% endif %}>Is ERW</option>
+                        <option value="N" {% if is_erw == 'N' %}selected="selected"{% endif %}>Is not ERW</option>
                     </select>
 
-                    <input type="text" name="organization" placeholder="ORGANIZATION">
+                    <input type="text" name="organization" placeholder="Filter by organization"{% if organization %}value="{{ organization }}"{% endif %}>
 
                     <select name="organization_type">
-                        <option value="none">ORGANIZATION TYPE</option>
-                        <option value="none">None</option>
+                        <option disabled="disabled" {% if not county %}selected="selected"{% endif %}>Filter by organization type</option>
+                        <option value=""></option>
+                        {% for k,v in helpers.organization_type.items() %}
+                        <option value="{{ k }}" {% if organization_type == k %}selected="selected"{% endif %}>{{ v }}</option>
+                        {% endfor %}
                     </select>
 
-                    <input type="text" name="position" placeholder="JOB TITLE">
+                    <input type="text" name="position" placeholder="Filter by job title" {% if position %}value="{{ position }}"{% endif %}>
 
                     <select name="payment_type">
-                        <option value="none">WAGE TYPE</option>
-                        <option value="none">None</option>
+                        <option disabled="disabled" {% if not payment_type %}selected="selected"{% endif %}>Filter by wage type</option>
+                        <option value=""></option>
+                        {% for k,v in helpers.payment_type.items() %}
+                        <option value="{{ k }}" {% if payment_type == k %}selected="selected"{% endif %}>{{ v }}</option>
+                        {% endfor %}
                     </select>
 
                     <select name="payment_issue">
-                        <option value="none">COMPLAINT TYPE</option>
-                        <option value="none">None</option>
+                        <option disabled="disabled" {% if not payment_issue %}selected="selected"{% endif %}>Filter by complaint type</option>
+                        <option value=""></option>
+                        {% for k,v in helpers.payment_issue.items() %}
+                        <option value="{{ k }}" {% if payment_issue == k %}selected="selected"{% endif %}>{{ v }}</option>
+                        {% endfor %}
                     </select>
 
-                    <a class="btn gradient_green rounded" href="">
+                    <a class="btn btn_submit gradient_green rounded" href="">
                         SEARCH
                     </a>
                 </form>

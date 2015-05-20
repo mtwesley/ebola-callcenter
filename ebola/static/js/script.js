@@ -18,6 +18,20 @@ jQuery(document).ready(function() {
         }
     });
 
+    $('#admin_form').on("keyup keypress", function(e) {
+        if ((e.keyCode || e.which) == 13) {
+            e.preventDefault()
+            $("#admin_form").submit()
+        }
+    });
+
+    $('#search_form').on("keyup keypress", function(e) {
+        if ((e.keyCode || e.which) == 13) {
+            e.preventDefault()
+            $("#search_form").submit()
+        }
+    });
+
     $(".btn_submit").on("click", function(e) {
         $("#agent_action").val('submit')
     })

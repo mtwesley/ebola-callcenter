@@ -81,7 +81,7 @@ class Complaint(db.Model):
         return bool(self.timestamp)
 
     def first_name(self):
-        return self.name.split(" ")[0]
+        return self.name.split()[0]
 
     def status(self, status=None, reason='system', comments=None):
         if status is None:

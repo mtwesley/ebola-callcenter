@@ -71,8 +71,6 @@ language = OrderedDict([
 ])
 
 county = OrderedDict([
-    (None,  None),
-    ('',  ''),
     ('bomi',  'Bomi'),
     ('bong',  'Bong'),
     ('gbarpolu',  'Gbarpolu'),
