@@ -223,7 +223,7 @@ def index(default_step=None):
             other_organization_type = request.form.get('other_organization_type', None)
             if other_organization_type:
                 complaint.other_organization_type = other_organization_type
-                step = 11
+                step = 13
             else:
                 step = agent_step
         elif agent_action == 'cancel':
@@ -390,6 +390,15 @@ def index(default_step=None):
             status = complaint.status('open')
             db.session.add(status)
             db.session.commit()
+            step = 25
+        else:
+            step = agent_step
+
+    elif agent_step == 25:
+        if agent_action == 'submit':
+            comments = request.form.get('comments', None)
+            if comments:
+                complaint.comments = comments
             session['deactivate'] = True
         else:
             step = agent_step

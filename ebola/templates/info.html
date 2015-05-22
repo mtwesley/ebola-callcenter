@@ -48,6 +48,7 @@
                 {% if complaint.payment_issue and complaint.payment_issue != 'other' %}<span style="color:#7D7D7D;">Complaint type:</span> {{ helpers.payment_issue[complaint.payment_issue] }} <br>{% endif %}
                 {% if complaint.complaint_description %}<span style="color:#7D7D7D;">Description of complaint:</span> {{ complaint.complaint_description }} <br>{% endif %}
                 {% if complaint.complaint_resolution %}<span style="color:#7D7D7D;">Proposed resolution:</span> {{ complaint.complaint_resolution }} <br>{% endif %}
+                {% if complaint.comments %}<span style="color:#7D7D7D;">Additional comments:</span> {{ complaint.comments }} <br>{% endif %}
             </div>
         </div>
     {% endif %}

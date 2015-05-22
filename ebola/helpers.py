@@ -7,8 +7,16 @@ payment_type = OrderedDict([
     ('hazard',  'Hazard pay'),
     ('allowance',  'Allowance'),
     ('response',  'Response pay'),
-    ('unknown',  'Unknown')
+    ('unknown',  'Unsure')
 ])
+
+payment_type_color = {
+    'salary': 'b44d54',
+    'hazard': '68acba',
+    'allowance': '7c5866',
+    'response': 'e3bb56',
+    'unknown': 'a88648',
+}
 
 payment_issue = OrderedDict([
     ('not_paid',  'Not paid'),

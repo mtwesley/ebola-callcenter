@@ -1,42 +1,4 @@
-{#{% if not call %}#}
-{#    <div id="module_c" class="module rounded">#}
-{#        <div class="agent_stats text_a">#}
-{#            Your statistics today#}
-{#            <br><br>#}
-{#            {% set call_total = g.user.today_calls().count() %}#}
-{#            {% set case_duplicates = g.user.today_calls(type='case_updates').count() %}#}
-{#            {% set case_reports = g.user.today_calls(type='case_report').count() %}#}
-{#            {% set case_inquiries = g.user.today_calls(type='case_inquiry').count() %}#}
-{#            {% set general_inquiries = g.user.today_calls(type='general_inquiry').count() %}#}
-{#            {% set call_cancelled = g.user.today_calls(status='cancelled').count() %}#}
-{##}
-{#            <div class="call_type2" style="background:#464646"></div>  {{ call_total }} total call{% if call_total != 1 %}s{% endif %} <br>#}
-{#            <div class="call_type2" style="background:#B44D54"></div>  {{ case_reports }} new case{% if case_reports != 1 %}s{% endif %} <br>#}
-{#            <div class="call_type2" style="background:#68ACBA"></div>  {{ case_inquiries }} case inquir{% if case_inquiries != 1 %}ies{% else %}y{% endif %} <br>#}
-{#            <div class="call_type2" style="background:#7C5866"></div>  {{ general_inquiries }} general inquir{% if general_inquiries != 1 %}ies{% else %}y{% endif %} <br>#}
-{#            <div class="call_type2" style="background:#E3BB56"></div>  {{ case_duplicates }} duplicate case{% if case_duplicates != 1 %}s{% endif %} <br>#}
-{#            <div class="call_type2" style="background:#6EAB61"></div>  {{ call_cancelled }} cancelled call{% if call_cancelled != 1 %}s{% endif %}#}
-{#        </div>#}
-{#    </div>#}
-{#{% endif %}#}
-
 {% if complaint %}
-{#    {% if call.caller.call_cases().first() %}#}
-{#        <div id="module_b" class="module rounded">#}
-{#            <div class="caller_related_cases text_a">#}
-{#                This caller previously reported the following case(s): <br><br>#}
-{##}
-{#                {% for c in call.caller.call_cases().all() %}#}
-{#                    {% if c.id != call.case.id %}#}
-{#                    <a class="btn2 gradient_gray3 rounded text_d" href="">#}
-{#                        Patient ID {{ c.patient.id }}  {{ c.patient.name() }}#}
-{#                    </a>#}
-{#                    {% endif %}#}
-{#                {% endfor %}#}
-{#            </div>#}
-{#        </div>#}
-{#    {% endif %}#}
-
     {% set all_complaints = vars['all_complaints'] %}
     {% if all_complaints and all_complaints.count() %}
         <div class="module rounded">
@@ -45,7 +7,7 @@
                 <br><br>
                 {% for c in all_complaints %}
                 <a class="btn2 gradient_gray3 rounded text_d" href="">
-                    Complaint ID {{ c.id }} {{ c.name }}
+                    Complaint ID {{ '%05d' % c.id|int }} {{ c.name }}
                 </a>
                 {% endfor %}
             </div>
@@ -61,7 +23,7 @@
                 {% for r in all_resolutions %}
                 {% if c.status() == 'resolved' %}
                 <a class="btn2 gradient_gray3 rounded text_d" href="">
-                    Resolution ID {{ r.id }}  {{ r.name }}
+                    Resolution ID {{ '%05d' % r.id|int }}  {{ r.name }}
                 </a>
                 {% endif %}
                 {% endfor %}

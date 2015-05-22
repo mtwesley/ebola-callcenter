@@ -4,6 +4,7 @@ from flask import g
 from flask.ext.sqlalchemy import SQLAlchemy, orm
 from flask.ext.login import UserMixin, AnonymousUserMixin, current_user
 
+import helpers
 
 db = SQLAlchemy()
 
@@ -89,6 +90,9 @@ class Complaint(db.Model):
             return self.statuses.order_by(ComplaintStatus.timestamp.desc()).first()
         else:
             return ComplaintStatus(self, status, reason, comments)
+
+    def color(self):
+        return helpers.payment_type_color[self.payment_type]
 
 
 class ComplaintStatus(db.Model):

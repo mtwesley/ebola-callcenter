@@ -49,7 +49,7 @@
                 </div>
                 {% for c in responded_complaints %}
                 <a class="btn2 gradient_gray3 rounded text_d" href="{{ url_for('outgoing.new', complaint_id=c.id) }}">
-                    <div class="call_type" style="background:#B44D54"></div>
+                    <div class="call_type" style="background:#{{ c.color() or '333333' }}"></div>
                     {% if c.phone %}{{ helpers.local_phone_number(c.phone) }} {% endif %}
                     {% if c.name %}{{ c.name }}{% endif %}
                 </a>

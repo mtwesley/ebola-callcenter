@@ -1,0 +1,11 @@
+{% extends 'step.html' %}
+{% block agent_instruction_text %}
+    Add your comments about the call:
+{% endblock %}
+{% set disable_agent_dialogue = True %}
+{% block agent_input_elements %}
+    <textarea name="comments" placeholder="Type your comments"></textarea>
+{% endblock %}
+{% block agent_submit_text %}ADD COMMENT{% endblock %}
+{% block agent_skip_text %}NO COMMENT{% endblock %}
+{% set disable_agent_cancel = True %}
