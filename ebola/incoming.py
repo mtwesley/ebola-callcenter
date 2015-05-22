@@ -79,7 +79,11 @@ def index(default_step=None):
 
     elif agent_step == 2:
         if agent_action == 'submit':
-            phone = helpers.e164_phone_number(request.form.get('phone', None))
+            try:
+                phone = helpers.e164_phone_number(request.form.get('phone', None))
+            except:
+                phone = None
+
             if phone:
                 complaint.phone = phone
                 step = 3
@@ -413,10 +417,11 @@ def index(default_step=None):
 
     elif agent_step == 99:
         if agent_action == 'submit':
-            reason = request.form.get('reason', '')
-            status = complaint.status('deleted', reason)
-            db.session.add(status)
-            db.session.commit()
+            if complaint.id:
+                reason = request.form.get('reason', '')
+                status = complaint.status('deleted', reason)
+                db.session.add(status)
+                db.session.commit()
             session['deactivate'] = True
         else:
             step = agent_step
