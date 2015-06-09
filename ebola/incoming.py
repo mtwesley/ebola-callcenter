@@ -404,6 +404,8 @@ def index(default_step=None):
             if comments:
                 complaint.comments = comments
             session['deactivate'] = True
+        if agent_action == 'skip':
+            session['deactivate'] = True
         else:
             step = agent_step
 
@@ -421,7 +423,7 @@ def index(default_step=None):
                 reason = request.form.get('reason', '')
                 status = complaint.status('deleted', reason)
                 db.session.add(status)
-                db.session.commit()
+                db.session.commit()2
             session['deactivate'] = True
         else:
             step = agent_step
