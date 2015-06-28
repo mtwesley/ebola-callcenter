@@ -423,7 +423,7 @@ def index(default_step=None):
                 reason = request.form.get('reason', '')
                 status = complaint.status('deleted', reason)
                 db.session.add(status)
-                db.session.commit()2
+                db.session.commit()
             session['deactivate'] = True
         else:
             step = agent_step
