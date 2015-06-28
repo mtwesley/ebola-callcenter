@@ -18,7 +18,7 @@ class User(db.Model, UserMixin):
     name = db.Column(db.String(128))
     is_agent = db.Column(db.Boolean, default=False, nullable=False)
     is_admin = db.Column(db.Boolean, default=False, nullable=False)
-    timestamp = db.Column(db.DateTime(), default=datetime.datetime.now(), server_default='current_timestamp', nullable=False)
+    timestamp = db.Column(db.DateTime(), default=datetime.datetime.now(), nullable=False)
 
     complaints = db.relationship('Complaint', backref='user', lazy='dynamic')
 
@@ -58,7 +58,7 @@ class Complaint(db.Model):
     payment_type = db.Column(db.Enum('salary', 'hazard', 'allowance', 'response', 'unknown', native_enum=False))
     payment_issue = db.Column(db.Enum('not_paid', 'delayed', 'incorrect', 'other', native_enum=False))
 
-    complaint_date = db.Column(db.Date(), default=datetime.datetime.today(), server_default='current_timestamp', nullable=False)
+    complaint_date = db.Column(db.Date(), default=datetime.datetime.today(), nullable=False)
     complaint_description = db.Column(db.Text)
     complaint_resolution = db.Column(db.Text)
 
@@ -68,7 +68,7 @@ class Complaint(db.Model):
     comments = db.Column(db.Text)
 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    timestamp = db.Column(db.DateTime(), default=datetime.datetime.now(), server_default='current_timestamp', nullable=False)
+    timestamp = db.Column(db.DateTime(), default=datetime.datetime.now(), nullable=False)
 
     statuses = db.relationship('ComplaintStatus', backref='inquiry', lazy='dynamic', cascade="all, delete-orphan")
 
@@ -105,7 +105,7 @@ class ComplaintStatus(db.Model):
     comments = db.Column(db.Text)
 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    timestamp = db.Column(db.DateTime(), server_default='current_timestamp', nullable=False)
+    timestamp = db.Column(db.DateTime(), nullable=False)
 
     def __init__(self, complaint, status, reason='system', comments=None):
         self.complaint_id = complaint.id
