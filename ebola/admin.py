@@ -69,14 +69,14 @@ def search(current_status=None):
             for x in name.split():
                 complaints = complaints.filter(Complaint.name.ilike('%'+x+'%'))
 
+        workplace = request.form.get('workplace', '')
+        if workplace:
+            complaints = complaints.filter(Complaint.workplace == workplace)
+
         organization = request.form.get('organization', '')
         if organization:
             for x in organization.split():
                 complaints = complaints.filter(Complaint.name.ilike('%'+x+'%'))
-
-        organization_type = request.form.get('organization_type', '')
-        if organization_type:
-            complaints = complaints.filter(Complaint.organization_type == organization_type)
 
         position = request.form.get('position', '')
         if position:
@@ -91,9 +91,15 @@ def search(current_status=None):
         if location:
             for x in location.split():
                 complaints = complaints.filter(
-                    (Complaint.district.ilike('%'+x+'%')) |
                     (Complaint.city.ilike('%'+x+'%')) |
                     (Complaint.address.ilike('%'+x+'%')))
+
+        is_government = request.form.get('is_government', '')
+        if is_government:
+            if is_government == 'Y':
+                complaints = complaints.filter(Complaint.is_government == True)
+            elif is_government == 'N':
+                complaints = complaints.filter(Complaint.is_government == False)
 
         is_moh = request.form.get('is_moh', '')
         if is_moh:
@@ -102,42 +108,30 @@ def search(current_status=None):
             elif is_moh == 'N':
                 complaints = complaints.filter(Complaint.is_moh == False)
 
-        is_erw = request.form.get('is_erw', '')
-        if is_erw:
-            if is_erw == 'Y':
-                complaints = complaints.filter(Complaint.is_erw == True)
-            elif is_erw == 'N':
-                complaints = complaints.filter(Complaint.is_erw == False)
-
         payment_type = request.form.get('payment_type', '')
-        if county:
+        if payment_type:
             complaints = complaints.filter(Complaint.payment_type == payment_type)
 
-        payment_issue = request.form.get('payment_issue', '')
-        if county:
-            complaints = complaints.filter(Complaint.payment_issue == payment_issue)
-
     else:
-        status = None
+        current_status = None
         complaint_id = None
         name = None
         phone = None
+        workplace = None
         organization = None
-        organization_type = None
         position = None
         county = None
         location = None
         is_moh = None
-        is_erw = None
+        is_government = None
         payment_type = None
-        payment_issue = None
 
     complaints = complaints.order_by(subquery.columns.latest_timestamp.desc()).limit(12)
 
-    return render_template('search.html', current_status=current_status, complaints=complaints, complaint_id=complaint_id, name=name,
-                           phone=phone, organization=organization, organization_type=organization_type,
-                           position=position, county=county, location=location, is_moh=is_moh, is_erw=is_erw,
-                           payment_type=payment_type, payment_issue=payment_issue)
+    return render_template('search.html', current_status=current_status, complaints=complaints,
+                           complaint_id=complaint_id, name=name, phone=phone, workplace=workplace,
+                           organization=organization, position=position, county=county, location=location,
+                           is_government=is_government, is_moh=is_moh, payment_type=payment_type)
 
 
 @view.route("/complaint/<complaint_id>", methods=['GET', 'POST'])

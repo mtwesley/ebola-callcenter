@@ -109,9 +109,9 @@ def index(default_step=None):
 
     elif agent_step == 4:
         if agent_action == 'submit':
-            county = request.form.get('county', None)
-            if county:
-                complaint.county = county
+            complaint_description = request.form.get('complaint_description', None)
+            if complaint_description:
+                complaint.complaint_description = complaint_description
                 step = 5
             else:
                 step = agent_step
@@ -122,14 +122,12 @@ def index(default_step=None):
 
     elif agent_step == 5:
         if agent_action == 'submit':
-            district = request.form.get('district', None)
-            if district:
-                complaint.district = district
+            payment_type = request.form.get('payment_type', None)
+            if payment_type:
+                complaint.payment_type = payment_type
                 step = 6
             else:
                 step = agent_step
-        elif agent_action == 'skip':
-            step = 6
         elif agent_action == 'cancel':
             step = 98
         else:
@@ -137,9 +135,9 @@ def index(default_step=None):
 
     elif agent_step == 6:
         if agent_action == 'submit':
-            city = request.form.get('city', None)
-            if city:
-                complaint.city = city
+            workplace = request.form.get('workplace', None)
+            if workplace in helpers.workplace.keys():
+                complaint.workplace = workplace
                 step = 7
             else:
                 step = agent_step
@@ -150,14 +148,15 @@ def index(default_step=None):
 
     elif agent_step == 7:
         if agent_action == 'submit':
-            address = request.form.get('address', None)
-            if address:
-                complaint.address = address
+            is_government = request.form.get('is_government', None)
+            if is_government == 'Y':
+                complaint.is_government = True
                 step = 8
+            elif is_government == 'N':
+                complaint.is_government = False
+                step = 9
             else:
                 step = agent_step
-        elif agent_action == 'skip':
-            step = 8
         elif agent_action == 'cancel':
             step = 98
         else:
@@ -168,7 +167,7 @@ def index(default_step=None):
             is_moh = request.form.get('is_moh', None)
             if is_moh == 'Y':
                 complaint.is_moh = True
-                step = 9
+                step = 11
             elif is_moh == 'N':
                 complaint.is_moh = False
                 step = 9
@@ -181,15 +180,13 @@ def index(default_step=None):
 
     elif agent_step == 9:
         if agent_action == 'submit':
-            is_erw = request.form.get('is_erw', None)
-            if is_erw == 'Y':
-                complaint.is_erw = True
-                step = 10
-            elif is_erw == 'N':
-                complaint.is_erw = False
-                step = 10
-            else:
-                step = agent_step
+            organization = request.form.get('organization', None)
+            if organization:
+                complaint.organization = organization
+                if complaint.is_government and not complaint.is_moh:
+                    step = 10
+                else:
+                    step = 11
         elif agent_action == 'cancel':
             step = 98
         else:
@@ -197,10 +194,15 @@ def index(default_step=None):
 
     elif agent_step == 10:
         if agent_action == 'submit':
-            organization = request.form.get('organization', None)
-            if organization:
-                complaint.organization = organization
+            is_seconded = request.form.get('is_seconded', None)
+            if is_seconded == 'Y':
+                complaint.is_seconded = True
                 step = 11
+            elif is_seconded == 'N':
+                complaint.is_seconded = False
+                step = 11
+            else:
+                step = agent_step
         elif agent_action == 'cancel':
             step = 98
         else:
@@ -208,13 +210,10 @@ def index(default_step=None):
 
     elif agent_step == 11:
         if agent_action == 'submit':
-            organization_type = request.form.get('organization_type', None)
-            if organization_type in helpers.organization_type.keys():
-                complaint.organization_type = organization_type
-                if organization_type == 'other':
-                    step = 12
-                else:
-                    step = 13
+            position = request.form.get('position', None)
+            if position:
+                complaint.position = position
+                step = 12
             else:
                 step = agent_step
         elif agent_action == 'cancel':
@@ -224,9 +223,9 @@ def index(default_step=None):
 
     elif agent_step == 12:
         if agent_action == 'submit':
-            other_organization_type = request.form.get('other_organization_type', None)
-            if other_organization_type:
-                complaint.other_organization_type = other_organization_type
+            county = request.form.get('county', None)
+            if county:
+                complaint.county = county
                 step = 13
             else:
                 step = agent_step
@@ -237,9 +236,9 @@ def index(default_step=None):
 
     elif agent_step == 13:
         if agent_action == 'submit':
-            position = request.form.get('position', None)
-            if position:
-                complaint.position = position
+            city = request.form.get('city', None)
+            if city:
+                complaint.city = city
                 step = 14
             else:
                 step = agent_step
@@ -250,14 +249,14 @@ def index(default_step=None):
 
     elif agent_step == 14:
         if agent_action == 'submit':
-            salary = request.form.get('salary', None)
-            if salary == 'Y':
-                complaint.payment_type = 'salary'
-                step = 19
-            elif salary == 'N':
+            address = request.form.get('address', None)
+            if address:
+                complaint.address = address
                 step = 15
             else:
                 step = agent_step
+        elif agent_action == 'skip':
+            step = 15
         elif agent_action == 'cancel':
             step = 98
         else:
@@ -265,140 +264,14 @@ def index(default_step=None):
 
     elif agent_step == 15:
         if agent_action == 'submit':
-            hazard = request.form.get('hazard', None)
-            if hazard == 'Y':
-                complaint.payment_type = 'hazard'
-                step = 19
-            elif hazard == 'N':
-                step = 16
-            else:
-                step = agent_step
-        elif agent_action == 'cancel':
-            step = 98
+            status = complaint.status('open')
+            db.session.add(status)
+            db.session.commit()
+            step = 16
         else:
             step = agent_step
 
     elif agent_step == 16:
-        if agent_action == 'submit':
-            allowance = request.form.get('allowance', None)
-            if allowance == 'Y':
-                complaint.payment_type = 'allowance'
-                step = 19
-            elif allowance == 'N':
-                step = 17
-            else:
-                step = agent_step
-        elif agent_action == 'cancel':
-            step = 98
-        else:
-            step = agent_step
-
-    elif agent_step == 17:
-        if agent_action == 'submit':
-            response = request.form.get('response', None)
-            if response == 'Y':
-                complaint.payment_type = 'response'
-                step = 19
-            elif response == 'N':
-                step = 18
-        elif agent_action == 'cancel':
-            step = 98
-        else:
-            step = agent_step
-
-    elif agent_step == 18:
-        if agent_action == 'submit':
-            payment_type = request.form.get('payment_type', None)
-            if payment_type:
-                complaint.payment_type = payment_type
-                step = 19
-            else:
-                step = agent_step
-        elif agent_action == 'cancel':
-            step = 98
-        else:
-            step = agent_step
-
-    elif agent_step == 19:
-        if agent_action == 'submit':
-            not_paid = request.form.get('not_paid', None)
-            if not_paid == 'N':
-                complaint.payment_issue = 'not_paid'
-                step = 22
-            elif not_paid == 'Y':
-                step = 20
-            else:
-                step = agent_step
-        elif agent_action == 'cancel':
-            step = 98
-        else:
-            step = agent_step
-
-    elif agent_step == 20:
-        if agent_action == 'submit':
-            delayed = request.form.get('delayed', None)
-            if delayed == 'Y':
-                complaint.payment_issue = 'delayed'
-                step = 22
-            elif delayed == 'N':
-                step = 21
-            else:
-                step = agent_step
-        elif agent_action == 'cancel':
-            step = 98
-        else:
-            step = agent_step
-
-    elif agent_step == 21:
-        if agent_action == 'submit':
-            incorrect = request.form.get('incorrect', None)
-            if incorrect == 'Y':
-                complaint.payment_issue = 'incorrect'
-                step = 22
-            elif incorrect == 'N':
-                complaint.payment_issue = 'other'
-                step = 22
-            else:
-                step = agent_step
-        elif agent_action == 'cancel':
-            step = 98
-        else:
-            step = agent_step
-
-    elif agent_step == 22:
-        if agent_action == 'submit':
-            complaint_description = request.form.get('complaint_description', None)
-            if complaint_description:
-                complaint.complaint_description = complaint_description
-                step = 23
-            else:
-                step = agent_step
-        elif agent_action == 'cancel':
-            step = 98
-        else:
-            step = agent_step
-
-    elif agent_step == 23:
-        if agent_action == 'submit':
-            complaint_resolution = request.form.get('complaint_resolution', None)
-            if complaint_resolution:
-                complaint.complaint_resolution = complaint_resolution
-                step = 24
-        elif agent_action == 'cancel':
-            step = 98
-        else:
-            step = agent_step
-
-    elif agent_step == 24:
-        if agent_action == 'submit':
-            status = complaint.status('open')
-            db.session.add(status)
-            db.session.commit()
-            step = 25
-        else:
-            step = agent_step
-
-    elif agent_step == 25:
         if agent_action == 'submit':
             comments = request.form.get('comments', None)
             if comments:
@@ -499,18 +372,17 @@ def new():
         complaint.phone = from_complaint.phone
         complaint.name = from_complaint.name
 
+        complaint.workplace = from_complaint.workplace
         complaint.organization = from_complaint.organization
-        complaint.organization_type = from_complaint.organization_type
-        complaint.other_organization_type = from_complaint.other_organization_type
         complaint.position = from_complaint.position
 
         complaint.county = from_complaint.county
-        complaint.district = from_complaint.district
         complaint.city = from_complaint.city
         complaint.address = from_complaint.address
 
-        complaint.is_erw = from_complaint.is_erw
+        complaint.is_government = from_complaint.is_government
         complaint.is_moh = from_complaint.is_moh
+        complaint.is_seconded = from_complaint.is_seconded
         db.session.add(complaint)
         db.session.commit()
 

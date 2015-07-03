@@ -18,29 +18,29 @@
                         {% endfor %}
                     </select>
 
-                    <input type="text" name="location" placeholder="Filter by district, village, or address" {% if location %}value="{{ location }}"{% endif %}>
+                    <input type="text" name="location" placeholder="Filter by city, address or community" {% if location %}value="{{ location }}"{% endif %}>
 
-                    <select name="is_moh">
-                        <option value="" disabled="disabled" {% if not is_moh %}selected="selected"{% endif %}>Filter by MOH status</option>
+                    <select name="is_government">
+                        <option value="" disabled="disabled" {% if not is_government %}selected="selected"{% endif %}>Filter by government employment status</option>
                         <option value=""></option>
-                        <option value="Y" {% if is_moh == 'Y' %}selected="selected"{% endif %}>Is MOH staff</option>
-                        <option value="N" {% if is_moh == 'N' %}selected="selected"{% endif %}>Is not MOH staff</option>
+                        <option value="Y" {% if is_government == 'Y' %}selected="selected"{% endif %}>Is government employee</option>
+                        <option value="N" {% if is_government == 'N' %}selected="selected"{% endif %}>Is not government employee</option>
                     </select>
 
-                    <select name="is_erw">
-                        <option value="" disabled="disabled" {% if not is_erw %}selected="selected"{% endif %}>Filter by ERW status</option>
+                    <select name="is_moh">
+                        <option value="" disabled="disabled" {% if not is_moh %}selected="selected"{% endif %}>Filter by MOHSW employment status</option>
                         <option value=""></option>
-                        <option value="Y" {% if is_erw == 'Y' %}selected="selected"{% endif %}>Is ERW</option>
-                        <option value="N" {% if is_erw == 'N' %}selected="selected"{% endif %}>Is not ERW</option>
+                        <option value="Y" {% if is_moh == 'Y' %}selected="selected"{% endif %}>Is MOHSW employee</option>
+                        <option value="N" {% if is_moh == 'N' %}selected="selected"{% endif %}>Is not MOHSW employee</option>
                     </select>
 
                     <input type="text" name="organization" placeholder="Filter by organization"{% if organization %}value="{{ organization }}"{% endif %}>
 
-                    <select name="organization_type">
-                        <option disabled="disabled" {% if not county %}selected="selected"{% endif %}>Filter by organization type</option>
+                    <select name="workplace">
+                        <option disabled="disabled" {% if not workplace %}selected="selected"{% endif %}>Filter by place of work</option>
                         <option value=""></option>
-                        {% for k,v in helpers.organization_type.items() %}
-                        <option value="{{ k }}" {% if organization_type == k %}selected="selected"{% endif %}>{{ v }}</option>
+                        {% for k,v in helpers.workplace.items() %}
+                        <option value="{{ k }}" {% if workplace == k %}selected="selected"{% endif %}>{{ v }}</option>
                         {% endfor %}
                     </select>
 
@@ -51,14 +51,6 @@
                         <option value=""></option>
                         {% for k,v in helpers.payment_type.items() %}
                         <option value="{{ k }}" {% if payment_type == k %}selected="selected"{% endif %}>{{ v }}</option>
-                        {% endfor %}
-                    </select>
-
-                    <select name="payment_issue">
-                        <option disabled="disabled" {% if not payment_issue %}selected="selected"{% endif %}>Filter by complaint type</option>
-                        <option value=""></option>
-                        {% for k,v in helpers.payment_issue.items() %}
-                        <option value="{{ k }}" {% if payment_issue == k %}selected="selected"{% endif %}>{{ v }}</option>
                         {% endfor %}
                     </select>
 

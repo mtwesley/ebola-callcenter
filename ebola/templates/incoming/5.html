@@ -3,8 +3,11 @@
     What type of payment are you calling about?
 {% endblock %}
 {% block agent_input_elements %}
-    {% for k,v in helpers.payment_type.items() %}
-    <input type="radio" name="payment_type" value="{{ k }}"> <label for="{{ k }}">{{ v }}</label><br>
-    {% endfor %}
+    <select name="payment_type">
+        <option disabled="disabled" selected="selected">Select the type of payment</option>
+        {% for k,v in helpers.payment_type.items() %}
+        <option value="{{ k }}">{{ v }}</option>
+        {% endfor %}
+    </select>
 {% endblock %}
 {% set disable_agent_skip = True %}

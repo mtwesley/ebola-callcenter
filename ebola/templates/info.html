@@ -22,17 +22,13 @@
             {% if complaint.phone %}<span style="color:#7D7D7D;">Phone:</span> {{ helpers.local_phone_number(complaint.phone) }} <br>{% endif %}
             {% if complaint.name %}<span style="color:#7D7D7D;">Name:</span> {{ complaint.name }} <br>{% endif %}
             {% if complaint.county %}<span style="color:#7D7D7D;">County:</span> {{ helpers.county[complaint.county] }} <br>{% endif %}
-            {% if complaint.district %}<span style="color:#7D7D7D;">District:</span> {{ complaint.district }} <br>{% endif %}
             {% if complaint.city %}<span style="color:#7D7D7D;">Village:</span> {{ complaint.city }} <br>{% endif %}
             {% if complaint.address %}<span style="color:#7D7D7D;">Address:</span> {{ complaint.address }} <br>{% endif %}
-            {% if not complaint.is_moh is none %}<span style="color:#7D7D7D;">MOH Staff:</span> {{ helpers.yes_no[complaint.is_moh] }} <br>{% endif %}
-            {% if not complaint.is_erw is none %}<span style="color:#7D7D7D;">ERW:</span> {{ helpers.yes_no[complaint.is_erw] }} <br>{% endif %}
+            {% if not complaint.is_government is none %}<span style="color:#7D7D7D;">Government Employee:</span> {{ helpers.yes_no[complaint.is_government] }} <br>{% endif %}
+            {% if not complaint.is_moh is none %}<span style="color:#7D7D7D;">MOHSW Employee:</span> {{ helpers.yes_no[complaint.is_moh] }} <br>{% endif %}
+            {% if not complaint.is_seconded is none %}<span style="color:#7D7D7D;">MOHSW Seconded:</span> {{ helpers.yes_no[complaint.is_seconded] }} <br>{% endif %}
+            {% if complaint.workplace %}<span style="color:#7D7D7D;">Place of work:</span> {{ helpers.workplace[complaint.workplace] }} <br>{% endif %}
             {% if complaint.organization %}<span style="color:#7D7D7D;">Organization:</span> {{ complaint.organization }} <br>{% endif %}
-            {% if complaint.organization_type == 'other' %}
-                <span style="color:#7D7D7D;">Org. Type:</span> {{ complaint.other_organization_type }} <br>
-            {% elif complaint.organization_type in helpers.organization_type %}
-                <span style="color:#7D7D7D;">Org. Type:</span> {{ helpers.organization_type[complaint.organization_type] }} <br>
-            {% endif %}
             {% if complaint.position %}<span style="color:#7D7D7D;">Job Title:</span> {{ complaint.position }} <br>{% endif %}
         </div>
     </div>
@@ -44,11 +40,9 @@
             </div>
 
             <div class="info_content text_b">
-                {% if complaint.payment_type %}<span style="color:#7D7D7D;">Wage type:</span> {{ helpers.payment_type[complaint.payment_type] }} <br>{% endif %}
-                {% if complaint.payment_issue and complaint.payment_issue != 'other' %}<span style="color:#7D7D7D;">Complaint type:</span> {{ helpers.payment_issue[complaint.payment_issue] }} <br>{% endif %}
-                {% if complaint.complaint_description %}<span style="color:#7D7D7D;">Description of complaint:</span> {{ complaint.complaint_description }} <br>{% endif %}
-                {% if complaint.complaint_resolution %}<span style="color:#7D7D7D;">Proposed resolution:</span> {{ complaint.complaint_resolution }} <br>{% endif %}
-                {% if complaint.comments %}<span style="color:#7D7D7D;">Additional comments:</span> {{ complaint.comments }} <br>{% endif %}
+                    {% if complaint.payment_type %}<span style="color:#7D7D7D;">Wage type:</span> {{ helpers.payment_type[complaint.payment_type] }} <br>{% endif %}
+                    {% if complaint.complaint_description %}<span style="color:#7D7D7D;">Description of complaint:</span> {{ complaint.complaint_description }} <br>{% endif %}
+                    {% if complaint.comments %}<span style="color:#7D7D7D;">Additional comments:</span> {{ complaint.comments }} <br>{% endif %}
             </div>
         </div>
     {% endif %}

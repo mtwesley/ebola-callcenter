@@ -41,29 +41,23 @@ class Complaint(db.Model):
     name = db.Column(db.String(128))
     phone = db.Column(db.String(23))
 
-    workplace = db.Column(db.Enum('etu', 'response', 'hospital', 'moh'))
+    workplace = db.Column(db.Enum('etu', 'response', 'hospital', 'moh', native_enum=False))
     organization = db.Column(db.String(128))
-    # organization_type = db.Column(db.Enum('moh', 'ingo', 'lngo', 'clinic', 'other', native_enum=False))
-    # other_organization_type = db.Column(db.String(64))
     position = db.Column(db.String(128))
 
     county = db.Column(db.String(32))
-    # district = db.Column(db.String(64))
     city = db.Column(db.String(32))
     address = db.Column(db.String(64))
 
-    # is_erw = db.Column(db.Boolean)
     is_government = db.Column(db.Boolean)
     is_moh = db.Column(db.Boolean)
     is_seconded = db.Column(db.Boolean)
     is_satisfied = db.Column(db.Boolean)
 
     payment_type = db.Column(db.Enum('salary', 'hazard', 'allowance', 'response', 'other', 'unknown', native_enum=False))
-    # payment_issue = db.Column(db.Enum('not_paid', 'delayed', 'incorrect', 'other', native_enum=False))
 
     complaint_date = db.Column(db.Date(), default=datetime.datetime.today(), server_default=db.func.now(), nullable=False)
     complaint_description = db.Column(db.Text)
-    complaint_resolution = db.Column(db.Text)
 
     response_date = db.Column(db.Date())
     response_description = db.Column(db.Text)
