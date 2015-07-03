@@ -1,13 +1,9 @@
 {% extends 'step.html' %}
 {% block agent_dialogue_text %}
-      What county do you live in?
+    Please provide a brief description of your issue. Please speak slowly and clearly so that I can
+    record your statement.
 {% endblock %}
 {% block agent_input_elements %}
-    <select name="county">
-        <option disabled="disabled" selected="selected">Select the county</option>
-        {% for k,v in helpers.county.items() %}
-        <option value="{{ k }}">{{ v }}</option>
-        {% endfor %}
-    </select>
+    <textarea name="complaint_description" placeholder="Type the description of the issue"></textarea>
 {% endblock %}
 {% set disable_agent_skip = True %}

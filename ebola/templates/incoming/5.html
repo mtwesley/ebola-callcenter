@@ -1,7 +1,10 @@
 {% extends 'step.html' %}
 {% block agent_dialogue_text %}
-    What district do you live in?
+    What type of payment are you calling about?
 {% endblock %}
 {% block agent_input_elements %}
-    <input type="text" name="district" placeholder="Type the district name">
+    {% for k,v in helpers.payment_type.items() %}
+    <input type="radio" name="payment_type" value="{{ k }}"> <label for="{{ k }}">{{ v }}</label><br>
+    {% endfor %}
 {% endblock %}
+{% set disable_agent_skip = True %}

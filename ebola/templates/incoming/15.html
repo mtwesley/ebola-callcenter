@@ -1,9 +1,8 @@
 {% extends 'step.html' %}
 {% block agent_dialogue_text %}
-    Are you calling about hazard pay?
+    Thank you for calling. Your complaint has been recorded and we will call you shortly with an update or resolution.
 {% endblock %}
-{% block agent_input_elements %}
-    <input type="radio" name="hazard" value="Y"> <label for="Y">Yes</label><br>
-    <input type="radio" name="hazard" value="N"> <label for="N">No</label><br>
-{% endblock %}
+{% block agent_submit_text %}END CALL{% endblock %}
+{% set disable_agent_input = True %}
 {% set disable_agent_skip = True %}
+{% set disable_agent_cancel = True %}

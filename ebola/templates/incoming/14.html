@@ -1,9 +1,7 @@
 {% extends 'step.html' %}
 {% block agent_dialogue_text %}
-    Are you calling about your regular salary?
+    What is your address or community?
 {% endblock %}
 {% block agent_input_elements %}
-    <input type="radio" name="salary" value="Y"> <label for="Y">Yes</label><br>
-    <input type="radio" name="salary" value="N"> <label for="N">No</label><br>
+    <input type="text" name="address" placeholder="Type the address or community name">
 {% endblock %}
-{% set disable_agent_skip = True %}

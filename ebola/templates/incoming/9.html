@@ -1,9 +1,8 @@
 {% extends 'step.html' %}
 {% block agent_dialogue_text %}
-    Were you an Ebola response worker?
+    What organization did you work for?
 {% endblock %}
 {% block agent_input_elements %}
-    <input type="radio" name="is_erw" value="Y"> <label for="Y">Yes</label><br>
-    <input type="radio" name="is_erw" value="N"> <label for="N">No</label><br>
+    <input type="text" name="organization" placeholder="Type the name of the organization">
 {% endblock %}
 {% set disable_agent_skip = True %}

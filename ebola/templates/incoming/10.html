@@ -1,8 +1,9 @@
 {% extends 'step.html' %}
 {% block agent_dialogue_text %}
-    What organization did you work for?
+    Were you seconded?
 {% endblock %}
 {% block agent_input_elements %}
-    <input type="text" name="organization" placeholder="Type the name of the organization">
+    <input type="radio" name="is_seconded" value="Y"> <label for="Y">Yes</label><br>
+    <input type="radio" name="is_seconded" value="N"> <label for="N">No</label><br>
 {% endblock %}
 {% set disable_agent_skip = True %}

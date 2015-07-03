@@ -3,19 +3,23 @@ from phonenumbers import parse as parse_number, format_number, is_possible_numbe
 from collections import OrderedDict
 
 payment_type = OrderedDict([
-    ('salary',  'Regular salary'),
-    ('hazard',  'Hazard pay'),
-    ('allowance',  'Allowance'),
-    ('response',  'Response pay'),
-    ('unknown',  'Unsure')
+    ('salary',  'Basic salary'),
+    ('allowance',  'General allowance'),
+    ('hazard',  'Hazard or response pay'),
+    # ('response',  'Response pay'),
+    ('risk', 'Death benefit'),
+    ('unknown',  'Unsure'),
+    ('other', 'Other')
 ])
 
 payment_type_color = {
     'salary': 'b44d54',
     'hazard': '68acba',
     'allowance': '7c5866',
-    'response': 'e3bb56',
+    # 'response': 'e3bb56',
+    'risk': 'e3bb56',
     'unknown': 'a88648',
+    'other': '333333'
 }
 
 payment_issue = OrderedDict([
@@ -23,6 +27,13 @@ payment_issue = OrderedDict([
     ('delayed',  'Delayed payment'),
     ('incorrect',  'Incorrect payment amount'),
     ('other',  'Other')
+])
+
+workplace = OrderedDict([
+    ('etu', 'ETU'),
+    ('response', 'Response Teams'),
+    ('hospital', 'Hospital'),
+    ('moh', 'Ministry of Health')
 ])
 
 organization_type = OrderedDict([

@@ -1,7 +1,9 @@
 {% extends 'step.html' %}
 {% block agent_dialogue_text %}
-    What is your address or community?
+    Were you a government employee?
 {% endblock %}
 {% block agent_input_elements %}
-    <input type="text" name="address" placeholder="Type the address or community name">
+    <input type="radio" name="is_government" value="Y"> <label for="Y">Yes</label><br>
+    <input type="radio" name="is_government" value="N"> <label for="N">No</label><br>
 {% endblock %}
+{% set disable_agent_skip = True %}

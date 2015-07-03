@@ -1,9 +1,0 @@
-{% extends 'step.html' %}
-{% block agent_dialogue_text %}
-    Have you received any payment?
-{% endblock %}
-{% block agent_input_elements %}
-    <input type="radio" name="not_paid" value="Y"> <label for="Y">Yes</label><br>
-    <input type="radio" name="not_paid" value="N"> <label for="N">No</label><br>
-{% endblock %}
-{% set disable_agent_skip = True %}

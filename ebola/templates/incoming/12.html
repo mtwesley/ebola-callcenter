@@ -1,8 +1,13 @@
 {% extends 'step.html' %}
 {% block agent_dialogue_text %}
-    What kind of organization is it?
+      What county do you live in?
 {% endblock %}
 {% block agent_input_elements %}
-    <input type="text" name="other_organization_type" placeholder="Type the kind of organization">
+    <select name="county">
+        <option disabled="disabled" selected="selected">Select the county</option>
+        {% for k,v in helpers.county.items() %}
+        <option value="{{ k }}">{{ v }}</option>
+        {% endfor %}
+    </select>
 {% endblock %}
 {% set disable_agent_skip = True %}

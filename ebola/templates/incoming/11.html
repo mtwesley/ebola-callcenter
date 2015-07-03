@@ -1,14 +1,8 @@
 {% extends 'step.html' %}
 {% block agent_dialogue_text %}
-    What kind of organization is this? Is this organization MOH, UN agency, International NGO, Liberian NGO, private clinic,
-    or something else?
+    What was your job title?
 {% endblock %}
 {% block agent_input_elements %}
-    <select name="organization_type">
-        <option disabled="disabled" selected="selected">Select the kind of organization</option>
-        {% for k,v in helpers.organization_type.items() %}
-        <option value="{{ k }}">{{ v }}</option>
-        {% endfor %}
-    </select>
+    <input type="text" name="position" placeholder="Type the job title">
 {% endblock %}
 {% set disable_agent_skip = True %}
