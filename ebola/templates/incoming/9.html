@@ -1,10 +1,6 @@
 {% extends 'step.html' %}
 {% block agent_dialogue_text %}
-    {% if complaint.is_government %}
-        What ministry, agency or commission did you work for?
-    {% else %}
-        What organization did you work for?
-    {% endif %}
+    What organization did you work for?
 {% endblock %}
 {% block agent_input_elements %}
     <input type="text" name="organization" placeholder="Type the name of the organization">
