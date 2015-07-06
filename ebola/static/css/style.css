@@ -315,6 +315,10 @@ img{
 	background: #FFF19F;
 }
 
+.agent_dialogue ul {
+    padding: 0 0 0 40px;
+}
+
 .agent_input,
 .agent_skip,
 .agent_submit{

@@ -1,7 +1,12 @@
 {% extends 'step.html' %}
 {% block agent_dialogue_text %}
     Where did you work?
-{% endblock %}
+    <ul>
+       {% for k,v in helpers.workplace.items() %}
+        <li>{{ v }}</li>
+       {% endfor %}
+    </ul>
+ {% endblock %}
 {% block agent_input_elements %}
     <select name="workplace">
         <option disabled="disabled" selected="selected">Select the place of work</option>
