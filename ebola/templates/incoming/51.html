@@ -1,0 +1,18 @@
+{% extends 'step.html' %}
+{% block agent_dialogue_text %}
+    What type of payment are you calling about?
+    <ul>
+       {% for k,v in helpers.payment_type.items() %}
+        <li>{{ v }}</li>
+       {% endfor %}
+    </ul>
+{% endblock %}
+{% block agent_input_elements %}
+    <select name="payment_type">
+        <option disabled="disabled" selected="selected">Select the type of payment</option>
+        {% for k,v in helpers.payment_type.items() %}
+        <option value="{{ k }}">{{ v }}</option>
+        {% endfor %}
+    </select>
+{% endblock %}
+{% set disable_agent_skip = True %}

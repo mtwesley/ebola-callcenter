@@ -1,0 +1,9 @@
+{% extends 'step.html' %}
+{% block agent_dialogue_text %}
+    Please provide a brief description of your issue. Please speak slowly and clearly so that I can
+    record your statement.
+{% endblock %}
+{% block agent_input_elements %}
+    <textarea name="complaint_description" placeholder="Type the description of the issue"></textarea>
+{% endblock %}
+{% set disable_agent_skip = True %}

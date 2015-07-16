@@ -282,6 +282,52 @@ def index(default_step=None):
         else:
             step = agent_step
 
+    elif agent_step == 50:
+        if agent_action == 'submit':
+            complaint_description = request.form.get('complaint_description', None)
+            if complaint_description:
+                complaint.complaint_description = complaint_description
+                step = 51
+            else:
+                step = agent_step
+        elif agent_action == 'cancel':
+            step = 98
+        else:
+            step = agent_step
+
+    elif agent_step == 52:
+        if agent_action == 'submit':
+            payment_type = request.form.get('payment_type', None)
+            if payment_type:
+                complaint.payment_type = payment_type
+                step = 53
+            else:
+                step = agent_step
+        elif agent_action == 'cancel':
+            step = 98
+        else:
+            step = agent_step
+
+    elif agent_step == 53:
+        if agent_action == 'submit':
+            status = complaint.status('open')
+            db.session.add(status)
+            db.session.commit()
+            step = 54
+        else:
+            step = agent_step
+
+    elif agent_step == 54:
+        if agent_action == 'submit':
+            comments = request.form.get('comments', None)
+            if comments:
+                complaint.comments = comments
+            session['deactivate'] = True
+        if agent_action == 'skip':
+            session['deactivate'] = True
+        else:
+            step = agent_step
+
     elif agent_step == 98:
         if agent_action == 'submit':
             step = previous_step
@@ -383,11 +429,12 @@ def new():
         complaint.is_government = from_complaint.is_government
         complaint.is_moh = from_complaint.is_moh
         complaint.is_seconded = from_complaint.is_seconded
+
         db.session.add(complaint)
         db.session.commit()
 
         session['active'] = True
-        session['step'] = 14
+        session['step'] = 50
         session['complaint_id'] = complaint.id
 
     return redirect(url_for('incoming.index'))

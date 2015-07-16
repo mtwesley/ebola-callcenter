@@ -32,6 +32,9 @@ def check_admin():
 @view.route("/search/<current_status>", methods=['GET', 'POST'])
 def search(current_status=None):
 
+    search_limit = 20
+    currrent_page = request.args.get('page', 1)
+
     search_action = request.form.get('search_action', '')
 
     subquery = (db.session.query(ComplaintStatus.complaint_id,
@@ -40,7 +43,7 @@ def search(current_status=None):
 
     if current_status:
 
-        complaints = db.session.query(Complaint).filter(
+        complaints = Complaint.query.filter(
             Complaint.id == ComplaintStatus.complaint_id,
             Complaint.id == subquery.columns.complaint_id,
             ComplaintStatus.status == current_status,
@@ -48,7 +51,7 @@ def search(current_status=None):
         )
 
     else:
-        complaints = db.session.query(Complaint).filter(
+        complaints = Complaint.query.filter(
             Complaint.id == ComplaintStatus.complaint_id,
             Complaint.id == subquery.columns.complaint_id,
             ComplaintStatus.status != 'pending',
@@ -126,12 +129,16 @@ def search(current_status=None):
         is_government = None
         payment_type = None
 
-    complaints = complaints.order_by(subquery.columns.latest_timestamp.desc()).limit(12)
+    pagination = (complaints.
+                  order_by(subquery.columns.latest_timestamp.desc()).
+                  paginate(int(currrent_page), search_limit, error_out=False))
 
-    return render_template('search.html', current_status=current_status, complaints=complaints,
+
+
+    return render_template('search.html', current_status=current_status, complaints=pagination.items,
                            complaint_id=complaint_id, name=name, phone=phone, workplace=workplace,
                            organization=organization, position=position, county=county, location=location,
-                           is_government=is_government, is_moh=is_moh, payment_type=payment_type)
+                           is_government=is_government, is_moh=is_moh, payment_type=payment_type, pagination=pagination)
 
 
 @view.route("/complaint/<complaint_id>", methods=['GET', 'POST'])

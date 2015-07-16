@@ -73,7 +73,7 @@
                 </a>
             </div>
         </div>
-        {% if complaints and complaints.count() %}
+        {% if complaints %}
         <div id="module_e" class="rounded">
             <div class="info_content text_b">
                 {% for c in complaints %}
@@ -87,6 +87,36 @@
                 </a>
                 {% endfor %}
             </div>
+
+            <div class="info_content text_b">
+                {% if pagination.has_prev %}
+                <a class="btn5 gradient_gray2 rounded text_d" href="">
+                    PREVIOUS
+                </a>
+                {% endif %}
+
+                {% set first = True %}
+                {% for p in pagination.iter_pages(0, 5, 5, 0) %}
+                    {% if not first %}
+                        &nbsp;&nbsp;|&nbsp;&nbsp;
+                    {% else %}
+                        {% set first = False %}
+                    {% endif %}
+
+                    {% if p == pagination.page %}
+                        {{ p }}
+                    {% else %}
+                        <a class="text_d" href="?page={{ p }}"> {{ p }} </a>
+                    {% endif %}
+                {% endfor %}
+
+                {% if pagination.has_next %}
+                <a class="btn5 gradient_gray2 rounded text_d" href="">
+                    NEXT
+                </a>
+                {% endif %}
+            </div>
+
         </div>
         {% endif %}
     </div>
