@@ -54,6 +54,7 @@ status = OrderedDict([
 ])
 
 reason = OrderedDict([
+    ('duplicate',  'Repeat caller'),
     ('connection',  'Lost connection'),
     ('noise',  'Could not hear caller'),
     ('prank',  'Prank call'),

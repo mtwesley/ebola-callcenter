@@ -340,7 +340,10 @@ def index(default_step=None):
         if agent_action == 'submit':
             if complaint.id:
                 reason = request.form.get('reason', '')
-                status = complaint.status('deleted', reason)
+                if reason == 'duplicate':
+                    status = complaint.status('duplicate', reason)
+                else:
+                    status = complaint.status('deleted', reason)
                 db.session.add(status)
                 db.session.commit()
             session['deactivate'] = True

@@ -1,0 +1,12 @@
+insert into users (name,email,hash,is_agent,is_admin) values ('Admin','admin@localhost',encode(digest('password','sha256'),'hex'),false,true);
+insert into users (name,email,hash,is_agent,is_admin) values ('Agent','agent@localhost',encode(digest('password','sha256'),'hex'),true,false);
+insert into users (name,email,hash,is_agent,is_admin) values ('UNDP','temp01@pperw.ccgafrica.com',encode(digest('pperw2015','sha256'),'hex'),false,true);
+insert into users (name,email,hash,is_agent,is_admin) values ('Tommy','tommy@pperw.ccgafrica.com',encode(digest('66771100','sha256'),'hex'),true,false);
+insert into users (name,email,hash,is_agent,is_admin) values ('Joseph','joseph@pperw.ccgafrica.com',encode(digest('22337788','sha256'),'hex'),true,false);
+insert into users (name,email,hash,is_agent,is_admin) values ('Eliza','eliza@pperw.ccgafrica.com',encode(digest('33446677','sha256'),'hex'),true,false);
+insert into users (name,email,hash,is_agent,is_admin) values ('Abdul','abdul@pperw.ccgafrica.com',encode(digest('44559988','sha256'),'hex'),true,false);
+insert into users (name,email,hash,is_agent,is_admin) values ('Kelvin','kelvin@pperw.ccgafrica.com',encode(digest('88998899','sha256'),'hex'),true,false);
+insert into users (name,email,hash,is_agent,is_admin) values ('Leann','leann@pperw.ccgafrica.com',encode(digest('11993300','sha256'),'hex'),true,false);
+insert into users (name,email,hash,is_agent,is_admin) values ('Franklynne','franklynne@pperw.ccgafrica.com',encode(digest('55882200','sha256'),'hex'),true,false);
+insert into users (name,email,hash,is_agent,is_admin) values ('Saralyn','saralyn@pperw.ccgafrica.com',encode(digest('77998855','sha256'),'hex'),true,false);
+insert into users (name,email,hash,is_agent,is_admin) values ('Jazlyn','jazlyn@pperw.ccgafrica.com',encode(digest('44882299','sha256'),'hex'),true,false);
